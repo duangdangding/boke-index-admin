@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.FileRecodeMapper">
+
+    <select id="getRecodePage" resultType="com.pearadmin.boke.entry.FileRecode" parameterType="com.pearadmin.boke.vo.query.QueryFileRecodeVo">
+        SELECT * FROM file_recode
+        <where>
+            <if test="vo.fileName != null and vo.fileName != ''">
+                and local_path like concat('%',#{vo.fileName},'%')
+            </if>
+            <if test="vo.urlPath != null and vo.urlPath != ''">
+                and file_url like concat('%',#{vo.urlPath},'%')
+            </if>
+            <if test="vo.upBelong != null">
+                and file_own_id = #{vo.upBelong}
+            </if>
+            <if test="vo.upType != null">
+                and upload_type_id = #{vo.upType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    
+</mapper>

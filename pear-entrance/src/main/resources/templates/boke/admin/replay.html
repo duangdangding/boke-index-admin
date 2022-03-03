@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+                邮箱状态：
+                <select class="url_input" id="emailBind">
+                    <option value = ''>全部</option>
+                    <option value="1">未绑定</option>
+                    <option value="2">已绑定</option>
+                </select>
+                状态：
+                <select class="url_input" id="deleteState">
+                    <option value = ''>全部</option>
+                    <option value="0">禁用</option>
+                    <option value="1">启用</option>
+                </select>
+                昵称：<input class="url_input" type="text" id="userName">
+                邮箱：<input class="url_input" type="text" id="userEmail">
+<!--                <button class="l-btn" onclick="startSelect()">开始查询</button>-->
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">私有：0是1否，置顶：0否1是，压缩：0未压缩1压缩，删除：0已删除1未删除，
+                    编辑器：富文本1 markdown 是2，审核：0未审核1通过2不通过</div>
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="replayListTable" lay-filter="replayListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="deleteState">删除</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+<script>
+    
+    $(function () {
+    })
+    let replayTable;
+    let replaylist_url = '/admin/commontReplay/replayPage';
+    let replayDel_url = '/admin/commontReplay/replayDel';
+    layui.use('table', function () {
+        let table = layui.table;
+        replayTable = table.render({
+            elem: '#replayListTable'
+            ,url: replaylist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'replyId', width:60, title: 'ID', sort: true}
+                    ,{field:'commentId', width:120, title: '留言ID'}
+                    ,{field:'replyContent', width:400, title: '回复内容'}
+                    ,{field:'replyTime', width:160, title: '留言时间'}
+                    ,{field:'userId', width:60, title: '用户'}
+                    ,{field:'bokeId', width:60, title: '文章'}
+                    ,{field:'replyIp', width:150, title: '留言IP'}
+                    ,{field:'replyVerify', width:80, title: '审核',templet: function (d) {if (d.replyVerify===0){return '未审核'}else if(d.replyVerify===1){return '通过'}else{return '未通过'}}}
+                    ,{field:'操作',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(replayListTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            let selects = checkStatus.data;
+            let len = selects.length;
+            let bs = '';
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    bs += selects[i].replyId + ',';
+                }
+                bs = bs.substr(0, bs.length-1);
+            }
+            switch(obj.event){
+                case 'deleteState':
+                    if (len > 0) {
+                        layer.confirm('确定要删除这'+len+'个吗？', function(index){
+                            param_sucfun_get(replayDel_url,{ids:bs},function () {
+                                // startSelect();
+                                replayTable.reload();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'reload':
+                    // startSelect();
+                    replayTable.reload();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(replayListTable)', function(obj){
+            let b = obj.data;
+            let replyId = b.replyId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要删除此留言吗？', function(index){
+                    param_sucfun_get(replayDel_url,{ids:replyId},function () {
+                        obj.del();
+                        layer.close(index);
+                    })
+                });
+            }
+        });
+    });
+    
+    function startSelect() {
+        let userName = $("#userName").val();
+        let deleteState = $("#deleteState").val();
+        let emailBind = $("#emailBind").val();
+        let userEmail = $("#userEmail").val();
+        
+        let where = {
+            userName:userName,
+            deleteState:deleteState,
+            emailBind:emailBind,
+            userEmail:userEmail
+        }
+        replayTable.reload({
+            where:where,
+            page:{curr:1}
+        })
+    }
+</script>
+</html>

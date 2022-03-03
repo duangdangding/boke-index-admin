@@ -1,0 +1,42 @@
+.classifyBigBox {
+    position: relative;
+    padding: 5px 15px;
+    /*display: inline-block;*/
+}
+.frant_items li {
+    position: relative;
+    padding: 0;
+    padding-top: 10px;
+    display: inline-block;
+    width: 165px;
+}
+.js-remove-f ,.js-remove-z{
+    -webkit-transition: opacity .2s;
+    transition: opacity .2s;
+    opacity: 0;
+    /* display: block; */
+    cursor: pointer;
+    color: #c00;
+    /* top: -41px; */
+    /* right: auto; */
+    /* float: right; */
+    position: absolute;
+    font-style: normal;
+}
+.classifyBox:hover .js-remove-f {
+    opacity: 1;
+}
+.frant_items li:hover i {
+    opacity: 1;
+}
+#filter .block__list {
+    padding-bottom: 0;
+}
+.drag-handle {
+    margin-right: 10px;
+    font: bold 20px Sans-Serif;
+    color: #5F9EDF;
+    /*display: inline-block;*/
+    cursor: move;
+    cursor: -webkit-grabbing;  /* overrides 'move' */
+}

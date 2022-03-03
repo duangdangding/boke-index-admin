@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.CommontsMapper">
+
+    <resultMap id="commMap" type="com.pearadmin.boke.entry.Comments">
+        <id property="commId" column="comm_id" />
+        <result property="commTont" column="comm_tont" />
+        <result property="commTime" column="comm_time" />
+        <result property="userId" column="user_id" />
+        <result property="bokeId" column="boke_id" />
+        <result property="commVerify" column="comm_verify" />
+<!--        <result property="" column="user_ip" />-->
+        <result property="userName" column="user_name" />
+        <result property="userFace" column="user_face" />
+        <collection property="replys" column="comm_id" ofType="com.pearadmin.boke.entry.Replys" 
+            select="com.lsh.mapper.boke.ReplysMapper.getRelyByPid"/>
+    </resultMap>
+    
+    <select id="getCommentsByBokeId" resultMap="commMap">
+        select c.comm_id,c.comm_tont,date_format(c.comm_time, '%Y-%m-%d %H:%i:%s') comm_time,c.comm_like_num,c.user_id,
+            c.boke_id,c.comm_verify,u.user_name,u.user_face
+        from comments c left join users u on u.user_id = c.user_id
+        where c.boke_id = #{bokeId}   
+        order by c.comm_time desc
+    </select>
+    
+    <!-- 插入数据返回ID -->
+    <insert id="saveComments" parameterType="com.pearadmin.boke.entry.Comments" useGeneratedKeys="true" keyColumn="comm_id" keyProperty="commId">
+        insert into comments (comm_tont,boke_id,user_ip
+        <if test="userId != null">
+            ,user_id
+        </if>
+        ) values
+        (#{commTont},#{bokeId},#{userIp}
+        <if test="userId != null">
+            ,#{userId}
+        </if>
+        )
+    </insert>
+</mapper>

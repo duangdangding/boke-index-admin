@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.FrantPageMapper">
+    
+    <resultMap id="frantMap" type="com.pearadmin.boke.entry.Classify">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="sort" property="sort" />
+        <collection property="frantPages" column="id" ofType="com.pearadmin.boke.entry.FrantPage"
+                    select="getFrantByClassify"/>
+    </resultMap>
+
+    <select id="groupFrants" resultMap="frantMap">
+        select * from classify where delete_state = 1
+        order by sort asc
+    </select>
+    
+    <select id="getFrantByClassify" resultType="com.pearadmin.boke.entry.FrantPage">
+        select * from frant_page 
+        where delete_state = 1 and classify_id = #{id}
+        order by frant_sort asc
+    </select>
+    
+    <select id="allList" resultType="com.pearadmin.boke.entry.FrantPage">
+        SELECT fp.*,c.title classifyName from frant_page fp
+        left join classify c on c.id = fp.classify_id
+        <where>
+            <if test="vo.frantTitle != null and vo.frantTitle != ''">
+                fp.frant_title like concat('%',#{vo.frantTitle},'%')
+            </if>
+        </where>
+        order by c.sort asc,fp.frant_sort asc
+    </select>
+    
+</mapper>

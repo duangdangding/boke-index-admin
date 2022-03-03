@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.VisitsMapper">
+    
+    <select id="getVisitPage" resultType="com.pearadmin.boke.entry.Visits" parameterType="com.pearadmin.boke.vo.query.QueryVisitVo">
+        SELECT v.*,u.user_name from visits v
+        left join users u on u.user_id = v.user_id
+        <where>
+            <if test="vo.cilent != null and vo.cilent != ''">
+                and v.visit_client like concat('%',#{vo.cilent},'%')
+            </if>
+            <if test="vo.addr != null and vo.addr != ''">
+                and v.ip_addr like concat('%',#{vo.addr},'%')
+            </if>
+        </where>
+        order by visit_time desc
+    </select>
+    
+</mapper>

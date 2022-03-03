@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>苏喂苏喂喔 - MD编辑</title>
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <link rel="stylesheet" href="/editor/editormd/css/editormd.css" />
+    <link rel="stylesheet" href="/editor/editormd/css/editormd.preview.css" />
+    <link rel="stylesheet" href="/editor/editormd/css/editormd.logo.css" />
+    <link rel="stylesheet" href="/editor/editormd/css/katex.min.css" />
+    <link rel="stylesheet" th:href="@{/select/layui.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/select/ySearchSelect.css}" type="text/css"/>
+    <style>
+
+    </style>
+    <link type="text/css" rel="stylesheet" href="/bokejscss/editor.css" />
+    <link type="text/css" rel="stylesheet" href="/bokejscss/md.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    <script src="/js/constains.js"></script>
+</head>
+<body>
+
+<!-- 头部 -->
+<!--<block th:include="boke/common :: page_editor_html" />-->
+<div th:insert="boke/common :: page_editor_html"></div>
+<div>
+    <!-- 显示字数 -->
+    <p id="showTextLen" style="text-align: center;clear: both;float: none"></p>
+    <!-- 显示保存草稿的信息 -->
+    <p id="showsaveCG" style="text-align: center;clear: both;float: none"></p>
+</div>
+<div id="layout">
+    <div id="test-editormd" onkeydown="showTxtLen()">
+        <textarea id="toMDMMD" spellcheck="false" onkeydown="showTxtLen()" style="display:none;"></textarea>
+    </div>
+</div>
+<script src="/js/jquery-3.8.min.js"></script>
+<!--<script src="/editor/editormd/editormd.min.js"></script>-->
+<script src="/editor/editormd/editormd.js"></script>
+<script th:src="@{/layui/layer.js}" ></script>
+<script src="/js/gogal_ajax.js"></script>
+
+<script th:src="@{/js/bs_common.js}" ></script>
+<!-- 播放器插件 -->
+<block th:include="boke/common :: page_music_html" />
+<script th:src="@{/js/dateutil.js}" ></script>
+<script src="/select/jQuery.Hz2Py-szm-min.js"></script>
+<script src="/select/ySearchSelect.js"></script>
+
+<script th:inline="javascript">
+    var boke = [[${boke}]];
+    var boke_id;
+    var boke_type = 2;
+</script>
+<script th:src="@{/bokejscss/editor.js}" ></script>
+<script th:src="@{/bokejscss/mdEditor.js}" ></script>
+</body>
+
+</html>

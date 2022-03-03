@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script src="/js/common.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <!-- 表格主体 -->
+        <table class="layui-hide" id="listTable" lay-filter="listTable"></table>
+        <!-- 模板 -->
+        <script type="text/html" id="headerTool">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+            </div>
+        </script>
+        <script type="text/html" id="rowTool">
+            <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+            <a class="layui-btn layui-btn-xs" lay-event="deleteState">不/可用</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除<i class="layui-icon layui-icon-close"></i></a>
+        </script>
+    </div>
+    <div class="layui-card-body">
+        <div class="layui-card-header">
+            <form>
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">导航名称：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="frantTitle" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                <i class="layui-icon layui-icon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 表格主体 -->
+        <table class="layui-hide" id="listTable2" lay-filter="listTable2"></table>
+        <!-- 模板 -->
+        <script type="text/html" id="headerTool2">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+            </div>
+        </script>
+        <script type="text/html" id="rowTool2">
+            <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+            <a class="layui-btn layui-btn-xs" lay-event="deleteState">不/可用</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除<i class="layui-icon layui-icon-close"></i></a>
+        </script>
+    </div>
+</div>
+<!-- 导航分类添加窗口 -->
+<div id="addOrEditClassifyWin" class="layui-panel-window" style="display: none">
+    <form class="layui-form" id="winForm" lay-filter="form_hx" style="padding: 0;margin: 0">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label">ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="id" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">是否可用：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" id="deleteStateIfy" name="deleteState">
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">名称：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="title" lay-verify="required" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">排序：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="number" name="sort" lay-verify="number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认">
+            <input class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="closelayer()" value="取消">
+        </div>
+    </form>
+</div>
+<!-- 导航添加窗口 -->
+<div id="addOrEditFrantPageWin" class="layui-panel-window" style="display: none">
+    <form class="layui-form" id="winForm2" lay-filter="form_hx2" style="padding: 0;margin: 0">
+        <div class="layui-form-item layui-hide">
+            <label class="layui-form-label">ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="frantId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航分类：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" id="classifyId" name="classifyId">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">是否可用：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" name="deleteState">
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航名称：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantTitle" lay-verify="required" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航链接：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantUrl" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航图标：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantIcon" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航排序：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="number" name="frantSort" lay-verify="number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航描述：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <textarea type="text" name="frantDesc" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="kFormSubmit2" id="kFormSubmit2" value="确认">
+            <input class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="closelayer()" value="取消">
+        </div>
+    </form>
+</div>
+</body>
+<script>
+
+    $(function () {
+        
+    })
+    let tableEle;
+    let list_url = '/admin/classify/list';
+    let del_url = '/admin/classify/delete';
+    let delState_url = '/admin/classify/deleteState';
+    let addOrEdit_url = '/admin/classify/addOrEdit';
+    
+    let tableEle2;
+    let list_url2 = '/admin/frant/list';
+    let del_url2 = '/admin/frant/delete';
+    let delState_url2 = '/admin/frant/deleteState';
+    let addOrEdit_url2 = '/admin/frant/addOrEdit';
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        let elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, table2 = layui.table;
+        tableEle = table.render({
+            elem: '#listTable'
+            ,url: list_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'id', width:60, title: 'menuId',hide:true}
+                    ,{field:'title', align:'center', width:160, title: '名称'}
+                    ,{field:'sort', align:'center', width:160, title: '排序',edit:'text'}
+                    ,{field:'createTime', align:'center', width:160, title: '创建时间'}
+                    ,{field:'deleteState', align:'center', width:100, title: '状态',templet: function (d) {return deleteState(d.deleteState)}}
+                    ,{field:'caozuo',width:215, align:'center', title: '操作', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: false
+            ,skin: 'row' //表格风格
+        });
+        tableEle2 = table2.render({
+            elem: '#listTable2'
+            ,url: list_url2
+            ,toolbar: '#headerTool2'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'frantId', width:60, title: 'menuId',hide:true}
+                    ,{field:'classifyId', width:60, title: 'menuParentId',hide:true}
+                    ,{field:'frantTitle', align:'center', width:160, title: '导航名',edit:'text'}
+                    ,{field:'classifyName', align:'center', width:160, title: '类别'}
+                    ,{field:'frantUrl', align:'center', width:200, title: '导航URL',templet: function (d) {return '<a target="_blank" href="'+d.frantUrl+'">'+d.frantUrl+'</a>'}}
+                    ,{field:'frantSort', align:'center', width:60, title: '排序',edit:'text'}
+                    ,{field:'frantIcon', align:'center', width:60, title: '图标',templet: function (d) {if (d.frantIcon){return '<img width="25px" src="'+d.frantIcon+'">'}else{return ''}}}
+                    ,{field:'createTime', align:'center', width:160, title: '创建时间'}
+                    ,{field:'deleteState', align:'center', width:100, title: '状态',templet: function (d) {return deleteState(d.deleteState)}}
+                    ,{field:'frantDesc', align:'center', width:260, title: '描述'}
+                    ,{field:'caozuo',width:215, align:'center', title: '操作', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(listTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delete':
+                    let selects = checkStatus.data;
+                    let len = selects.length;
+                    if (len > 0) {
+                        layer.confirm('确定要删除这'+len+'个吗？', function(index){
+                            let ids = [];
+                            $.each(selects, function(i, n){
+                                ids[i] = n.frantId;
+                            });
+                            listDel(ids.join());
+                        });
+                    }
+                    break;
+                case 'reload':
+                    tableEle.reload();
+                    break;
+                case 'add':
+                    // 清空表单 (首先要是form标签如果是其他标签是不行的)
+                    $("#winForm")[0].reset();
+                    openAddOrEditClassifyWin();
+                    break;
+            }
+        });
+        table.on('edit(listTable2)', function(obj){
+            let f = obj.field;
+            let p = {id:obj.data.id}
+            p.sort = obj.value
+            param_sucAndfun_get(addOrEdit_url,p,function () {
+                closelayer();
+            })
+        });
+
+        //监听行工具事件
+        table.on('tool(listTable)', function(obj){
+            let b = obj.data;
+            let id = b.id;
+            if(obj.event === 'deleteState'){
+                let old = b.deleteState;
+                let v = old === 1 ? 0 : 1;
+                param_sucfun_get(delState_url,{id:id,deleteState:v},function () {
+                    obj.update({
+                        deleteState: v,
+                    });
+                })
+            } else if (obj.event === 'update') {
+                openAddOrEditClassifyWin();
+                form.val("form_hx",b)
+                // renderForm()
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定要删除此项吗？', function(index){
+                    listDel(id);
+                });
+            }
+        });
+        
+        //头工具栏事件
+        table2.on('toolbar(listTable2)', function(obj){
+            let checkStatus = table2.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delete':
+                    let selects = checkStatus.data;
+                    let len = selects.length;
+                    if (len > 0) {
+                        layer.confirm('确定要删除这'+len+'个吗？', function(index){
+                            let ids = [];
+                            $.each(selects, function(i, n){
+                                ids[i] = n.frantId;
+                            });
+                            listDel2(ids.join());
+                        });
+                    }
+                    break;
+                case 'reload':
+                    tableEle2.reload();
+                    break;
+                case 'add':
+                    // 清空表单 (首先要是form标签如果是其他标签是不行的)
+                    $("#winForm2")[0].reset();
+                    openAddOrEditFrantPageWin();
+                    break;
+            }
+        });
+
+        table2.on('edit(listTable2)', function(obj){
+            let f = obj.field;
+            let p = {frantId:obj.data.frantId}
+            if (f === 'frantSort') {
+                p.frantSort = obj.value
+            } else if (f === 'frantTitle') {
+                p.frantTitle = obj.value
+            }
+            param_sucAndfun_get(addOrEdit_url2,p,function () {
+                closelayer();
+            })
+            // 修改之前的值
+            /*let oldText = $(this).prev().text();
+            layer.confirm('确定要修改吗？', function(index){
+                if (f === 'frantSort') {
+                    p.frantSort = obj.value
+                } else if (f === 'title') {
+                    p.frantTitle = obj.value
+                }
+                param_sucAndfun_get(addOrEdit_url2,p,function () {
+                    closelayer();
+                })
+            },function(){
+                if (f === 'sort') {
+                    obj.update({
+                        sort: oldText,
+                    });
+                } else if (f === 'title') {
+                    obj.update({
+                        title: oldText,
+                    });
+                }
+            });*/
+        });
+
+        //监听行工具事件
+        table2.on('tool(listTable2)', function(obj){
+            let b = obj.data;
+            let id = b.frantId;
+            if(obj.event === 'deleteState'){
+                let old = b.deleteState;
+                let v = old === 1 ? 0 : 1;
+                param_sucfun_get(delState_url2,{id:id,deleteState:v},function () {
+                    obj.update({
+                        deleteState: v,
+                    });
+                })
+            } else if (obj.event === 'update') {
+                openAddOrEditFrantPageWin();
+                form.val("form_hx2",b)
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定要删除此项吗？', function(index){
+                    listDel2(id);
+                });
+            }
+        });
+
+        function openAddOrEditClassifyWin() {
+            openWind('修改或新增导航类别','addOrEditClassifyWin','620px','350px',function (){
+            });
+        }
+        function openAddOrEditFrantPageWin() {
+            initSelectsKeepFirst('classifyId','/admin/classify/select');
+            openWind('修改或新增导航','addOrEditFrantPageWin','620px','550px',function (){
+            });
+        }
+
+        function listDel(ids) {
+            param_sucfun_get(del_url,{ids:ids},function () {
+                tableEle.reload();
+            })
+        }
+        function listDel2(ids2) {
+            param_sucfun_get(del_url2,{ids:ids2},function () {
+                tableEle2.reload();
+            })
+        }
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            renderTableData(obj.field);
+            return false;
+        });
+
+        function renderTableData(params) {
+            params = params ? params : {};
+            tableEle2.reload({
+                where: params,
+            });
+        }
+        
+        form.on('submit(kFormSubmit)', function (data) {
+            let d = data.field;
+            param_sucAndfun_get(addOrEdit_url,d,function () {
+                tableEle.reload();
+                closelayer();
+            })
+        });
+        form.on('submit(kFormSubmit2)', function (data) {
+            let d = data.field;
+            param_sucAndfun_get(addOrEdit_url2,d,function () {
+                tableEle2.reload();
+                closelayer();
+            })
+        });
+    });
+
+</script>
+</html>

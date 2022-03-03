@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!-- 百度SEO -->
+<!--    <meta name="baidu-site-verification" content="code-zqJOlgVi8w" />-->
+    <meta name="baidu-site-verification" content="code-w4nRNj0vMe" />
+    <link rel="alternate" href="http://blog.suweibk.xyz">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--    // 防止页面放大-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="site" content="http://suweibk.xyz:11521" />
+    <meta name="referer" content="origin" />
+<!--    <meta name="referer" content="suweibk.xyz" />-->
+
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!--  403  -->
+<!--    <meta name="referrer" content="no-referrer" />-->
+<!--    <img referrer="no-referrer|origin|unsafe-url" src="{{item.src}}"/>-->
+    <title>苏喂苏喂喔 - 标签墙</title>
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    <style>
+        .labelBody {
+            padding: 20px 100px;
+        }
+        .labelBody a:hover {
+            background: #ff5722;
+            color: #fff;
+            transform: scale(1.2);
+        }
+        
+        .labelBody a {
+            display: inline-block;
+            margin: 10px;
+            border-bottom: black 2px solid;
+            color: #738a94;
+            word-break: break-all;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <block th:include="boke/common :: page_header_html" />
+    <div id="main">
+        <div id="mainContent" style="text-align: center">
+            <h5 style="font-size: 20px;padding: 30px 0">所有标签--(<span th:text="${labelCount}"></span>)</h5>
+            <div class="labelBody">
+               <a th:each="label,labelStat:${labels}" th:text="${label.labelName}" th:href="@{'/?navTitle=标签：' + ${label.labelName} + '&lId=' + ${label.labelId}}"></a>
+            </div>
+        </div><!--end: mainContent 主体内容容器-->
+        <block th:include="boke/common :: page_right2_html" />
+    </div><!--end: main -->
+    <block th:include="boke/common :: page_footer_html" />
+
+</div><!--end: home 自定义的最大容器 -->
+<block th:include="boke/common :: page_right1_html" />
+<block th:include="boke/common :: page_end_html" />
+</body>
+<!-- ios设置手机禁止缩放 -->
+<script src="/js/iossuofang.js"></script>
+
+<script th:inline="javascript" type="text/javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+    $(function () {
+        let as = $(".labelBody a");
+        for (let i = 0;i < as.length; i++) {
+            as[i].style.borderBottomColor = randomColor()
+        }
+    })
+
+/**
+ * 随机颜色
+ */
+function randomColor(){
+    this.r = Math.floor(Math.random()*255);
+    this.g = Math.floor(Math.random()*255);
+    this.b = Math.floor(Math.random()*255);
+    return 'rgba('+ this.r +','+ this.g +','+ this.b +',0.8)';
+}
+</script>
+</html>

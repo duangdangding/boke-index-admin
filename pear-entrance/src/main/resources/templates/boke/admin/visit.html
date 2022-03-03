@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+                客户端：<input class="url_input" type="text" id="cilent">
+                地址：<input class="url_input" type="text" id="addr">
+                <button class="l-btn" onclick="startSelect()">开始查询</button>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header"></div>
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="visitListTable" lay-filter="visitListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                        </div>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+<script>
+    
+    $(function () {
+    })
+    let visitTable;
+    let visitlist_url = '/admin/visit/page';
+    layui.use('table', function () {
+        let table = layui.table;
+        visitTable = table.render({
+            elem: '#visitListTable'
+            ,url: visitlist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    // ,{field:'userId', width:60, title: 'ID', sort: true}
+                    ,{field:'visitIp', width:150, title: '访问IP'}
+                    ,{field:'visitTime', width:160, title: '访问时间'}
+                    ,{field:'visitCount', width:70, title: '访问次数'}
+                    ,{field:'visitClient', width:100, title: '客户端'}
+                    ,{field:'country', width:80, title: '国家'}
+                    ,{field:'city', width:80, title: '城市'}
+                    ,{field:'userAgent', width:800, title: 'userAgent'}
+                    ,{field:'ipAddr', width:800, title: '地址'}
+                    // ,{field:'userName', width:100, title: '用户'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(visitListTable)', function(obj){
+            switch(obj.event){
+                case 'reload':
+                    startSelect();
+                    break;
+            }
+        });
+    });
+    
+    function startSelect() {
+        let cilent = $("#cilent").val();
+        let addr = $("#addr").val();
+        
+        let where = {
+            cilent:cilent,
+            addr:addr
+        }
+        visitTable.reload({
+            where:where,
+            page:{curr:1}
+        })
+    }
+</script>
+</html>

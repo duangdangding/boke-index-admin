@@ -1,0 +1,362 @@
+<!doctype html>
+<!--<html lang="en" class="no-js">-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>图片上传</title>
+    <!--    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>-->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/mulitupload/dropzone.css">
+    <script src="/js/jquery-3.8.min.js"></script>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script src="/js/constains.js"></script>
+    <script src="/mulitupload/dropzone.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <!--    <script th:src="@{/layui/layer.js}" ></script>-->
+    <script type="text/javascript">
+        /* Dropzone上传插件配置 */
+        var IsServerError = false;//服务器获取配置出错
+        // var fileList_Uploading = new Array();
+        var fileList = 0;
+        var uploaded_filePaths = new Array();//已上传的文件在服务器的路径集合；用于遇到异常时删除已上传的文件。（相当于回滚）
+        var arr_file = new Array();
+        var arr_xhr = new Array();
+        Dropzone.options.uploadForm = { //此处的"uploadForm" 是dropzone的HTML元素ID的驼峰命名，比如<form id="my-form"></form>,那么此处应该写：Dropzone.options.myForm
+            timeout:1000000,
+            paramName: "photo-image-file", //上传字段名 filedName
+            maxFiles: 100, //最大上传数量
+            maxFilesize:20, // MB 单个文件大小上限
+            filesizeBase:10000,
+            acceptedFiles: "image/*",
+            // addRemoveLinks: true,
+            clickable: true,
+            headers:{"token":get_item(lo_token)},
+            autoProcessQueue: true, // true:自动上传，一次性上传parallelUploads个文件，上传成功后后面排队的其他队伍也会继续排队上传。false:关闭自动上传, 手动调度 ,但每次需要点击“上传”按钮才会触发上传，排队的其他文件不会自动上传。 
+            parallelUploads: 1, //最大并行处理量（一次同时上传的个数，不设置的话，默认：2个）
+            /* 插件消息翻译 */
+            /*  dictDefaultMessage: '<i class="fa fa-cloud-upload"></i>拖拉文件上传<br />或 <i class="fa fa-thumbs-down"></i>点此上传', */
+            dictInvalidFileType: '仅支持以下格式文件：image/*',
+            dictFileTooBig: '文件超出最大10M约束',
+            dictMaxFilesExceeded: '超出最大上传数量',
+            dictCancelUpload: '取消上传',
+            dictRemoveFile: '删除',
+            dictCancelUploadConfirmation: '确认取消上传',
+            dictResponseError:"文件上传失败!",
+            dictDefaultMessage:"<span class='bigger-150 bolder'><i class='icon-caret-right red'></i>拖动文件</span>上传\ <span class='smaller-80 gre'>(或者点击上传)</span> <br /> \ <i class='upload-icon icon-cloud-upload blue icon-3x'></i>",
+            /* 上传缩略图预览模板 */
+            // previewTemplate: ' <div id="viewer"  class="dz-preview dz-file-preview">    <div class="dz-details" onClick="viewFile(this)" name="">  <div style="display:none;" class="fileId"></div>   <div class="dz-filename"><span data-dz-name></span></div>       <div class="dz-size" data-dz-size></div>    <img data-dz-thumbnail />    </div>    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>   <div class="dz-success-mark"><span>?</span></div>                           <div class="dz-error-mark"><span>?</span></div>                             <div class="dz-error-message"><span data-dz-errormessage>""</span></div>                          </div>                       ',
+            accept: function(file, done) {
+                // fileList_Accepted.push(file)
+                done();
+            },
+            init: function(){
+                /*  var self = this; 
+                 // 非自动上传。点击上传按钮开始ajax上传 
+                 this.element.querySelector("button#uploadBtn").addEventListener("click", function(e) {
+                   e.preventDefault();
+                   e.stopPropagation();
+                   self.processQueue(); 
+                 }); */
+
+
+                /*var accept = this.getAcceptedFiles();//所有接受的文件（合法）
+                var reject = this.getRejectedFiles();//所有拒绝的文件（非法）
+                var uploading = this.getQueuedFiles();//所有上传中的文件
+                var queued = this.getRejectedFiles(); //所有排队中的文件
+                */
+                fileList = this.getAcceptedFiles();//所有接受的文件（合法）
+                // 符合上传的文件个数
+                let accept_num = 0;
+                this.on("addedfile", function(file) {  //新添加的文件，每添加一个新文件都会触发一次该函数，可以使用alert测试一下
+                    // console.log("最大上传文件数量" + this.options.maxFiles)
+                    accept_num ++;
+                    disabled_select("photoType");
+                    fileList.push(file);
+                })
+                this.on("canceled", function(file,response) {  //当取消文件上传式调用
+                    //单个文件点击“取消上传”并确认后执行该函数，将该文件从上传列队中移除。
+                    for(var i in arr_file){
+                        if(arr_file[i].name.trim()==file.name.trim()){
+                            var xhr = arr_xhr[i];
+                            xhr.abort();
+                        }
+                    }
+                })
+                this.on("sending", function(file,xhr,formData) {  //文件上传前调用 
+                    arr_file.push(file);
+                    arr_xhr.push(xhr);
+                })
+                this.on("uploadprogress", function(file,progress,bytesSent) {
+                    //文件上传监听器（file：文件、progress：上传进度n%、bytesSent：）
+                })
+
+                var file_count = 0;
+                this.on("complete", function(file,response) { //当上传完成，成功或者出现错误时调用.
+                    file_count ++;
+                    // console.log("complete:"+response)
+                })
+                this.on("success", function(file,response) {  //文件已经成功上传，获得服务器返回信息作为第二个参数
+                    /*if (response.status == 1) {
+                        let imgbox = $("#photos_imgs");
+                        imgbox.prepend("<img width='100' src='" + response.result + "'>")
+                    }*/
+                    //每个文件上传成功后有以下处理
+                    //1.该文件会自动将UI拼接到上传区域，我们需要将文件的服务器路径隐藏到该UI中。为移除等操作提供便利。
+                    if (response.status) {
+                        IsServerError =  response.status == -1 ? true:false;
+                    } else {
+                        show_err_msg(login_err);
+                        IsServerError = true;
+                    }
+                    /*
+                    var File_PhysicalPath = "";
+                    var list = JSON.parse(JSON.parse(response).list_client)
+                    for(var k in list){
+                        var file0 = list[k];
+                        //alert(file0.fileName.trim()+":"+file.name+"\n"+file0.fileSize+":"+file.size)
+                        if(file0.fileName.trim()==file.name&&file0.fileSize==file.size){
+                            File_PhysicalPath = file0.physical_path;
+                        }
+                    }
+                    $(".dz-filename span").each(function(){
+                        if($(this).text().trim()==file.name.trim()){
+                            $(this).parent().parent().find(".fileId").text(File_PhysicalPath);
+                            uploaded_filePaths.push(File_PhysicalPath).copy-btn .clippy;
+                        }
+                    })*/
+                });queuecomplete
+                this.on("queuecomplete", function(file,response) { //当上传队列中的所有文件上传完成时调用.
+                    // console.log(response)
+                    if (accept_num === file_count) {
+                        remove_disabled("photoType");
+                    }
+                    if(IsServerError){
+                        alert("服务器获取文件夹配置失败！即将回滚上传操作");//若提示该警告，请查看com.nbc.demok.io.Upload.multi_upload()方法中的PropertiesUtils.getProperty("")获取配置是否为空。为空的话，请及时在配置文件中添加该配置
+                        //1.后台：遇到服务器异常，删除已上传的服务器上的文件 
+                        var filePaths = "";
+                        for(var i in uploaded_filePaths){
+                            var path = uploaded_filePaths[i];
+                            if(path!=""){
+                                filePaths = (filePaths=="")?path:(filePaths+"¤¤¤¤¤"+path);
+                            }
+                        }
+                        if(filePaths.trim()!=""){
+                            removeFiles_From_Server(filePaths);//服务器：移除所有未遇到错误之前的刚刚上传了的文件
+                        }
+                        //2.前端：移除所有显示的附件
+                        this.removeAllFiles(true);
+                    } else {
+                        console.log("上传队列中的所有文件上传完成");
+                        show_suc_msg("全部上传完成~");
+                        $("#photos_imgs").html("全部上传完成~");
+                        if (accept_num === file_count) {
+                            remove_disabled("photoType");
+                        }
+                    }
+                });
+
+                this.on("error", function(file, errorMessage){
+                    //不接受该文件（非定义的可接受类型）或上传失败
+                    console.log(file+"~"+errorMessage)
+                    // this.removeFile(file); 
+                });
+            }
+        };
+
+    </script>
+</head>
+<body>
+<div class="yp_set" id="other_update">
+    <table style="margin: 0 auto;width: 60%" class="layui-table">
+        <tr>
+            <th colspan="3">上传文件</th>
+        </tr>
+        <tr>
+            <td >文件：</td>
+            <td><input type="file" id="otherFile" class="url_input" /></td>
+        </tr>
+        <tr>
+            <td >文件名：</td>
+            <td><input type="text" id="otherFileName" class="url_input" /></td>
+        </tr>
+        <tr>
+            <td >文件夹名：</td>
+            <td><input type="text" id="otherFileFloder" class="url_input" value="text/" /></td>
+        </tr>
+        <tr>
+            <td colspan="3"><button class="l-btn" onclick="otherFileUpload()">开始上传</button></td>
+        </tr>
+        <tr>
+            <td colspan="3"><textarea class="layui-textarea" style="min-height: 40px" id="fileMsg"></textarea><button id="othercopyBtn" class="l-btn" onclick="copyText('fileMsg')">复制</button></td>
+        </tr>
+    </table>
+</div>
+<br>
+
+<form id="uploadForm" action="/admin/other/t/kodo/phc" class="dropzone">
+    <!--    <input type="hidden" name="token" id="p_token" value="">-->
+    选择一个相册：
+    <select name="photoType" id="photoType"></select>
+    <span style="color: red">*最大一次上传100张,请先选择类别之后再点击上传，上传过程中，请勿修改分类，等全部完成之后再修改分类</span><br>
+</form>
+<!--上传之后显示-->
+<div id="photos_imgs"></div>
+
+<div class="layui-card">
+    <div class="menuBox">
+        上传类型：
+        <select class="url_input" id="upType">
+            <option value = ''>全部</option>
+            <option value="4">七牛云</option>
+            <option value="3">阿里云</option>
+            <option value="2">腾讯云</option>
+            <option value="1">FTP</option>
+        </select>
+        上传所属：
+        <select class="url_input" id="upBelong">
+            <option value = ''>全部</option>
+            <option value="3">头像</option>
+            <option value="1">富文本</option>
+            <option value="2">markdown</option>
+            <option value="4">相册</option>
+            <option value="5">其他</option>
+        </select>
+        文件名：<input class="url_input" type="text" id="fileName">
+        路径：<input class="url_input" type="text" id="urlPath">
+        <button class="l-btn" onclick="startSelect()">开始查询</button>
+    </div>
+    <div class="layui-card-header">上传类型：1、ftp，2txy，3阿里，4七牛 | 文件所属位置1、富文本2、markdown3、头像4、相册5、其他</div>
+    <div class="layui-card-body">
+        <!-- 表格主体 -->
+        <table class="layui-hide" id="fileListTable" lay-filter="fileListTable"></table>
+        <!-- 模板 -->
+        <script type="text/html" id="headerTool">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
+            </div>
+        </script>
+        <script type="text/html" id="rowTool">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
+        </script>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+
+    function otherFileUpload() {
+        let floder = $("#otherFileFloder").val();
+        let fileName = $("#otherFileName").val();
+        let file = $("#otherFile")[0].files[0];
+        let daw = new FormData()
+        daw.append("floder",floder);
+        daw.append("fileName",fileName);
+        daw.append("file",file);
+        upload_file("/admin/other/t/kodo/other",daw,function (data) {
+            $("#fileMsg").val(data);
+            $("#othercopyBtn").show();
+        });
+    }
+
+    $(function () {
+        initSelects("photoType","/pt/all");
+        // var tott = get_item(lo_token);
+        // $("#p_token").val(tott);
+    })
+
+    let fileTable;
+    let filelist_url = '/admin/recode/page';
+    let fileDel = '/admin/recode/delete';
+    layui.use('table', function () {
+        let table = layui.table;
+        fileTable = table.render({
+            elem: '#fileListTable'
+            ,url: filelist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'fileId', width:60, title: 'ID', sort: true}
+                    ,{field:'fileUrl', width:400, title: '路径'}
+                    ,{field:'uploadTypeId', width:100, title: '上传类型'}
+                    ,{field:'fileOwnId', width:100, title: '所属上传'}
+                    ,{field:'localPath', width:400, title: '文件名'}
+                    ,{field:'fileSize', width:150, title: '文件大小'}
+                    ,{field:'createTime', width:160, title: '上传时间'}
+                    // ,{field:'oosKey', width:120, title: ''}
+                    ,{field:'caozuo',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [10,20,30]
+            ,limit: 10 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(fileListTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            let selects = checkStatus.data;
+            let len = selects.length;
+            let bs = '';
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    bs += selects[i].fileUrl + ',';
+                }
+                bs = bs.substr(0, bs.length-1);
+            }
+            switch(obj.event){
+                case 'deleteState':
+                    if (len > 0) {
+                        layer.confirm('确定要删除这'+len+'条记录吗？', function(index){
+                            param_sucfun_get(fileDel,{urls:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'reload':
+                    startSelect();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(fileListTable)', function(obj){
+            let b = obj.data;
+            let fileUrl = b.fileUrl;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要删除此记录吗？', function(index){
+                    param_sucfun_get(fileDel,{urls:fileUrl},function () {
+                        // startSelect();
+                        obj.del();
+                        layer.close(index);
+                    })
+                });
+            }
+        });
+    });
+
+    function startSelect() {
+        let upType = $("#upType").val();
+        let upBelong = $("#upBelong").val();
+        let fileName = $("#fileName").val();
+        let urlPath = $("#urlPath").val();
+
+        let where = {
+            upType:upType,
+            upBelong:upBelong,
+            urlPath:urlPath,
+            fileName:fileName
+        }
+        fileTable.reload({
+            where:where,
+            page:{curr:1}
+        })
+    }
+</script>
+</html>

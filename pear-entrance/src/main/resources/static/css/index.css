@@ -1,0 +1,137 @@
+.catListTitle span{
+    font-size:11px;font-weight:normal
+}
+/*.nnnav_d{display: none}*/
+#sidebar_postcategory ul li{
+    display: inline-block;
+    float: left;
+    width: 100px;
+}
+#nav_title_b{
+    margin: 0 auto;
+    border-bottom: 1px dashed #95a5a6;
+    font-size: 16px;
+    max-width: 830px;
+}
+#navList a{
+    font-size: 16px;
+    font-weight: bold;
+}
+.cate_se{
+    display: inline-flex;
+    font-size: 16px;
+    padding: 10px;
+}
+.cate_se label{
+    padding: 5px;
+}
+#waifu-tips{
+    /*去掉背景颜色*/
+    background-color:transparent !important;
+}
+@font-face {
+    font-family: 'idea mono';
+    /*src: url('fonts/hanshand-webfont.eot');*/
+    src:
+        /*url('fonts/hanshand-webfont.eot?#iefix') format('embedded-opentype'),*/
+            url('/fonts/JetBrainsMono-Light.woff2') format('woff'),
+            url('/fonts/JetBrainsMono-Light.ttf') format('truetype');
+    /*url('fonts/hanshand-webfont.svg#webfont34M5alKg') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+}
+.postBody{
+    font-family: "idea mono" !important;
+}
+pre{
+    font-family: "idea mono" !important;
+    font-size: 14px;
+    padding: 16px;
+    line-height: 1.45;
+    border: 1px solid #DBE1E8;
+    border-radius: 5px;
+    /*white-space: pre-wrap;*/
+    /*white-space: -moz-pre-wrap;*/
+    /*white-space: -pre-wrap;*/
+    /*white-space: -o-pre-wrap;*/
+    /*word-wrap: break-word;*/
+    /*word-break: break-all;*/
+    margin: 8px 0;
+}
+code{ font-family: "idea mono", serif !important;}
+.blogpost-body blockquote {
+    display: block;
+    border-left: 5px solid #657b83;
+    padding: 10px;
+    /*margin: 10px 0;*/
+    /*line-height: 1.4;*/
+    font-size: 100%;
+    background-color: white;
+}
+.ed_type li{
+    margin: -5px 0;
+    /*display: block !important;*/
+}
+.to_edit a{
+    display: inline-block;
+}
+.hidden {
+    display: none;
+}
+#info_table td.weixin_c,#info_table td.QQ_c{
+    position: relative;
+}
+#info_table td.weixin_c .wx_img{
+    position: absolute;
+    width: 100px;
+    bottom: 30px;
+    /*text-align: center;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    left: -25px;
+    display: none;
+}
+#info_table td.QQ_c .qq_img {
+    position: absolute;
+    width: 200px;
+    left: -99px;
+    top: 20px;
+    display: none;
+}
+.d_set_btn{display: none}
+
+/* 标签 */
+#sidebar_postLabel {width: 200px}
+#sidebar_postLabel ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+#sidebar_postLabel ul li a {
+    color: var(--color-list);
+    padding: 5px;
+    border-radius: 5px;
+}
+#sidebar_postLabel ul li a:hover {
+    background: #ff5722;
+    color: #fff;
+}
+.suwei_logo{
+    position: absolute;
+    z-index: -999;
+    width: 10px;
+    height: 10px;
+}
+
+.postDesc img,#BlogPostCategory img {
+    width: 20px;
+    margin-bottom: -5px;
+}
+span.like_img:hover {
+    color: #bbdcef;
+}
+.clear {clear: both}
+.shadow_hover:hover,.w-e-text:hover,.shadow_hover:focus,.w-e-text:focus {
+    box-shadow: 0 0 4px #999 inset;
+}

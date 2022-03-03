@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>苏喂苏喂喔 - 注册</title>
+    <!--<link rel="stylesheet" type="text/css" href="css/normalize.css" />-->
+    <!--<link rel="stylesheet" type="text/css" href="css/demo.css" />-->
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="/login/css/component.css" />
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <!--[if IE]>
+    <script src="/login/html5.js"></script>
+    <![endif]-->
+    <style>
+        body{
+            overflow: hidden;
+        }
+        div.container::after {
+            background-image: url(https://api.imacroc.cn/acg/);
+        }
+        div.container::after {
+            content: "";
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.1;
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            filter: grayscale(100%);
+            filter: gray;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .error_msg{
+            color: red;
+            font-size: 12px;
+            text-align: center;
+            margin: -20px auto -10px;
+            height: 15px;
+        }
+        a{
+            text-decoration: none;
+            outline: none;
+        }
+        .err_c{
+            color: red;
+        }
+        .suc_c{
+            color: green;
+        }
+        /*谷歌记住密码默认样式*/
+        input:-webkit-autofill , textarea:-webkit-autofill, select:-webkit-autofill {
+            /*第一种修改颜色*/
+            /*-webkit-box-shadow: 0 0 0px 1000px white inset;*/
+            /*border: 0 solid #CCC!important;*/
+            /*第二种修改chrome浏览器渲染背景的时间*/
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+</head>
+<body>
+<div class="container demo-1">
+    <div class="content">
+        <div id="large-header" class="large-header">
+            <canvas id="demo-canvas"></canvas>
+            <div class="logo_box">
+                <h3>用户注册</h3>
+                <form id="form1" class="reg_from" action="#" name="f" method="post">
+                    <div class="input_outer">
+                        <span class="u_user"></span>
+                        <input id="username" name="new-text" class="text" type="text" placeholder="请输入用户名">
+                    </div>
+                    <div class="input_outer">
+                        <span class="u_email"></span>
+                        <input name="userEmail" id="email" class="text" type="text" placeholder="请输入邮箱">
+                    </div>
+                    <div class="input_outer">
+                        <span class="us_uer"></span><!--autocomplete="new-password" off-->
+                        <input class="text" id="password" autocomplete="new-password" style="position:absolute; z-index:100;" type="password" placeholder="请输入密码">
+                    </div>
+                    <div class="input_outer">
+                        <span class="us_uer"></span>
+                        <input name="logpass" id="repassword" class="text" style="position:absolute; z-index:100;" type="password" AUTOCOMPLETE="off" placeholder="请再次输入密码">
+                    </div>
+                    <p class="error_msg"><span id="msg_to"></span></p>
+                    <div class="mb2"><a class="act-but submit" onclick="register()" href="javascript:;" style="color: #FFFFFF">注册</a></div>
+                    <!--用来清空表单数据-->
+<!--                    <button id="restCont" type="reset" name="reset" >清空</button>-->
+                    <div style="text-align: center"> <a style="" href="/login">已经有账号？</a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- /container -->
+<script src="/js/jquery-3.8.min.js"></script>
+<script th:src="@{/layui/layer.js}" ></script>
+<script src="/js/gogal_ajax.js"></script>
+<script src="/login/TweenLite.min.js"></script>
+<script src="/login/EasePack.min.js"></script>
+<script src="/login/rAF.js"></script>
+<script src="/login/demo-1.js"></script>
+</body>
+<script type="text/javascript">
+    
+    function register() {
+        // 触发 reset 事件
+        // $("input[type=reset]").trigger("click");
+        showLoad();
+        var username = $("#username").val().trim();
+        var email = $("#email").val().trim();
+        var passord = $("#password").val().trim();
+        var repwd = $("#repassword").val().trim();
+        if (username.length > 0 && passord.length > 0 && email.length > 0 && repwd.length > 0) {
+            //用户名正则，4到16位（字母，数字，下划线，减号）
+            // var name_reg = /^[a-zA-Z0-9_-]{4,16}$/;
+            // var name_reg = /^[a-zA-Z0-9_]{4,16}$/;
+            var name_reg=/^[\u4e00-\u9fa5_a-zA-Z0-9]{4,16}$/;
+            if (!username.match(name_reg)) {
+                show_errMsg("用户名在4~16位之间(中文，字母，数字，下划线)");
+            }
+            // var email_reg = /^[a-zA-Z0-9][a-zA-Z0-9_]+\\@[a-zA-Z0-9]+\\.[a-zA-Z]{2,5}(\\.[a-zA-Z]{2,5})*$/i;
+            // if (!email.match(email_reg)) {
+            var email_reg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (!email_reg.test(email)) {
+                show_errMsg("请输入正确的邮箱格式");
+            }
+            //包含中文正则
+            var pwd_reg = /([a-zA-Z0-9!@#$%^&*()_?<>{}]){6,15}/;
+            if (!pwd_reg.test(passord)) {
+                show_errMsg("密码必须在6~15位之间(只能字母、数字、英文符号)");
+            }
+            if (repwd != passord) {
+                show_errMsg("两次密码不一致");
+            }
+            $("#msg_to").text("");
+            $.post({
+                url:"/userRegis",
+                data:{userName:username,password:passord,userEmail:email},
+                dataType:"json",
+                success:function (data) {
+                    if (data.status !== -1) {
+                        show_sucMsg("注册成功，跳转到登录页面~~~");
+                        window.location.href="/login";
+                        closeLoad(0);
+                    } else {
+                        show_errMsg(data.msg);
+                    }
+                }
+            })
+        } else {
+            show_errMsg("需全部填写");
+        }
+    }
+</script>
+</html>

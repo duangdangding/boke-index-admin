@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+            </div>
+            <div class="layui-card">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">生日主角：</label>
+                    <div class="layui-input-block">
+                        <input type="text" style="width: 800px;display: inline-block" id="subTitle" autocomplete="off" class="layui-input">
+                        <button class="layui-btn" onclick="setSubTitle()">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+
+</body>
+<script>
+    var honey1 ;
+    $(function () {
+        
+        noParam_sucfun_get('/admin/birthday/honey/get',function (data) {
+            honey1 = data;
+            $("#subTitle").val(data);
+        })
+    })
+    
+    function setSubTitle() {
+        let honey2 = $("#subTitle").val();
+        param_sucAndfun_get('/admin/birthday/honey/update',{honey1:honey1,honey2:honey2},function (data) {
+            honey1 = honey2;
+        });
+    }
+    
+</script>
+</html>

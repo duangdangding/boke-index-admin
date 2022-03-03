@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公共页面引用</title>
+</head>
+<body>
+<!-- 主要是公共使用的地方 -->
+<!--头部-->
+<footer th:fragment="page_header_html">
+    <script src="/js/constains.js"></script>
+    <script src="/js/jquery-3.8.min.js"></script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <script src="/js/checkpc_moile.js"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <!-- 看板娘 -->
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">-->
+    <!--    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>-->
+    <!--    <script src="/kbn/autoload.js"></script>-->
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    
+    <script type="text/javascript">
+        // 设置副标题
+        function loadSubtitle(t) {
+            if (isNull_O(t)) {
+                noParam_sucfun_get("/title/sub",setSub);
+            } else {
+                setSub(t);
+            }
+        }
+        function setSub(t) {
+            if (!isNull_O(t)) {
+                sessionStorage.subTitle = t;
+                $("#header_subtitle").html(t);
+            }
+        }
+        $(function () {
+            let subtitle = sessionStorage.subTitle;
+            loadSubtitle(subtitle);
+            /* 如果是手机则隐藏此按钮  */
+            if (jQuery.browser.mobile) {
+                $(".yc_4fn").show();
+            } else {
+                $(".yc_4fn").hide();
+            }
+        //    保存链接
+            let his_url = window.location.href;
+            console.log('当前页面：' + his_url)
+            sessionStorage.setItem(history_href, his_url);
+        })
+    </script>
+    <div id="header">
+        <!--end: blogTitle 博客的标题和副标题 -->
+        <div id="blogTitle">
+            <h1 id="Header1_HeaderTitle">苏喂苏喂喔</h1>
+            <h2 id="header_subtitle" style="font-size: 18px" th:utext="${subTitle_g}">你就是我要找的人~</h2>
+        </div>
+        <!--end: navigator 博客导航栏 -->
+        <div id="navigator"><ul id="navList"></ul></div>
+    </div><!--end: header 头部 -->
+</footer>
+<!--侧边栏1-->
+<footer th:fragment="page_right1_html">
+    <div id="page_begin_html">
+        <div id="set_btn_box">
+            <div class="set_btn xt_btn fly_top fadeIn animated" title="回到顶部">
+                <svg class="icon" aria-hidden="true"><use xlink:href="#icon-Fly"></use></svg>
+            </div>
+            <!--<div class="set_btn xt_btn dashang_btn fadeIn animated" title="打赏">
+                <svg class="icon" aria-hidden="true"><use xlink:href="#icon-dashang"></use></svg>
+            </div>-->
+            <div class="d_set_btn switchfishbtn fadeIn animated" title="打开或者关闭下方动态鱼">
+                <!--                from="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26" to="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28"-->
+                <svg class="d_icon" aria-hidden="true">
+                    <defs><path id="ytpyv-12" d="M 11 10 L 17 10 L 17 26 L 11 26 M 20 10 L 26 10 L 26 26 L 20 26">
+                        <animate id="yvanimation" begin="indefinite" attributeType="XML" attributeName="d" fill="freeze" dur="0.1s" keySplines=".4 0 1 1" repeatCount="1"></animate>
+                    </path></defs><use xlink:href="#ytpyv-12"></use>
+                </svg>
+            </div>
+            <div class="d_set_btn switchkbnbtn fadeIn animated" title="打开或者关闭看板娘">
+                <svg class="d_icon" aria-hidden="true">
+                    <defs><path id="ytpkbn-12" d="M 11 10 L 17 10 L 17 26 L 11 26 M 20 10 L 26 10 L 26 26 L 20 26">
+                        <animate id="kbnanimation" begin="indefinite" attributeType="XML" attributeName="d" fill="freeze" dur="0.1s" keySplines=".4 0 1 1" repeatCount="1"></animate>
+                    </path></defs><use xlink:href="#ytpkbn-12"></use>
+                </svg>
+            </div>
+            <div class="set_btn xt_btn skin_btn fadeIn animated" title="更换皮肤">
+                <svg class="icon" aria-hidden="true" style="color:#97A1A7"><use xlink:href="#icon-pifu"></use></svg>
+            </div>
+            <!--            <canvas id="thumsCanvas" width="200" height="400" style="width:100px;height:200px"></canvas>-->
+            <div class="set_btn xt_btn catalogue fadeIn animated" title="隐藏右侧边栏">
+                <svg class="icon" aria-hidden="true" style="color:#97A1A7"><use xlink:href="#icon-cebianlan-"></use></svg>
+            </div>
+            <!-- 隐藏上面的按钮 -->
+            <div class="set_btn yc_4fn" onclick="ycBtnfn()" title="隐藏上边4个按钮"><!-- xia xialajiantou -->
+                <svg class="icon" aria-hidden="true" style="color:#97A1A7"><use xlink:href="#icon-xia"></use></svg>
+            </div>
+        </div>
+        <!--        <script src='/js/canvas2.js'></script>-->
+    </div>
+    <script type="text/javascript">
+        // 点击打开或关闭动态鱼
+        var yvflip = true,
+            yvpause = "M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28",
+            yvplay = "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26",
+            $yvanimation = $('#yvanimation');
+        $(".switchfishbtn").on('click', function() {
+            $yvanimation.attr({
+                "from": yvflip ? yvplay : yvpause,
+                "to": yvflip ? yvpause : yvplay
+            }).get(0).beginElement();
+            yvflip = !yvflip;
+            if (yvflip) {
+                set_item(switchFish,"on");
+            } else {
+                set_item(switchFish,"off");
+            }
+            showFish();
+        });
+        function showFish() {
+            let s = get_item(switchFish);
+            clearFishCommont();
+            if (isNull_O(s) || s === 'on') {
+                let skin = get_item("skin");
+                if (isNull_O(skin) || skin === "light_white") {
+                    createResources("script","/js/fish.js","fish_type");
+                } else if (skin === "furvous") {
+                    createResources("script","/js/fish2.js","fish_type");
+                } else if (skin === "reading") {
+                    createResources("script","/js/fish3.js","fish_type");
+                }
+            }
+        }
+        // 点击打开或者关闭看板娘
+        var kbnflip = true,
+            kbnpause = "M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28",
+            kbnplay = "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26",
+            $kbnanimation = $('#kbnanimation');
+        $(".switchkbnbtn").on('click', function() {
+            $kbnanimation.attr({
+                "from": kbnflip ? kbnplay : kbnpause,
+                "to": kbnflip ? kbnpause : kbnplay
+            }).get(0).beginElement();
+            kbnflip = !kbnflip;
+            if (kbnflip) {
+                set_item(switchkbn,"on");
+            } else {
+                set_item(switchkbn,"off");
+            }
+            shouKBN();
+        });
+        // 手动打开或关闭看板娘
+        function shouKBN() {
+            if (!jQuery.browser.mobile) {
+                let switchkbn4 = get_item(switchkbn);
+                let e = $("#waifu");
+                if (e) {
+                    // 取消定时任务
+                    if (typeof userActionTimer !== "undefined" && userActionTimer != null) {
+                        clearInterval(userActionTimer);
+                        userActionTimer = null;
+                    }
+                    if (typeof userActionInterval !== "undefined") {
+                        clearInterval(userActionInterval);
+                    }
+                    $("#kbncss").remove();
+                    $("#kbnjs").remove();
+                    e.remove();
+                    $("#waifu-toggle").remove();
+                    $("#live2djs").remove();
+                    $("#wftipsjs").remove();
+                    $("#waifucss").remove();
+                }
+                if (isNull_O(switchkbn4) || switchkbn4 === 'on') {
+                    // createResources("link","https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css","kbncss");
+                    // createResources("script","/kbn/autoload.js","kbnjs");
+                    createResources("link","https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css","kbncss","head");
+                    createResources("script","/kbn/autoload.js","kbnjs","head");
+                }
+            }
+        }
+
+        $(function () {
+            if (!jQuery.browser.mobile) {
+                let switchkbn2 = get_item(switchkbn);
+                // 默认不显示看板娘
+                if (isNull_O(switchkbn2)) {
+                    kbnflip = false;
+                    set_item(switchkbn,"off");
+                }
+                if (!isNull_O(switchkbn2) && switchkbn2 === "off") {
+                    kbnflip = false;
+                }
+                $kbnanimation.attr({
+                    "from": kbnflip ? kbnpause : kbnplay,
+                    "to": kbnflip ? kbnplay : kbnpause
+                }).get(0).beginElement();
+                shouKBN();
+                let switchyv2 = get_item(switchFish);
+                if (isNull_O(switchyv2)) {
+                    yvflip = false;
+                    set_item(switchFish,"off");
+                }
+                if (!isNull_O(switchyv2) && switchyv2 === "off") {
+                    yvflip = false;
+                }
+                $yvanimation.attr({
+                    "from": yvflip ? yvpause : yvplay,
+                    "to": yvflip ? yvplay : yvpause
+                }).get(0).beginElement();
+                $(".d_set_btn").show();
+            }
+        })
+        /* 点击按钮隐藏或者显示上面4个按钮 并旋转180度 */
+        var ycbtnInx = 1;
+        function ycBtnfn() {
+            if (ycbtnInx === 1) {
+                $(".xt_btn").hide();
+                ycbtnInx = 0;
+                $(".yc_4fn").css("transform","rotate(180deg)").css("-ms-transform","rotate(180deg)")
+                    .css("-moz-transform","rotate(180deg)").css("-webkit-transform","rotate(180deg)").css("-o-transform","rotate(180deg)");
+            } else {
+                $(".xt_btn").show();
+                ycbtnInx = 1;
+                $(".yc_4fn").css("transform","rotate(0deg)").css("-ms-transform","rotate(0deg)")
+                    .css("-moz-transform","rotate(0deg)").css("-webkit-transform","rotate(0deg)").css("-o-transform","rotate(0deg)");
+            }
+        }
+    </script>
+</footer>
+<!--侧边栏2-->
+<footer th:fragment="page_right2_html">
+    <div id="sideBar" style="visibility: visible; clip-path: circle(100% at 50% 50%); transition: all 0.3s ease-in-out 0s;display:inline-block">
+        <div id="sideBarMain">
+            <div id="sidebar_news" class="newsItem"><!--done-->
+                <h3 class="catListTitle">个人信息</h3>
+                <div id="blog-news">
+                    <!--                    <div id="portrait"><img src="/imgs/face_2.jpg"></div>-->
+                    <div id="portrait"><img src="https://gitee.com/magerlu/source/raw/master/imgs/face.png"></div>
+                    <p class="catListTitle" style="font-weight:500;margin-top:10px;" id="uuuuu">苏喂苏喂喔</p>
+                    <table id="info_table" style="">
+                        <tbody>
+                        <tr>
+                            <td class="github_c"><a href="https://github.com/duangdangding" target="_black" title="github"><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-github1"></use></svg></a></td>
+                            <td class="weixin_c"><span class="wx_img"><img src="/imgs/wx.jpg"></span><a target="_black" ><svg class="icon popper_weixin" aria-hidden="true" aria-expanded="false"><use xlink:href="#icon-weixin"></use></svg></a></td>
+                            <td class="QQ_c"><span class="qq_img"><img src="/imgs/qq.gif"></span><a target="_black" href="https://qm.qq.com/cgi-bin/qm/qr?k=DsC5Lx4vnQjEkYfHssGkRz9pZD8-MuxO&noverify=0" title="点击加我好友" ><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-QQ"></use></svg></a></td>
+                            <!--                                <td><a href="https://juejin.im/user/5d18adce5188256e98090e33" target="_black" title="掘金"><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-juejin"></use></svg></a></td>-->
+                        </tr>
+                        <tr>
+                            <!--                            <td class="weibo_c"><a href="https://www.weibo.com/6001406082/profile?topnav=1&amp;wvr=6" target="_black" title="微博：不怎么玩，在这就示例一下"><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-weibobangding"></use></svg></a></td>-->
+                            <td class="csdn_c"><a href="https://blog.csdn.net/lussss" target="_black" title="CSDN"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-csdn"></use></svg></a></td>
+                            <td class="bili_c"><a href="https://space.bilibili.com/297588571" target="_black" title="bilibili"><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-bilibili"></use></svg></a></td>
+                            <td class="mail_c"><a href="javascript:void(0)" onclick="opWaiMail()" title="发送邮件"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-youxiang"></use></svg></a></td>
+                            <!--                            <td class="mail_c"><a href="javascript:void(0)" onclick="opWaiMail()" title="发送邮件"><img class="icon" src="/imgs/email.png" alt="发送邮件" /></a></td>-->
+                            <!--                                <td><a href="https://www.yuque.com/miluluyo" target="_black" title="语雀"><svg class="icon undefined" aria-hidden="true"><use xlink:href="#icon-yuquemianlogo"></use></svg></a></td>-->
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="catListTitle" style="margin-bottom:20px">青春有限  编码无尽</p>
+                </div>
+            </div>
+            <!--<h3 class="catListTitle">日历</h3>
+            <div id="blog-calendar" style="">
+                <table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+                    <tbody id="cal_body"></tbody>
+                </table>
+            </div>-->
+            <div id="leftcontentcontainer">
+                <div id="blog-sidecolumn"><!-- 搜索 -->
+                    <div id="sidebar_search" class="mySearch">
+                        <h3 class="catListTitle">搜  索</h3>
+                        <div id="widget_my_zzk" class="div_my_zzk">
+                            <input type="text" id="q_title" onkeydown="return zzk_go_enter(event);" class="input_my_zzk shadow_hover" placeholder="搜索标题~">
+                            <svg class="icon search_icon" aria-hidden="true" onclick="zzk_go()">
+                                <use xlink:href="#icon-sousuo"></use></svg>&nbsp;
+                            <input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+                        </div>
+                    </div>
+                </div>
+                <!-- 分类 -->
+                <div id="sidebar_postcategory" class="catListPostCategory sidebar-block"></div>
+                <div class="clear"></div>
+                <!-- 标签 -->
+                <div id="sidebar_postLabel" class="sidebar-block"></div>
+                <!-- 归档 -->
+                <div id="sidebar_postarchive" class="catListPostArchive sidebar-block"></div>
+                <!-- 阅读排行 -->
+                <div id="sidebar_topviewedposts" class="sidebar-block"></div>
+            </div>
+        </div><!--end: sideBarMain -->
+    </div><!--end: sideBar 侧边栏容器 -->
+    <div class="clear"></div>
+</footer>
+
+<!--最下面的js-->
+<footer th:fragment="page_end_html">
+    <div id="page_end_html">
+        <style id="ceshicss">
+            @media (max-width: 76px){
+                #set_btn_box {width: 50vw;left: 50px;right: 0;bottom: 0;/*background: hsla(0,0%,100%,.6);*/height: 49px;display: flex;
+                    justify-content: space-between;align-items: center;padding: 12px 40px;border-top: 1px solid #e8e8e8;box-sizing: border-box;}
+                .set_btn {margin-top: 0;}
+                .set_btn.fly_top.fadeIn.animated {position: absolute;right: -120px;bottom: 60px;}
+                .container{bottom:50px}}
+            #mainContent{width:90%}
+        </style>
+        <link href="/css/tippy.min.css" rel="stylesheet">
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/tippy.js"></script>
+        <!--        <link rel='stylesheet' href='/css/animate.min.css'>-->
+        <script src="/js/font-icon.js"></script>
+        <!--        <script src="/js/three.min.js"></script>-->
+        <!--        <script src='/js/star.js'></script>-->
+        <!--        <link rel="stylesheet" href="/css/OwO.min.css" />-->
+        <!--        <script src="/js/OwO2.min.js"></script>-->
+        <script src="/js/index.js"></script>
+        <script src="/js/cute-cnblogs3.js"></script>
+
+        <!--    <script src="https://blog-static.cnblogs.com/files/miluluyo/monitoring2.js"></script>-->
+        <script type="text/javascript">
+            /* 导航动态生成 */
+            // let navs ;
+            let userId = get_item(lo_userId);
+            if (isNull_O(userId)) {
+                userId = 0;
+            }
+            // 记录新随笔出现的索引
+            var suibi_index;
+            $.ajax({
+                url:"/navicon/all/" + userId,
+                // async:false,
+                success:function (data) {
+                    // navs = data;
+                    let cus = data.custom;
+                    // console.log(JSON.stringify(data))
+                    for (let i=0;i < cus.length;i++) {
+                        if (cus[i].name === "新随笔") {
+                            suibi_index = i;
+                        }
+                    }
+                    miluframe(data)
+                    /* 右边栏头像 */
+                    let token = get_item(lo_token);
+                    if (isNull_O(token)) {
+                        $("#navList li").eq(suibi_index).hide();
+                        $("#user_info").hide();
+                        $("#user_logout").hide();
+                        $("#user_login_a").show();
+                    } else {
+                        getInfo(suibi_index);
+                    }
+                    /* 导航栏 随笔 */
+                    // 判断是否是手机
+                    if (jQuery.browser.mobile) {
+                        // 手机端不开放此编辑器
+                        // 使用jquery修改！important样式
+                        // $('.ed_type li').eq(1).css("cssText","display:none !important;");
+                        $('#boke_type a:first-child').click(function(){//点击a标签
+                            if($('.ed_type').is(':hidden')){//如果当前隐藏
+                                $('.ed_type').show();//那么就显示div
+                            }else{//否则
+                                $('.ed_type').hide();//就隐藏div
+                            }
+                        })
+                    } else {
+                        $("#navList li").eq(suibi_index).mouseover(function () {
+                            $(".ed_type").show();
+                        })
+                        $(document).mouseover(function (e) {
+                            let target = $(e.target);
+                            if (target.closest("#boke_type").length != 0) return;
+                            $(".ed_type").hide();
+                        })
+                    }
+                    // 点击登录打开登录窗口
+                    if(!$('#user_login_a').is(':hidden')) {
+                        $("#user_login_a").click(function () {
+                            set_item("t_login",1);
+                            let w;
+                            if (jQuery.browser.mobile) {w = '100%'}
+                            openHtmlWin_fun3("登录","/login",w);
+                        })
+                    }
+                    
+                    // 注销
+                    if(!$('#user_logout').is(':hidden')) {
+                        $("#user_logout").click(function () {
+                            let out_id = get_item(lo_userId);
+                            if (!out_id) {out_id = 0}
+                            clear_item(lo_userId);
+                            clear_item(lo_token);
+                            clear_item(lo_username);
+                            clear_item(lo_face);
+                            clear_item(songList + out_id);
+                            window.location.href = "/logout";
+                        });
+                    }
+                }
+            })
+            /* 未登录不显示新随笔 */
+            if(!userId) {
+                $("#boke_type").hide();
+            }
+        </script>
+        <!-- 以下内容是否添加你随意 -->
+        <!-- 发送邮件 -->
+        <div id="ques_m_b" class="hidden" style="padding: 5px;margin: 5px;text-align: center">
+            <label for="quesCont" style="vertical-align: top;height: 25px;line-height: 25px">邮件内容：</label>
+            <textarea style="width: 200px;height: 80px;padding: 5px" name="ttt" id="quesCont"></textarea><br />
+            <button style="padding: 5px;border-radius: 5px;border: 1px solid" onclick="submitToQues()">发送邮件</button>
+            <button style="padding: 5px;border-radius: 5px;border: 1px solid;" onclick="layer.closeAll('page')">取消</button>
+        </div>
+
+        <script src="/js/xstorage.js"></script>
+        <script type="text/javascript">
+
+            function opWaiMail() {
+                layer.open({
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['auto', 'auto'], //宽高
+                    title: "发送邮件",
+                    shade: 0.8,
+                    type:1,
+                    content:$("#ques_m_b")
+                })
+            }
+            // 发送邮件
+            var ls=new Storage();
+            function submitToQues() {
+                if (ls.get("quesMail")) {
+                    layer.msg("1个小时之内只能发送一条邮件~")
+                    return false;
+                }
+                var cont = $("#quesCont").val().trim();
+                var len = cont.length;
+                if (len > 5 && len < 200) {
+                    showLoad()
+                    $.ajax({
+                        url:"/mail/qus",
+                        type: "post",
+                        data:{content:cont},
+                        dataType:"json",
+                        success:function (data) {
+                            if (data.status === 1) {
+                                layer.msg(data.result)
+                                ls.set("quesMail",1,60 * 60)
+                                layer.closeAll('page')
+                            } else {
+                                layer.msg(data.msg)
+                            }
+                        },
+                        complete:closeLoad
+                    })
+                } else {
+                    layer.msg("字数在5~200之间~")
+                }
+            }
+            /*$(window).scroll(function(){
+                var s_top = Number($(this).scrollTop());  // 获取滚动条，滚动刻度
+                var csh_top = 0;
+                if (s_top > 346) {
+                    $("#sideBar").css("top",(s_top + csh_top) + "px")
+                }else {
+                    $("#sideBar").css("top",csh_top + "px")
+                }
+            })*/
+        </script>
+        <!--鼠标点击特效-->
+        <script src="/js/mouseclick.js"></script>
+        <block th:include="boke/common :: page_music_html" />
+    </div>
+</footer>
+
+<footer th:fragment="page_music_html">
+    <!-- require APlayer -->        <!-- require MetingJS -->
+    <link rel="stylesheet" href="/music/APlayer.min.css">
+    <script src="/music/APlayer.min.js"></script>
+    <script src="/music/Meting.min.js"></script>
+    <!--        <script src="/music/Meting.min_b.js"></script>-->
+    <!--<div style="" id="player" class="aplayer aplayer-withlist aplayer-fixed" data-id="3116636104" data-server="netease" data-type="playlist" 
+         data-order="random" data-fixed="true" data-listfolded="true" data-autoplay="false" data-theme="#2D8CF0"></div>-->
+    <div id="metingBox"></div>
+    <script type="text/javascript">
+        $(function () {
+            /* 获取用户自己的歌单设置 */
+            let userId = get_item(lo_userId);
+            if (isNull_O(userId)) {userId = 0}
+            let lo_songlist = get_item(songList + userId);
+            //由JSON字符串转换为JSON对象
+            if (!isNull_O(lo_songlist)) {
+                let res = JSON.parse(lo_songlist);
+                // console.log(res);
+                createSongBox(res,userId);
+            } else {
+                noParam_sucfun_get("/song/" + userId, function (res){
+                    createSongBox(res,userId);
+                },2);
+            }
+        })
+    </script>
+</footer>
+<!--念两句诗-->
+<footer th:fragment="page_shici_html">
+    <script src="/js/jinrishici.js" charset="utf-8"></script>
+    <script>
+        /*在文章页面添加古诗词*/
+        $("#navigator").after('<div class="poem-wrap"><div class="poem-border poem-left"></div><div class="poem-border poem-right"></div><h1>念两句诗</h1><div id="poem_sentence"></div><div id="poem_info"></div></div>')
+        jinrishici.load(function(result) {
+            let sentence = document.querySelector("#poem_sentence")
+            let info = document.querySelector("#poem_info")
+            sentence.innerHTML = result.data.content
+            info.innerHTML = '【' + result.data.origin.dynasty + '】' + result.data.origin.author + '《' + result.data.origin.title + '》'
+        });
+    </script>
+</footer>
+<footer th:fragment="page_footer_html">
+    <div class="clear"></div>
+    <div id="footer">Copyright &copy; 2021 苏喂苏喂喔
+        <br /> <b>仅供学习使用</b>
+<!--        <br /><span id="poweredby" style="padding: 0.6rem 0;display: block">今日访问量：<span id="web_day">0</span>&nbsp;&nbsp;总访问量：<span id="web_count">0</span></span>-->
+<!--        <p><a target="_blank" href="https://beian.miit.gov.cn">豫ICP备2021020899号</a></p>-->
+        <!--<br /><span id="poweredby">Powered by .NET 5.0 on Kubernetes</span>--></div><!--end: footer -->
+</footer>
+<footer th:fragment="page_editor_html">
+    <div id="zzc" onclick="hideLabelist()"></div>
+    <div class="wd_header" id="md_header">
+        <div class="first_line_e"><a class="toIndexBtn" href="/">回到首页</a>
+            <input type="text" class="tl-price-input" id="title" onblur="checkb_title(this)" placeholder="请输入标题(100字之内)"></div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类:</label>
+            <div class="layui-input-inline">
+                <div class="layui-form-select ySearchSelect y1">
+                    <input type="hidden" id="cateitemSelect">
+                    <div id="cate_v_b" class="layui-input"><i class="layui-edge"></i></div>
+                    <ul id="cateItems"></ul>
+                </div>
+            </div>
+            <span class="addCate_sp" style="display: contents"><input id="cateItem_add" onkeydown="return addCategory_enter(event);" placeholder="添加分类" autocomplete="false" class="layui-input">
+            <button onclick="b_addcate()" class="addCateBtn">添加/选择</button></span>
+        </div>
+        <div id="label_box" class="layui-form-item">
+            <label class="layui-form-label">标签:</label>
+            <input type="hidden" id="label_vles">
+            <input type="text" onclick="showLabelist()" readonly class="layui-input" id="label_t">
+            <div id="label_list_box">
+                <div id="first_la">
+                    <input type="text" onkeydown="return addLabel_enter(event);" class="layui-input" style="height: 25px;width: auto;border: 1px solid #c9d8db" id="addb_v">
+                    <button class="addCateBtn" style="height: 25px;line-height: 25px" onclick="addLabel()">新增/选择</button>
+                </div>
+                <ul id="label_list"></ul>
+            </div>
+        </div>
+        <span class="modle_sp">发布形式：<input type="radio" checked name="cheakRadios" value="1">公开
+    <input  type="radio" name="cheakRadios" value="2">私有</span>
+        <span class="btn3ge">
+        <button class="ant-btn ant-btn-primary" onclick="saveCGBtn()">保存草稿</button>
+        <button class="ant-btn ant-btn-primary" onclick="submitBoke()">发布博客</button>
+        <button class="ant-btn ant-btn-red" onclick="clearcg()">清空草稿</button>
+    </span>
+    </div>
+</footer>
+</body>
+</html>

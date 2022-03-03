@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+    
+    <title>苏喂苏喂喔 - 美好记录</title>
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+    <!-- 代码高亮css -->
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+<!--    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>-->
+
+    <style>
+        .content-wrap img{
+            padding: 5px;
+            /*display: block;*/
+            border-radius: 10px;
+            /*width:194px;*/
+            /*height:120px*/
+        }
+        .fyBtn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            /*position: absolute;*/
+            width: 100%;
+            height: 60px;
+            /*height: 100%;*/
+            /*background: #333;*/
+        }
+        .next_container {
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+        .chevron {
+            position: absolute;
+            width: 28px;
+            height: 8px;
+            opacity: 0;
+            transform: scale3d(0.5, 0.5, 0.5);
+            animation: move 3s ease-out infinite;
+        }
+        .chevron:first-child {
+            animation: move 3s ease-out 1s infinite;
+        }
+        .chevron:nth-child(2) {
+            animation: move 3s ease-out 2s infinite;
+        }
+        .chevron:before,
+        .chevron:after {
+            content: ' ';
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 51%;
+            background: #7f8c93;
+        }
+        .chevron:before {
+            left: 0;
+            transform: skew(0deg, 30deg);
+        }
+        .chevron:after {
+            right: 0;
+            width: 50%;
+            transform: skew(0deg, -30deg);
+        }
+        @keyframes move {
+            25% {
+                opacity: 1;
+            }
+            33% {
+                opacity: 1;
+                transform: translateY(30px);
+            }
+            67% {
+                opacity: 1;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(55px) scale3d(0.5, 0.5, 0.5);
+            }
+        }
+        .btn_text {
+            display: flex;
+            justify-content: center;
+            font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+            font-size: 14px;
+            margin: 0 auto;
+            /*color: #fff;*/
+            text-transform: uppercase;
+            white-space: nowrap;
+            /*opacity: .25;*/
+            animation: pulse 2s linear alternate infinite;
+        }
+        @keyframes pulse {
+            to {
+                opacity: 1;
+            }
+        }
+        .catalogue {
+            display: none;
+        }
+        .layui-layer-content{overflow: hidden !important;}
+        /* 看图图标颜色 */
+        .zx-image-preview-wrapper .zip-tool-wrapper ._item{
+            color: aliceblue !important;
+        }
+        @media screen and (max-device-width: 360px){
+            .content-wrap img {
+                width: 100% !important;
+                height: 100% !important;
+            }
+        }
+    </style>
+<!--    <script src="/js/jquery-3.8.min.js"></script>-->
+<!--    <script th:src="@{/layui/layer.js}" ></script>-->
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    
+    <!-- tabs样式 -->
+    <link rel="stylesheet" type="text/css" href="/tabs/tab2/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/tabs/tab2/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/tabs/tab2/css/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="/tabs/tab2/css/tabstyles.css" />
+    <script src="/tabs/tab2/js/modernizr.custom.js"></script>
+    <!-- tabs样式 -->
+    
+    <!-- 看图插件 -->
+    <script src="/zoom-zx/zx-image-viewer.min.js"></script>
+
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <block th:include="boke/common :: page_header_html" />
+    <div id="main">
+        <svg class="hidden">
+            <defs><path id="tabshape" d="M80,60C34,53.5,64.417,0,0,0v60H80z"/></defs>
+        </svg>
+        <div class="p_container">
+            <section>
+                <div class="tabs tabs-style-shape">
+                    <nav><ul id="p_type_tab"></ul></nav>
+                    <div class="content-wrap"></div><!-- /content -->
+                </div><!-- /tabs -->
+            </section>
+        </div><!-- /container -->
+        <script src="/tabs/tab2/js/cbpFWTabs.js"></script>
+    </div><!--end: main -->
+    <block th:include="boke/common :: page_footer_html" />
+</div><!--end: home 自定义的最大容器 -->
+<block th:include="boke/common :: page_right1_html" />
+<block th:include="boke/common :: page_end_html" />
+<script th:inline="javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+// let page = 1;
+// let allPage;
+
+// 存放图片类型数字的map 原始比例
+let typeMap = new Map();
+var photoTempType;
+$(function () {
+    $.ajax({
+        url:"/pt/all",
+        async:false,
+        success:function (options) {
+            let tabs = $("#p_type_tab");
+            let conts = $(".content-wrap");
+            for (let i in options) {
+                let option = options[i];
+                let key2 = option['key'];
+                let text = option['value'];
+                typeMap.set(key2+"",[]);
+                let tab = '<li>' +
+                    '         <a href="#section-' + key2 + '">' +
+                    '             <svg viewBox="0 0 80 60" preserveAspectRatio="none"><use xlink:href="#tabshape"></use></svg>' +
+                    '             <svg viewBox="0 0 80 60" preserveAspectRatio="none"><use xlink:href="#tabshape"></use></svg>' +
+                    '             <span>' + text + '</span>' +
+                    '         </a>\n' +
+                    '     </li>';
+                tabs.append(tab);
+                let fy = '<div class="fyBtn" id="fyBtn'+key2+'" onclick="next_page('+key2+')">' +
+                    '         <div class="next_container">' +
+                    '             <div class="chevron"></div>' +
+                    '             <div class="chevron"></div>' +
+                    '             <div class="chevron"></div>' +
+                    '             <span class="btn_text">继续浏览</span>' +
+                    '         </div>' +
+                    '     </div>';
+                let cont = '<section class="imgbox" id="section-' + key2 + '"><p id="section-imgs-' + key2 + '"></p>'+fy+'</section>';
+                conts.append(cont);
+            }
+        }
+    })
+    new CBPFWTabs( $(".tabs")[0] );
+})
+$(document).ready(function () {
+}).keydown(function (e) {
+    if (e.which === 27) {
+        closelayer()
+    }
+});
+// 记录每个type的当前页数
+var curPageM = new Map(); // 空Map
+// 记录每个type的总页数
+var allPageM = new Map(); // 空Map
+function next_page(type) {
+    let cur = curPageM.get(photoType+type);
+    let all = allPageM.get(photoType+type);
+    cur = cur + 1;
+    if (cur >= all) {
+        cur = all;
+    }
+    curPageM.set(photoType+type,cur);
+    loadImgs(type);
+}
+// 图片数组2
+function loadImgs(type) {
+    let box = $("#section-imgs-"+type);
+    let arrType = typeMap.get(type+"");
+    let cur = curPageM.get(photoType+type);
+    showLoad()
+    $.ajax({
+        url:"/photos/fy",
+        async:false,
+        data:{page:cur,photoType:type},
+        success :function (data) {
+            let imgs = data.records;
+            if (imgs.length > 0) {
+                let allPage = data.pages;
+                let page = data.current;
+                curPageM.set(photoType+type,page);
+                allPageM.set(photoType+type,allPage);
+                for (let i = 0; i < imgs.length; i++) {
+                    let img = imgs[i];
+                    let thumbImg;
+                    let img_src1 = img.photoUrl;
+                    let img_src2 = img.thumbUrl;
+                    thumbImg = img_src2 ? img_src2 : img_src1;
+                    box.append("<img width='"+img.newWidth+"' height='"+img.newHeight+"' src='" + thumbImg + "' />");
+                    arrType.push({
+                        url: img_src1,
+                        angle: 0
+                    })
+                }
+                if (allPage === page) {
+                    $("#fyBtn" + type).hide()
+                }
+            } else {
+                $("#fyBtn" + type).hide()
+            }
+        },
+        complete : function () {
+            let $images = $("#section-imgs-"+type + " img");
+            zxShowImg($images,arrType)
+            closeLoad();
+        },
+        error:serverErr
+    })
+}
+</script>
+</body>
+</html>

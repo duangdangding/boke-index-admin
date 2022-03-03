@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+<style>
+    #bannads span,#ranNameBox span {
+        display: inline-block;
+        padding: 5px 10px;
+        border: 1px solid;
+        border-radius: 8px;
+        margin: 3px 8px;
+        color: #757373;
+        position: relative;
+    }
+    .del-icon {
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        border: 1px solid red;
+        border-radius: 50%;
+        top: -7px;
+        right: -7px;
+        cursor: pointer;
+        transform: rotate(45deg);
+    }
+
+    .del-icon::before {
+        display: block;
+        position: absolute;
+        content: "";
+        width: 10px;
+        height: 2px;
+        background-color: red;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+
+    }
+    .del-icon::after {
+        display: block;
+        position: absolute;
+        content: "";
+        width: 2px;
+        height: 10px;
+        background-color: red;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+    }
+</style>
+</head>
+<body>
+<!--done-->
+<div id="home" style="overflow: hidden">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+            </div>
+            <div class="layui-card">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">副标题：</label>
+                    <div class="layui-input-block">
+                        <input type="text" style="width: 800px;display: inline-block" id="subTitle" autocomplete="off" class="layui-input">
+                        <button class="layui-btn" onclick="setSubTitle()">修改</button>
+                    </div>
+                </div>
+            </div>
+            <hr style="background-color: #ff5722;height: 3px;">
+            <div class="layui-card">
+                <div class="layui-form-item">
+                    <table class="layui-table">
+                        <tr><th colspan="3"><b>应用中使用的key（删除多个用英文逗号隔开）</b></th></tr>
+                        <tr>
+                            <td>绑定邮箱：bangding</td>
+                            <td>更换邮箱：genghua</td>
+                            <td>更换密码：genghuamm</td>
+                            <td>评论：pinglun</td>
+                            <td>日访问量：visit</td>
+                            <td>总访问量：visitcount</td>
+                            <td>敏感词：VIOLATION</td>
+                        </tr>
+                        <tr>
+                            <td>发送邮件：question</td>
+                            <td>副标题：subtitle</td>
+                            <td>某文章详情：bokexq_</td>
+                            <td>某用户导航栏：Navigation_</td>
+                            <td>某用户信息：UserInfo_</td>
+                            <td>某用户归档：guidang_</td>
+                            <td>归档排行：DATEARCHIVE</td>
+                        </tr>
+                        <tr>
+                            <td>某用户歌曲：SongList_</td>
+                            <td>某用户标签：LabelList_</td>
+                            <td>某用户分类：cateList_</td>
+                            <td>某文章分享数：SHARENUM_</td>
+                            <td>某文章浏览数：LOOKNUM_</td>
+                            <td>某文章点赞数：LIKENUM_</td>
+                            <td>浏览排行：LOOKRANK</td>
+                        </tr>
+                        <tr>
+                            <td>分类排行：CATERANK</td>
+                            <td>标签排行：LABELRANK</td>
+                            <td>随机昵称：randomName</td>
+                            <td>可用标签：USELABELLIST</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <label class="layui-form-label">Redis Key：</label>
+                    <div class="layui-input-block">
+                        <input type="text" style="width: 700px;display: inline-block" id="redisKey" autocomplete="off" class="layui-input">
+                        <select class="layui-select" id="delType">
+                            <option value="1">单个</option>
+                            <option value="2">前缀</option>
+                            <option value="3">后缀</option>
+                        </select>
+                        <button class="layui-btn" onclick="delRedis()">删除</button>
+                    </div>
+                </div>
+            </div>
+            <hr style="background-color: #ff5722;height: 3px;">
+            <div class="layui-card">
+                <h5 class="example-title">设置默认播放列表</h5>
+                <form class="layui-form" id="winForm" lay-filter="form_hx" style="padding: 0;margin: 0">
+                    <div class="layui-form-item layui-hide">
+                        <label class="layui-form-label">ID：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="id" id="musicId" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 105px">歌单平台：</label>
+                        <div class="layui-input-inline" style="width: 200px">
+                            <select class="layui-select" id="songServer" name="songServer">
+                                <option value="netease">网易云音乐</option>
+                                <option value="tencent">QQ音乐</option>
+                                <option value="kugou">酷狗音乐</option>
+                                <option value="baidu">百度音乐</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 105px">自动播放：</label>
+                        <div class="layui-input-inline" style="width: 200px">
+                            <select class="layui-select" id="aotoPaly" name="aotoPaly">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 105px">歌单编号：</label>
+                        <div class="layui-input-inline" style="width: 200px">
+                            <input type="text" name="songNo" id="songNo" lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="text-align: left">
+                        <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="songSubmitBtn" id="songSubmitBtn" value="修改歌单">
+                    </div>
+                </form>
+            </div>
+            <hr style="background-color: #ff5722;height: 3px;">
+            <div class="layui-card">
+                <h5 class="example-title">设置敏感词</h5>
+                <div id="bannad_toolbar" style="display: inline-flex ">
+                    <input class="layui-input" id="bannadna" type="text" style="width: 200px;margin-left: 50px" />
+                    <button class="layui-btn" onclick="addBannad()">添加</button>
+                </div>
+                <div class="data-contents" style="margin: 10px" id="bannads"></div>
+            </div>
+            <hr style="background-color: #ff5722;height: 3px;">
+            <div class="layui-card">
+                <h5 class="example-title">设置随机昵称</h5>
+                <div style="display: inline-flex ">
+                    <input class="layui-input" id="ranName" type="text" style="width: 200px;margin-left: 50px" />
+                    <button class="layui-btn" onclick="addRanName()">添加</button>
+                </div>
+                <div class="data-contents" style="margin: 10px" id="ranNameBox"></div>
+            </div>
+            <hr style="background-color: #ff5722;height: 3px;">
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+
+</body>
+<script>
+    
+    $(function () {
+        // 获取副标题
+        noParam_sucfun_get('/title/sub',function (data) {
+            $("#subTitle").val(data);
+        })
+        // 获取所有的敏感词
+        noParam_sucfun_get('/admin/other/word/list',function (data) {
+            let html = "";
+            for (let i = 0;i < data.length;i++) {
+                let s = data[i];
+                html += '<span id="wordSpan'+i+'"><label id="label_f_'+i+'" for="label_b_'+i+'">'+s+'</label><div class="del-icon" onclick="delBannad('+i+')"></div></span>';
+            }
+            $("#bannads").html(html);
+        })
+        // 显示所有的随即名字
+        noParam_sucfun_get('/admin/other/ranname/list',function (data) {
+            let html = "";
+            for (let i = 0;i < data.length;i++) {
+                let s = data[i];
+                html += '<span id="ranname'+i+'"><label id="label_rn_'+i+'" for="label_c_'+i+'">'+s+'</label><div class="del-icon" onclick="delRanname('+i+')"></div></span>';
+            }
+            $("#ranNameBox").html(html);
+        })
+        // 回显歌曲列表
+        noParam_sucfun_get('/song/0',function (data) {
+            layui.use(['element', 'form', 'layer', 'table'], function () {
+                var elemet = layui.element, form = layui.form, table1 = layui.table, table2 = layui.table;
+                form.val("form_hx",data)
+                let v = data.aotoPaly ? '1' : '0'
+                console.log(v)
+                $("#aotoPaly").val(v)
+                form.render('select','form_hx')
+            });
+        })
+    })
+    
+    function addBannad() {
+        let s = $("#bannadna").val();
+        if (s) {
+            param_suc_post('/admin/other/word/add',{word:s},function () {
+                let len = $("#bannads span").length;
+                $("#bannads").prepend('<span id="wordSpan'+len+'"><label id="label_f_'+len+'" for="label_b_'+len+'">'+s+'</label><div class="del-icon" onclick="delBannad('+len+')"></div></span>');
+                $("#bannadna").val("");
+            })
+        }
+    }
+    function addRanName() {
+        let s = $("#ranName").val();
+        if (s) {
+            param_suc_post('/admin/other/ranname/add',{word:s},function () {
+                let len = $("#ranNameBox span").length;
+                $("#ranNameBox").prepend('<span id="ranname'+len+'"><label id="label_rn_'+len+'" for="label_c_'+len+'">'+s+'</label><div class="del-icon" onclick="delRanname('+len+')"></div></span>');
+                $("#ranName").val("");
+            })
+        }
+    }
+    function delBannad(i) {
+        let s = $("#label_f_" + i).text();
+        if (s) {
+            param_suc_post('/admin/other/word/del',{word:s},function () {
+                $("#label_f_" + i).remove();
+            })
+        }
+    }
+    function delRanname(i) {
+        let s = $("#label_rn_" + i).text();
+        if (s) {
+            param_suc_post('/admin/other/ranname/del',{word:s},function () {
+                $("#label_rn_" + i).remove();
+            })
+        }
+    }
+    function setSubTitle() {
+        let title = $("#subTitle").val();
+        param_suc_get('/admin/navigation/update',{subTitle:title});
+    }
+    function delRedis() {
+        let redisKey = $("#redisKey").val();
+        let delType = $("#delType").val();
+        param_suc_get('/admin/other/delRedis',{delType:delType,delKey:redisKey});
+    }
+
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, table1 = layui.table, table2 = layui.table;
+        form.on('submit(songSubmitBtn)', function (data) {
+            let d = data.field;
+            param_sucfun_get('/song/updateById',d)
+        });
+    });
+    
+</script>
+</html>

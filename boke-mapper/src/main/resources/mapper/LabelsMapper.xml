@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.LabelsMapper">
+
+    <select id="getByUserId" resultType="com.pearadmin.boke.entry.Labels">
+        SELECT l.* from labels l
+        left join user_label ul on ul.label_id = l.label_id
+        WHERE ul.user_id = #{userId} and l.delete_state = 1
+        order by order_num ,create_time desc
+    </select>
+    
+    <select id="labelRank" resultType="com.pearadmin.boke.entry.Labels">
+        SELECT * from labels where delete_state = 1
+        order by create_time DESC
+        limit 0,40
+    </select>
+    <select id="getByUserLabel2" resultType="com.pearadmin.boke.entry.Labels">
+        SELECT * from labels l
+        where l.delete_state = 1 and l.label_id IN (select DISTINCT label_id from user_label)
+        order by l.create_time DESC
+    </select>
+    
+    <select id="getLabelCountByBoke" resultType="int">
+        select count(1) from bokes
+        where FIND_IN_SET(#{labelId},label_id)
+        limit 1
+    </select>
+    
+</mapper>

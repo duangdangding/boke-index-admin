@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+    
+    <title>苏喂苏喂喔 - 用户信息设置</title>
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+    <!-- 代码高亮css -->
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+<!--    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>-->
+
+    <link rel="stylesheet" href="/tabs/tab1/cropper.css">
+    <link rel="stylesheet" href="/tabs/tab1/tabs.css">
+    <link rel="stylesheet" href="/tabs/tab1/ImgCropping.css">
+
+    <style>
+        
+        #image {
+            max-width: 100%; /* This rule is very important, please do not ignore this! */
+        }
+        .catalogue {
+            display: none !important;
+        }
+        #content5 table {
+            border-collapse: collapse;
+            word-break: break-word
+        }
+
+        /*#content5 .table-wrapper {
+            display: block;
+            overflow: hidden;
+        }*/
+
+        #content5 th {
+            background-color: #fafafa
+        }
+
+        #content5 th, #content5 td {
+            border: 1px solid #c0c0c0;
+            border-collapse: collapse;
+            padding: 8px 14px;
+            min-width: 50px
+        }
+        .url_input {
+            color:#333;
+            line-height:normal;
+            font-family:"Microsoft YaHei",Tahoma,Verdana,SimSun;
+            font-style:normal;
+            font-variant:normal;
+            font-size-adjust:none;
+            font-stretch:normal;
+            font-weight:normal;
+            font-size:14px;
+            outline-width:medium;
+            outline-style:none;
+            outline-color:invert;
+            text-shadow:0px 1px 2px #fff;
+            background-attachment:scroll;
+            background-repeat:repeat-x;
+            background-position-x:left;
+            background-position-y:top;
+            background-size:auto;
+            background-origin:padding-box;
+            background-clip:border-box;
+            background-color:rgb(255,255,255);
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            /*width: 100%;*/
+            margin: 10px 0;
+        }
+        .url_set tr {
+            height: 30px;
+            line-height: 30px;
+        }
+        .url_set .url_input{width: 100%}
+        .td_1r{
+            width: 7%;
+            font-size: 14px;
+        }
+        .td_3r{
+            padding-left: 20px;
+        }
+        .td_3r button{
+            padding: 3px;
+        }
+        .yp_set{
+            font-size: 18px;
+        }
+        .yp_set span{
+            line-height: 51px;
+            height: 51px;
+            padding: 0 5px;
+            width: 100%;
+        }
+        .yp_set button,#mailbdbox button,#pwdghbox button,#mailghbox button{
+            padding: 5px;
+            margin: 0 5px;
+        }
+        @media screen and (max-device-width: 320px){
+            .cropper-container {
+                width: 260px !important;
+            }
+            .tailoring-container .tailoring-content {
+                width: 280px !important;
+            }
+            .url_set table td {
+                font-size: 10px !important;
+            }
+            .forFlow main {
+                padding: 0 !important;
+                min-width: 280px !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/editor/wangeditor/wang.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <block th:include="boke/common :: page_header_html" />
+    <div id="main">
+        <div id="mainContent">
+            <div class="forFlow">
+                <main>
+                    <input class="tabBox_info" id="tab1" type="radio" name="tabs" checked>
+                    <label for="tab1">设置URL</label>
+
+                    <input class="tabBox_info" id="tab2" type="radio" name="tabs">
+                    <label for="tab2">上传头像</label>
+
+                    <input class="tabBox_info" id="tab3" type="radio" name="tabs">
+                    <label for="tab3">设置签名</label>
+
+                    <input class="tabBox_info" id="tab4" type="radio" name="tabs">
+                    <label for="tab4">账号设置</label>
+                    
+                    <input class="tabBox_info" id="tab5" type="radio" name="tabs">
+                    <label for="tab5">歌单设置</label>
+
+                    <section id="content1">
+                        <div class="url_set">
+<!--                            <form name="form" id="seturl_form">-->
+                                <table style="margin: 0 auto;width: 70%">
+                                    <tr>
+                                        <td class="td_1r">微信：</td>
+                                        <td><input type="text" th:value="${user.wxUrl}" name="wxUrl" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'wxUrl')">设置</button><button onclick="setUrls(2,'wxUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>QQ：</td>
+                                        <td><input type="text" th:value="${user.qqUrl}" name="qqUrl" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'qqUrl')">设置</button><button onclick="setUrls(2,'qqUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GITHUB：</td>
+                                        <td><input type="text" th:value="${user.githubUrl}" name="githubUrl" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'githubUrl')">设置</button><button onclick="setUrls(2,'githubUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>CSDN：</td>
+                                        <td><input type="text" name="csdnUrl" th:value="${user.csdnUrl}" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'csdnUrl')">设置</button><button onclick="setUrls(2,'csdnUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GITEE：</td>
+                                        <td><input type="text" name="giteeUrl" th:value="${user.giteeUrl}" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'giteeUrl')">设置</button><button onclick="setUrls(2,'giteeUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BILIBILI：</td>
+                                        <td><input type="text" name="biliUrl" th:value="${user.biliUrl}" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'biliUrl')">设置</button><button onclick="setUrls(2,'biliUrl')">清空</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>微博：</td>
+                                        <td><input type="text" name="weiboUrl" th:value="${user.weiboUrl}" placeholder="请输入内容" required="required" class="url_input" /></td>
+                                        <td class="td_3r"><button onclick="setUrls(1,'weiboUrl')">设置</button><button onclick="setUrls(2,'weiboUrl')">清空</button></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td style="text-align: center" colspan="3"><button onclick="setUrls('all')">一键设置</button></td>
+                                    </tr>-->
+                                </table>
+<!--                            </form>-->
+                        </div>
+                    </section>
+
+                    <!-- 修改头像 -->
+                    <section id="content2">
+                        <div class="tailoring-container">
+                            <div class="black-cloth" onclick="closeTailor(this)"></div>
+                            <div class="tailoring-content">
+                                <div class="tailoring-content-one">
+                                    <label title="上传图片" for="chooseImg" class="l-btn choose-btn">
+                                        <input type="file" accept="image/jpg,image/jpeg,image/png" name="file" id="chooseImg" class="hidden" onchange="selectImg(this)">
+                                        选择图片
+                                    </label>
+                                    <!--                                    <div class="close-tailoring"  onclick="closeTailor(this)">×</div>-->
+                                </div>
+                                <div class="tailoring-content-two">
+                                    <div class="tailoring-box-parcel">
+                                        <img id="tailoringImg">
+                                    </div>
+                                    <div class="preview-box-parcel">
+<!--                                        <p>图片预览：</p>-->
+                                        <div class="square previewImg"></div>
+                                        <div class="circular previewImg"></div>
+                                    </div>
+                                </div>
+                                <div class="tailoring-content-three">
+                                    <button class="l-btn cropper-reset-btn">复位</button>
+                                    <button class="l-btn cropper-rotate-btn">旋转</button>
+                                    <button class="l-btn cropper-scaleX-btn">换向</button>
+                                    <button class="l-btn sureCut" id="sureCut">开始上传</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 设置签名 -->
+                    <section id="content3">
+                        <div>
+                            <div id="wangEdit" style="position: sticky;"></div>
+                            <button style="padding: 5px" onclick="setSignature()">设置签名</button>
+                        </div>
+                    </section>
+
+                    <!-- 邮箱设置 -->
+                    <section id="content4">
+                        <div class="yp_set">
+                            <!--                            <form name="form" id="seturl_form">-->
+                            <table style="margin: 0 auto;width: 60%">
+                                <tr>
+                                    <td colspan="3">邮箱绑定之后可以使用邮箱登录，没有绑定按钮说明已经绑定~</td>
+                                </tr>
+                                <tr>
+                                    <td >邮箱：</td>
+                                    <td><span id="mail_old" th:text="${user.userEmail}">无</span></td>
+                                    <td class="td_3r"><button class="hidden" onclick="openMailbox()" id="mailbd">绑定</button><button onclick="openMailghbox()">更换</button></td>
+                                </tr>
+                                <!--<tr>
+                                    <td >打赏设置：</td>
+                                    <td><span id="mail_old" th:text="${user.userEmail}">无</span></td>
+                                    <td class="td_3r"><button class="hidden" onclick="openMailbox()" id="mailbd">绑定</button><button onclick="openMailghbox()">更换</button></td>
+                                </tr>-->
+                                <tr>
+                                    <td colspan="3"><button onclick="openPwdbox()">更换密码</button></td>
+                                </tr>
+                                <!--<tr>
+                                    <td>手机：</td>
+                                    <td><span id="phone_old" th:text="${user.phone}">无</span><input id="phone_new" type="text" name="phone" placeholder="请输入新的手机号" required="required" class="hidden url_input" /></td>
+                                    <td class="td_3r"><button class="hidden" onclick="openPhonebox()" id="phonebd">绑定</button><button onclick="newPhone()">更换</button></td>
+                                </tr>-->
+                            </table>
+                        </div>
+                    </section>
+                    <!-- 歌单设置 -->
+                    <section id="content5">
+                        <div class="yp_set">
+                            <table style="margin: 0 auto;width: 60%">
+                                <tr>
+                                    <td colspan="3">这里推荐几个歌单：
+                                        <p>网易云：6821290654，3116636104，3116636104</p>
+                                        <p>qq音乐：7309085056，6948407795，1106908216</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td >歌单平台：</td>
+                                    <td><select class="url_input" name="songServer" id="songServer">
+                                        <option value="netease">网易云音乐</option>
+                                        <option value="tencent">QQ音乐</option>
+                                        <option value="kugou">酷狗音乐</option>
+                                        <option value="baidu">百度音乐</option>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td>歌单编号：</td>
+                                    <td><input class="url_input" type="text" name="songNo" id="songNo" required="required"></td>
+                                </tr>
+                                <tr>
+                                    <td >自动播放：</td>
+                                    <td><select class="url_input" name="aotoPaly" id="aotoPaly">
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td >是否固定：</td>
+                                    <td><select class="url_input" name="leftFixed" id="leftFixed">
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select></td>
+                                </tr>
+                                <!--<tr>
+                                    <td >主题颜色：</td>
+                                    <td><input class="url_input" type="text" name="songTheme" id="songTheme" required="required"></td>
+                                </tr>-->
+                                <tr>
+                                    <td colspan="2">
+                                        <button class="l-btn" onclick="setSongList()">设置</button>
+                                        <button class="l-btn" onclick="setDefaultsong()">默认</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </section>
+
+                </main>
+            </div><!--end: forFlow -->
+        </div><!--end: mainContent 主体内容容器-->
+<!--        <block th:include="boke/common :: page_right2_html" />-->
+    </div><!--end: main -->
+    <block th:include="boke/common :: page_footer_html" />
+</div><!--end: home 自定义的最大容器 -->
+<block th:include="boke/common :: page_right1_html" />
+<block th:include="boke/common :: page_end_html" />
+<!-- 邮箱绑定 -->
+<div id="mailbdbox" class="hidden" style="text-align: center;margin: 10px auto">
+    <h4 style="margin: 5px 0">验证码将发送到<span th:text="${user.userEmail}"></span></h4>
+    <p style="margin: 5px 0">邮箱绑定之后，可以直接使用邮箱登录~</p>
+    <p style="margin: 5px 0">如果长时间未收到验证码，请检查垃圾箱</p>
+    <div><span>填写验证码：</span><input type="text" name="yzm" id="bdMyzm" class="url_input" required="required" /><button onclick="getMail(2)">获取验证码</button><br>
+        <button onclick="emailBD(2)">绑定</button>
+        <button onclick="layer.closeAll('page')">取消</button>
+    </div>
+</div>
+<!-- 邮箱绑定并更换 -->
+<div id="mailghbox" class="hidden" style="text-align: center;margin: 10px auto">
+    <h4 style="margin: 5px 0">验证码将发送到下方所填写邮箱</h4>
+    <p style="margin: 5px 0">如果长时间未收到验证码，请检查垃圾箱</p>
+    <div>
+        <span>新邮箱：</span><input id="email_new" type="text" name="userEmail" placeholder="请输入新的邮箱" required="required" class="url_input" /><br>
+        <span>填写验证码：</span><input type="text" name="yzm" required="required" id="ghMyzm" class="url_input" /><button onclick="getMail(3)">获取验证码</button><br>
+        <button onclick="emailBD(3)">更换邮箱</button>
+        <button onclick="layer.closeAll('page')">取消</button>
+    </div>
+</div>
+<!-- 更换密码 -->
+<div id="pwdghbox" class="hidden" style="text-align: center;margin: 10px auto">
+    <h4 style="margin: 5px 0">验证码将发送到<span th:text="${user.userEmail}"></span>邮箱</h4>
+    <p style="margin: 5px 0">如果长时间未收到验证码，请检查垃圾箱</p>
+    <div>
+        <span>新密码：</span><input id="password_new" type="password" placeholder="请输入新密码" required="required" class="url_input" /><br>
+        <span>再次输入密码：</span><input id="repassword_new" type="password" placeholder="请再次输入新的密码" required="required" class="url_input" /><br>
+        <span>填写验证码：</span><input type="text" name="yzm"  id="ghPWDyzm" required="required" class="url_input" /><button onclick="getMail(4)">获取验证码</button><br>
+        <button onclick="setPwdgh()">更换密码</button>
+        <button onclick="layer.closeAll('page')">取消</button>
+    </div>
+</div>
+</body>
+<!--<script src="/tabs/tab1/prefixfree.min.js"></script>-->
+<!-- 头像选择所需插件js -->
+<script src="/tabs/tab1/cropper.js"></script>
+<!--    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js" ></script>-->
+<script type="text/javascript" th:src="@{/editor/wangeditor/wangEditor.min.js}" ></script>
+<script th:inline="javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+
+var song = [[${song}]];
+
+//  设置歌单
+function setDefaultsong() {
+    token_ajax("/t/song/default", {},function (res) {
+        show_suc_msg("设置成功~");
+        setSongData(res);
+        reloadjsonh();
+    },2);
+}
+//  设置歌单
+function setSongList() {
+    let songNo = $("#songNo").val().trim();
+    if (songNo.length == 0) {
+        show_l_m("歌单编号不能为空！",2)
+        return ;
+    }
+    /*let songTheme = $("#songTheme").val().trim();
+    if (songTheme.length == 0) {
+        show_l_m("主题颜色不能为空！",2)
+        return ;
+    }*/
+    let songServer = $("#songServer").val();
+    let aotoPaly = $("#aotoPaly").val();
+    let leftFixed = $("#leftFixed").val();
+    // let data = {songNo:songNo,songTheme:songTheme,songServer:songServer,aotoPaly:aotoPaly,leftFixed:leftFixed};
+    let data = {songNo:songNo,songServer:songServer,aotoPaly:aotoPaly,leftFixed:leftFixed};
+    token_ajax("/t/song",data,function (res) {
+        show_suc_msg("设置成功~");
+        setSongData(res);
+        reloadjsonh();
+    },2);
+}
+
+var user = [[${user}]];
+var mailBd = user.emailBind;
+var oldmail = user.userEmail;
+
+const E = window.wangEditor
+const editor = new E("#wangEdit")
+editor.config.height = 200
+// editor.config.zIndex = 500
+// 取消自动 focus
+editor.config.focus = false
+// 不想使用 placeholder ，赋值为空字符串即可
+editor.config.placeholder = '请输入前面'
+// 还可以修改历史记录的步数。默认 30 步
+editor.config.historyMaxSize = 50 // 修改为 50 步
+// 默认情况下，显示所有菜单
+// editor.config.menus.fullscreen = false
+editor.config.menus = [
+    'bold',
+    'foreColor',
+    'link',
+    'quote',
+    'image',
+    'code',
+    'emoticon',  // 表情
+]
+editor.config.emotions = getEmoji();
+
+//插入代码语言配置
+editor.config.languageType = wd_language
+editor.config.customUploadImg = function (resultFiles, insertImgFn) {
+    // resultFiles 是 input 中选中的文件列表
+    let daw = new FormData();
+    for (let i = 0; i < resultFiles.length; i++) {
+        daw.append("files", resultFiles[i]);
+    }
+    wd_upload_img(daw,insertImgFn);
+}
+editor.create()
+    function openMailbox() {
+        if (mailBd === 1) {
+            openWind("绑定邮箱","mailbdbox",'420px','240px');
+        } else {
+            layer.msg("已经绑定~");
+        }
+    }
+    function openPwdbox() {
+        openWind("更改密码","pwdghbox",'420px','300px');
+    }
+    
+    //获取验证码
+    function getMail(index) {
+        if (index === 2) {
+            if (mailBd === 2) {
+                layer.msg("已经绑定~")
+                return false;
+            }
+            toPost("/t/mail/bd",{index:index})
+        } else if (index === 3) {
+            let nem = $("#email_new").val();
+            if (oldmail === nem) {
+                layer.msg("与原邮箱一致~")
+                return false;
+            }
+            let email_reg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (!email_reg.test(nem)) {
+                layer.msg("请输入正确的邮箱格式");
+                return false;
+            }
+            toPost("/t/mail/bd",{index:index,to:nem})
+        } else if (index === 4) {
+            let pwd = $("#password_new").val();
+            let repwd = $("#repassword_new").val();
+            //包含中文正则
+            let pwd_reg = /([a-zA-Z0-9!@#$%^&*()_?<>{}]){6,15}/;
+            if (!pwd_reg.test(pwd)) {
+                layer.msg("密码必须在6~15位之间(只能字母、数字、英文符号)");
+                return false;
+            }
+            if (repwd !== pwd) {
+                layer.msg("两次密码不一致");
+                return false;
+            }
+            toPost("/t/mail/bd",{index:index})
+        }
+    }
+    
+    function openMailghbox() {
+        layer.open({
+            skin: 'layui-layer-rim', //加上边框
+            area: ['420px', '240px'], //宽高
+            title: "更换邮箱",
+            type:1,
+            content:$("#mailghbox")
+        })
+    }
+    // 设置密码
+    function setPwdgh() {
+        let pwd = $("#password_new").val();
+        let repwd = $("#repassword_new").val();
+        //包含中文正则
+        let pwd_reg = /([a-zA-Z0-9!@#$%^&*()_?<>{}]){6,15}/;
+        if (!pwd_reg.test(pwd)) {
+            layer.msg("密码必须在6~15位之间(只能字母、数字、英文符号)");
+            return false;
+        }
+        if (repwd !== pwd) {
+            layer.msg("两次密码不一致");
+            return false;
+        }
+        let yzm = $("#bdMyzm").val();
+        let reg = /^\d{6}$/;
+        if (!reg.test(yzm)) {
+            layer.msg("zz验证码不正确~")
+            return false;
+        }
+        token_ajax("/t/set/pwd",{valitionCode:yzm,pwd:pwd},function () {
+            closelayer()
+            window.location.href = "/login"
+        })
+    }
+
+    // 开始绑定邮箱
+    function emailBD(index) {
+        let param = {};
+        if (index === 2) {
+            if (mailBd === 2) {
+                layer.msg("已经绑定~")
+                return false;
+            }
+            let yzm = $("#bdMyzm").val();
+            let reg = /^\d{6}$/;
+            if (!reg.test(yzm)) {
+                layer.msg("zz验证码不正确~")
+                return false;
+            }
+            param = {valitionCode:yzm,index:index};
+        } else if (index === 3) {
+            let nem = $("#email_new").val();
+            if (oldmail === nem) {
+                layer.msg("与原邮箱一致~")
+                return false;
+            }
+            let email_reg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (!email_reg.test(nem)) {
+                layer.msg("请输入正确的邮箱格式");
+                return false;
+            }
+            let yzm = $("#ghMyzm").val();
+            let reg = /^\d{6}$/;
+            if (!reg.test(yzm)) {
+                layer.msg("zz验证码不正确~")
+                return false;
+            }
+            param = {index:index,valitionCode:yzm,to:nem};
+        }
+        token_ajax("/t/mail/sbd",param,function () {
+            mailBd = 2;
+            if (index === 3) {
+                oldmail = param.to;
+            }
+            closelayer();
+        },3);
+    }
+    
+    // 设置签名
+    function setSignature() {
+        let html = editor.txt.html().trim();
+        let h_re = html.replace("<p>","").replace("</p>","").replace("<br/>","").replace("&nbsp;","").trim();
+        let len = h_re.length;
+        if (len > 500 || len < 1) {
+            layer.msg("请输入合适的字数~")
+            return false;
+        }
+        if (len > 0) {
+            token_ajax("/t/setsignature",{signature:html})
+        } else {
+            layer.msg("请先输入内容~");
+            return false;
+        }
+    }
+
+    // 设置URL
+    function setUrls(i,t) {
+        let v = "";
+        if (i == 1) {
+            v = $("input[name=" + t + "]").val();
+        }
+        token_ajax("/t/seturl",{column:t,url:v},function () {
+            $("input[name=" + t + "]").val(v);
+        },3);
+    }
+
+    function setSongData(s,i) {
+        if (!i) {
+            createSongBox(s,get_item(lo_userId));
+        }
+        $("#songNo").val(s.songNo);
+        // $("#songTheme").val(s.songTheme);
+        $("#songServer").val(s.songServer);
+        $("#aotoPaly").val(s.aotoPaly?1:0);
+        $("#leftFixed").val(s.leftFixed?1:0);
+    }
+    
+    $(function () {
+        showLoad();
+
+        // let pathTypeArr = document.getElementsByName("tabs");
+        let u_tabs = $(".tabBox_info");
+        // 给每个radio 加点击事件
+        u_tabs.each(function (index,e) {
+            $(this).click(function () {
+                sessionStorage.u_f_tab = index + 1;
+            });
+        })
+        let uftab = sessionStorage.u_f_tab;
+        if (!uftab) {
+            uftab = "1";
+        }
+        $("#tab" + uftab).attr("checked","checked");
+        // 字符串转数字
+        let uftab_i = parseInt(uftab);
+        for (let i = 1;i < 6;i++) {
+            if (i !== uftab_i) {
+                $('#tab' + i).removeAttr("checked");
+            }
+        }
+        setSongData(song,1);
+        if (mailBd === 1) {
+            $("#mailbd").show();
+        }
+        editor.txt.html(user.signature);
+        var $image = $('#tailoringImg');
+// 参数项说明
+        var options = {
+            viewMode: 0,
+            // dragMode: "crop",
+            initialAspectRatio: 1/1,
+            aspectRatio: 1/1,
+            data: null,
+            preview: '.previewImg',
+            responsive: true,
+            restore: true,
+            checkCrossOrigin: true,
+            checkOrientation: true,
+            resizable: false,  //是否允许改变裁剪框的大小
+            modal: true,
+            guides: true,
+            center: true,
+            highlight: true,
+            touchDragZoom: true,  //是否允许通过触摸移动来缩放图片
+            background: true,
+            autoCrop: true,
+            autoCropArea: 0.5, //默认0.8 0-1之间的数值，定义自动剪裁区域的大小，默认0.8
+            movable: true,
+            rotatable: true,
+            scalable: true,
+            zoomable: true,
+            zoomOnTouch: true,
+            zoomOnWheel: true,
+            mouseWheelZoom: true,  //是否允许通过鼠标滚轮来缩放图片
+            wheelZoomRatio: 0.1,
+            cropBoxMovable: true,
+            cropBoxResizable: false,
+            toggleDragModeOnDblclick: true,
+            minCanvasWidth: 0,
+            minCanvasHeight: 0,
+            minCropBoxWidth: 0,
+            minCropBoxHeight: 0,
+            // minContainerWidth: 200,
+            // minContainerHeight: 200,
+            ready: null,
+            cropstart: null,
+            cropmove: null,
+            cropend: null,
+            crop: null,
+            zoom: null
+        }
+        $image.cropper(options);
+        // 设置全局cropper属性
+        //裁剪后的处理
+        $("#sureCut").on("click",function () {
+            if ($("#tailoringImg").attr("src") == null ){
+                return false;
+            }else{
+                var cas = $('#tailoringImg').cropper('getCroppedCanvas',{
+                    width:200,height:200
+                });//获取被裁剪后的canvas
+                var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+                // console.log("图片base64!~~" + base64url)
+                // $("#finalImg").prop("src",base64url);//显示为图片的形式
+                // var file = convertBase64UrlToBlob(base64url);
+                var img_file = convertBase64UrlToFile(base64url);
+                var maxLen = 5 * 1024 * 1024;
+                if (img_file.size > maxLen || img_file.size == 0) {
+                    show_l_m("大小必须在5M以内~",5);
+                    return false;
+                }
+                
+                let daw = new FormData()
+                daw.append("fcIMg",img_file);
+                daw.append("userId",get_item(lo_userId));
+                token_file("/t/kodo/face",daw);
+            }
+        });
+
+        //旋转
+        $(".cropper-rotate-btn").on("click",function () {
+            $('#tailoringImg').cropper("rotate", 45);
+        });
+        //复位
+        $(".cropper-reset-btn").on("click",function () {
+            $('#tailoringImg').cropper("reset");
+        });
+        //换向
+        var flagX = true;
+        $(".cropper-scaleX-btn").on("click",function () {
+            if(flagX){
+                $('#tailoringImg').cropper("scaleX", -1);
+                flagX = false;
+            }else{
+                $('#tailoringImg').cropper("scaleX", 1);
+                flagX = true;
+            }
+            // flagX !== flagX;
+        });
+        closeLoad();
+    })
+
+//选择图片
+function selectImg(file) {
+    if (!file.files || !file.files[0]){
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (evt) {
+        var replaceSrc = evt.target.result;
+        //更换cropper的图片
+        $('#tailoringImg').cropper('replace', replaceSrc,false);//默认false，适应高度，不失真
+    }
+    reader.readAsDataURL(file.files[0]);
+}
+// 发送验证码
+function toPost(url,param) {
+    token_ajax(url,param,function () {
+        show_suc_msg("请在5分钟之内填写~");
+    },3)
+}
+</script>
+</html>

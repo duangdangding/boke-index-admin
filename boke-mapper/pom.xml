@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- 依赖项目 -->
+    <parent>
+        <groupId>com.lsh.boke</groupId>
+        <artifactId>boke-index-admin</artifactId>
+        <version>1.5.4</version>
+    </parent>
+    <artifactId>boke-mapper</artifactId>
+    <version>1.5.4</version>
+<!--    <packaging>jar</packaging>-->
+    <dependencies>
+        <!--<dependency>
+            <groupId>com.lsh.boke</groupId>
+            <artifactId>boke-pojo</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>com.lsh.boke</groupId>
+            <artifactId>pear-common</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/**/*Mapper.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+                <!--                <filtering>false</filtering>-->
+            </resource>
+        </resources>
+    </build>
+</project>

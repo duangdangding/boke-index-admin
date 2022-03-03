@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .hidden {display: none}
+    </style>
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">排序：asc，弹出：0在本页面1新窗口，显示：0显示1不显示</div>
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="navListTable" lay-filter="navListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="navAdd">新增</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" id="navBtn{{d.friendId}}"
+                           lay-event="deleteState">
+                            {{#  if(d.navShow == 1){ }}
+                            启用
+                            {{#  } else { }}
+                            禁用
+                            {{#  } }}
+                        </a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="update">修改</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+
+<div id="addOrUpNavWin" class="hidden">
+    <form class="layui-form" id="navForm" method="post">
+        <input type="hidden" name="navId" id="navId">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" id="navTitle" name="navTitle" lay-verify="friend" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" id="navUrl" name="navUrl" lay-verify="friend" autocomplete="off" placeholder="请输入地址" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="number" id="orderNum" name="orderNum" lay-verify="friend" autocomplete="off" placeholder="请输入排序" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">ID值</label>
+            <div class="layui-input-block">
+                <input type="text" id="idStr" name="idStr" lay-verify="friend" autocomplete="off" placeholder="请输入ID值" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">HTML</label>
+            <div class="layui-input-block">
+                <input type="text" id="htmlStr" name="htmlStr" lay-verify="friend" autocomplete="off" placeholder="请输入HTML" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示</label>
+            <div class="layui-input-block">
+                <select class="layui-select" name="navShow" id="navShow">
+                    <option value="1">显示</option>
+                    <option value="0">隐藏</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">弹出</label>
+            <div class="layui-input-block">
+                <select class="layui-select" name="target" id="target">
+                    <option value="1">新窗口</option>
+                    <option value="0">本页面</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div>
+        <button class="layui-btn" onclick="upOrSave()">确定</button>
+        <button class="layui-btn" onclick="closelayer()">取消</button>
+    </div>
+</div>
+</body>
+<script>
+    
+    $(function () {
+    })
+    // let edit ;
+    let navTable;
+    let navlist_url = '/admin/navigation/page';
+    let navAddOrUpdate = '/admin/navigation/upOrAdd';
+    layui.use('table', function () {
+        let table = layui.table;
+        navTable = table.render({
+            elem: '#navListTable'
+            ,url: navlist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'navId', width:60, title: 'ID', sort: true}
+                    ,{field:'navTitle', width:120, title: '标题'}
+                    ,{field:'navUrl', width:200, title: '地址'}
+                    ,{field:'orderNum', width:60, title: '排序'}
+                    ,{field:'createTime', width:160, title: '创建时间'}
+                    ,{field:'target', width:150, title: '弹出'}
+                    ,{field:'idStr', width:100, title: 'iD值'}
+                    ,{field:'htmlStr', width:120, title: 'HTML'}
+                    ,{field:'navShow', width:120, title: '显示'}
+                    ,{field:'caozuo',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: false
+            ,skin: 'row' //表格风格
+        });
+
+        //头工具栏事件
+        table.on('toolbar(navListTable)', function(obj){
+            switch(obj.event){
+                case 'navAdd':
+                    // edit = 1;
+                    document.getElementById("navForm").reset();
+                    openWind('新增','addOrUpNavWin','50%','80%',function () {
+                        reload();
+                    })
+                    break;
+                case 'reload':
+                    reload();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(navListTable)', function(obj){
+            let b = obj.data;
+            let navId = b.navId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要禁用此导航吗？', function(index){
+                    let state = b.navShow;
+                    let pstate;
+                    let pv;
+                    if (state) {
+                        pstate = false;
+                        pv = '启用';
+                    } else {
+                        pstate = true;
+                        pv = '禁用';
+                    }
+                    param_suc_post(navAddOrUpdate,{navId:navId,navShow:pstate},function () {
+                        obj.update({
+                            navShow: pstate + '',
+                        });
+                        $("#navBtn" + navId).text(pv);
+                        layer.close(index);
+                    })
+                });
+            } else if (obj.event === 'update') {
+                // edit = 2;
+                $("#navId").val(b.navId);
+                $("#navTitle").val(b.navTitle);
+                $("#navUrl").val(b.navUrl);
+                $("#orderNum").val(b.orderNum);
+                $("#target").val(b.target);
+                $("#idStr").val(b.idStr);
+                $("#htmlStr").val(b.htmlStr);
+                $("#navShow").val(b.navShow);
+                openWind('修改','addOrUpNavWin','50%','80%',function () {
+                    reload();
+                })
+            }
+        });
+    });
+    
+    function reload() {
+        navTable.reload();
+    }
+    
+    
+    function upOrSave() {
+        let d = {};
+        let t = $('#navForm').serializeArray();
+        //t的值为[{name: "a1", value: "xx"},
+        //{name: "a2", value: "xx"}...]
+        $.each(t, function() {
+            d[this.name] = this.value;
+        });
+        param_suc_post(navAddOrUpdate,d,function () {
+            navTable.reload();
+            closelayer();
+        });
+    }
+    
+</script>
+</html>

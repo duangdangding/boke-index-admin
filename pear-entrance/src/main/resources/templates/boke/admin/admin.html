@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--解决idea thymeleaf 表达式模板报红波浪线-->
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title >博客后台管理系统</title>
+    <!-- 引入公用部分 -->
+    <script th:replace="boke/admin/common/head::static"></script>
+    <style>
+        /* 菜单鼠标放上去时，左边的提示条对不齐，直接屏蔽*/
+        .layui-nav-bar{
+            display: none;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <div class="layui-header" >
+        <div class="layui-logo"><img class="layui-nav-img" src="/favicon.ico"/></div>
+    </div>
+
+    <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-shrink="all">
+                <li class="layui-nav-item" th:each="menu,menuStatus:${menus}">
+                    <a href="javascript:;" th:text="${menu.menuName}">项目管理</a>
+                    <dl class="layui-nav-child" th:each="m,mStatus:${menu.menus}">
+                        <a class="huanzi-menu" th:attr="data-id='menuId' + ${m.menuId},data-url=${m.menuUrl}" href="javascript:;" th:text="${m.menuName}">菜单管理</a></dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 内容主体区域 -->
+    <div class="layui-body" style="overflow-y: hidden;">
+        <!--   动态选项卡   -->
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true">
+            <!-- 标题 -->
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="11">首页</li>
+            </ul>
+            <!-- 内容 -->
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div id="indexTabContent"  class="layui-row layui-col-space15 tab-content-div" style="padding: 20px;background-color: #F2F2F2;overflow: auto;">
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">欢迎使用</div>
+                                <div class="layui-card-body">
+                                    去博客首页<a class="layui-btn" target="_blank" th:href="@{/}">博客首页</a><br>
+                                    去祝贺生日<a class="layui-btn" target="_blank" href="http://birthday.suweibk.xyz/">祝贺生日</a><br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">系统公告</div>
+                                <div class="layui-card-body">
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">AD广告位（长期招租，如有需要请私信）</div>
+                                <div class="layui-card-body">
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=ckkryd9h&utm_source=ckkryd9h', '_blank')" title="AD广告！">【阿里云】新老用户同享，上云优化聚集地！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/activity?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】最新活动页，上新必买抢先知，劲爆优惠不错过！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/daily-act/ecs/activity_selection?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】轻量应用服务器2核2G 低至60元/年起！香港与海外服务器最低24元/月起！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/daily-act/ecs/care?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】ECS实例升级、续费，享低至 6.3折 限时折扣！</span><br/>
+                                    <br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1077&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年74元！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1068&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】境外1核2G服务器低至2折，半价续费券限量免费领取！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1063&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】星星海SA2云服务器，1核2G首年99元起，高性价比首选！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1060&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】中小企业福利专场，多款刚需产品，满足企业通用场景需求，云服务器2.5折起！</span><br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <div class="layui-card-header">AD广告位（长期招租，如有需要请私信）</div>
+                                <div class="layui-card-body">
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://promotion.aliyun.com/ntms/act/ambassador/sharetouser.html?userCode=ckkryd9h&utm_source=ckkryd9h', '_blank')" title="AD广告！">【阿里云】新老用户同享，上云优化聚集地！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/activity?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】最新活动页，上新必买抢先知，劲爆优惠不错过！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/daily-act/ecs/activity_selection?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】轻量应用服务器2核2G 低至60元/年起！香港与海外服务器最低24元/月起！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://www.aliyun.com/daily-act/ecs/care?userCode=ckkryd9h', '_blank')" title="AD广告！">【阿里云】ECS实例升级、续费，享低至 6.3折 限时折扣！</span><br/>
+                                    <br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1077&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年74元！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1068&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】境外1核2G服务器低至2折，半价续费券限量免费领取！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1063&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】星星海SA2云服务器，1核2G首年99元起，高性价比首选！</span><br/>
+                                    <span style='color: #4c4f8b;text-decoration:underline;cursor: pointer; ' onclick="window.open('https://cloud.tencent.com/act/cps/redirect?redirect=1060&cps_key=e1c9db729edccd479fc902634492bf53&from=console', '_blank')" title="AD广告！">【腾讯云】中小企业福利专场，多款刚需产品，满足企业通用场景需求，云服务器2.5折起！</span><br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部固定区域 -->
+    <div class="layui-footer" >
+        © 苏喂苏喂喔 - 博客后台管理系统
+    </div>
+</div>
+<script>
+    layui.use('element', function () {
+        let element = layui.element;
+
+        //首页内容高度
+        $("#indexTabContent").css("height",($(".layui-body")[0].offsetHeight - 94) + "px");
+
+        /**
+         * 菜单点击事件
+         */
+        $("body").on("click", ".huanzi-menu", function (e) {
+            if($(this).next("dl").length > 0){
+                return;
+            }
+            let url = $(this).data("url");
+            let id = $(this).data("id");
+            let text = $(this).text();
+
+            //如果不存在
+            if ($(".layui-tab-title").find("li[lay-id='" + id + "']").length <= 0) {
+                element.tabAdd('demo', {
+                    title: text,
+                    //iframe子页面onload新增监听src为/loginPage是父页面跳转/loginPage，解决“俄罗斯套娃”问题
+                    content: "<iframe class='tab-content-div' onload='if(this.contentWindow.location.pathname == \""+ctx+"/loginPage\"){window.location.href = \""+ctx+"/loginPage\"};' width='100%' height='" + ($(".layui-body")[0].offsetHeight - 61) + "px" + "' frameborder='0' scrolling='auto' src=\"" + url + "\"></iframe>",
+                    id: id
+                });
+            }
+            element.tabChange('demo', id);
+        });
+
+        /**
+         * 监听浏览器可视高度，自适应设置高度
+         */
+        window.onresize = function (ev) {
+            let h = 94;
+            if($(".layui-show .tab-content-div")[0].nodeName === "IFRAME"){
+                h = 61;
+            }
+            $(".tab-content-div").css("height",($(".layui-body")[0].offsetHeight - h) + "px");
+        }
+    });
+</script>
+</body>
+</html>

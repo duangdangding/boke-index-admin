@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!-- 百度SEO -->
+    <!--    <meta name="baidu-site-verification" content="code-zqJOlgVi8w" />-->
+    <meta name="baidu-site-verification" content="code-w4nRNj0vMe" />
+    <link rel="alternate" href="http://blog.suweibk.xyz">
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+    <!--    // 防止页面放大-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="site" content="http://suweibk.xyz:11521" />
+    <meta name="referer" content="origin" />
+    <!--    <meta name="referer" content="suweibk.xyz" />-->
+
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--  403  -->
+    <!--    <meta name="referrer" content="no-referrer" />-->
+    <!--    <img referrer="no-referrer|origin|unsafe-url" src="{{item.src}}"/>-->
+    <title th:text="'苏喂苏喂喔 - ' + ${boke.title}">苏喂苏喂喔 - 博客园</title>
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+   
+    <link rel="stylesheet" href="/bokejscss/bokexq.css" />
+    <link rel="stylesheet" href="/editor/editormd/css/editormd.css" />
+    <!--    <link rel="stylesheet" href="/editor/editormd/css/editormd.preview.css" />-->
+    <!--    <link rel="stylesheet" href="/editor/editormd/css/editormd.logo.css" />-->
+    <link rel="stylesheet" href="/editor/editormd/css/katex.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+
+    <link rel="stylesheet" href="/editor/wangeditor/wang.css" />
+    <link type="text/css" rel="stylesheet" href="/share/css/share.min.css" />
+    <style>
+        .w-e-text,.w-e-text-container {
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+<!--th:src="@{/imgs/a.png}"-->
+<img id="firstImg" th:src="@{/imgs/a.png}" class="suwei_logo">
+<!--done-->
+<div id="home">
+    <block th:include="boke/common :: page_header_html" />
+    <div id="main">
+        <div id="mainContent">
+            <div id="topics" style="position: relative">
+                <div class="post">
+                    <h1 class = "postTitle">
+                        <a id="cb_post_title_url" th:href="@{'/boke/' + ${bokeId}}" href="javascript:void(0)">
+                            <span th:text="${boke.title}"></span>
+                        </a>
+                        <span class="b_c_s" th:vlt="${bokeId}"></span>
+                        <span id="setTOP" style="font-size: 12px;font-weight: normal"><a style="display:none;" class="to_top_e"></a></span>
+                        <div id="BlogPostCategory">
+                            <span th:text="${boke.userName}">苏喂苏喂喔</span>
+                            <span th:text="${boke.createTime}"></span> | <span><img th:src="@{/imgs/ll_blue.gif}">(<span id="b_ll" ></span>) </span>
+                            <span class="like_img"><img style="cursor: pointer" onclick="setLikeNum()" th:src="@{/imgs/fax.gif}">(<span id="b_ln" ></span>) </span>
+                            <span><img th:src="@{/imgs/fx.gif}">(<span id="b_sn"></span>)</span>
+                            <span class="xq_fl_span"><a style="display:none;" onclick="return toeditor();" class="to_edit_e"
+                                                        th:href="@{'/t/editor/' + ${boke.bokeId}}" target="_blank">编辑</a></span>
+                            <p style="padding: 2px 0">
+                                分类:<a th:href="@{'/?navTitle=分类：'+${boke.cateName}+ '&cateId=' +${boke.cateId}}" th:text="${boke.cateName}" target="_blank">每日一题</a>
+                                <!-- 标签 -->
+                                <span id="labels_box"></span>
+                                <span class="fxBtnBox">分享到：<span class="wzShare" th:vlt="${bokeId}" id="boke_fenxiang1"></span></span>
+                            </p>
+                            <p >本帖最新于<span th:text="${boke.updateTime}"></span>编辑</p>
+                        </div>
+                    </h1>
+                    <div class="clear"></div>
+                    <div class="postBody">
+                        <div id="cnblogs_post_body" class="blogpost-body blogpost-body-html" style="border-top: #c0c0c0 1px dashed;" >
+                            <textarea id="md_msg" style="display:none;"></textarea>
+                        </div>
+                        <div class="sign" id="gr_sign" style="max-height:200px;maxHeightIE:200px;" th:utext="${boke.signature}"></div>
+                        <div id="blog_post_info_block">
+                            <div class="fxBtnBox">
+                                分享到：<div class="wzShare" th:vlt="${bokeId}" id="boke_fenxiang2"></div>
+                            </div>
+                            <div id="blog_post_info">
+                                <div id="green_channel">
+                                    <a title="如果觉得文章不错，可以点一下喜欢哦~" href="javascript:void(0);" id="green_channel_digg" onclick="setLikeNum()">喜欢</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="blogs_ml">
+                    <button class="zkml_btn"></button>
+                    <div id="blogs_ml"></div>
+                </div>
+                <div class="clear"></div>
+                <div id="comm_listbox">
+                    <div class="one_comm" th:if="${comments}" th:each="comment,status : ${comments}">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="cm_td_img">
+                                    <img width="150" style="border-radius: 5px;border: 5px solid white" th:alt="${comment.userName == null ? '无名氏':comment.userName}" th:src="${comment.userFace == null ? '/imgs/face_2.jpg' : comment.userFace}" />
+                                    <p style="padding: 10px 0;text-align: center" th:text="${comment.userName == null ? '无名氏':comment.userName}"></p>
+                                </td>
+                                <td class="cm_td_cont">
+                                    <div class="comm_title">发表于：<span th:text="${comment.commTime}">2021.01.11: 11:11:11</span></div>
+                                    <div class="comm_count" th:id="comm_count+(${status.index} + 1)" style="padding-top: 5px" th:utext="${comment.commTont}">这是啥</div>
+                                    <ul th:id="replyUl+(${status.index} + 1)">
+                                        <li th:if="${comment.replys}" th:each="reply,replyStatus : ${comment.replys}">
+                                            <div class="rep_count">
+                                                <img width="40" height="40" th:alt="${reply.userName == null ? '无名氏':reply.userName}" alt="" th:src="${reply.userFace == null ? '/imgs/face_2.jpg' : reply.userFace}" />
+                                                <div class="cm_td_rp_sp">
+                                                    <span>回复：</span><span th:text="${reply.replyTime}">2021.01.11: 11:11:11</span>
+                                                </div>
+                                            </div>
+                                            <div class="reply_count" th:id="reply_count+(${replyStatus.index} + 1)" th:utext="${reply.replyContent}">
+                                                这是回复
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cm_td_img"></td>
+                                <td class="cm_td_hf"><a href="javascript:void(0)" th:onclick="openReplyBox([[${comment.commId}]],[[${status.index} + 1]])">回复</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="editbox">
+                    <div id="wangEdit" onkeydown="return pinglune(event);" style="position: sticky;"></div>
+                    <div style="display: block;text-align: center">
+                        <button style="margin: 5px auto;padding: 5px;" onclick="pinglun()">评论/回复</button>
+                        <button id="repl_ca_btn" class="hidden" style="margin: 5px auto;padding: 5px;" onclick="closeRelAf()">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div><!--end: mainContent 主体内容容器-->
+        <block th:include="boke/common :: page_right2_html" />
+    </div><!--end: main -->
+    <block th:include="boke/common :: page_footer_html" />
+
+</div><!--end: home 自定义的最大容器 -->
+<block th:include="boke/common :: page_right1_html" />
+<block th:include="boke/common :: page_end_html" />
+</body>
+<script type="text/javascript" th:src="@{/editor/wangeditor/wangEditor.min.js}" ></script>
+<!-- 看图插件 -->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-polyfills/0.1.42/polyfill.min.js"></script>-->
+<script src="/zoom-zx/zx-image-viewer.min.js"></script>
+<script src="/share/js/jquery.share.min.js"></script>
+<!--    <script src="/editor/editormd/editormd.min.js"></script>-->
+<script src="/editor/editormd/editormd.js"></script>
+<!--    <script src="/editor/editormd/prettify.js"></script>-->
+<script src="/editor/editormd/lib/flowchart.min.js"></script>
+<script src="/editor/editormd/lib/jquery.flowchart.min.js"></script>
+<script src="/editor/editormd/lib/raphael.min.js"></script>
+<script src="/editor/editormd/lib/marked.min.js"></script>
+<script src="/editor/editormd/lib/prettify.min.js"></script>
+<script src="/editor/editormd/lib/underscore.min.js"></script>
+<script src="/editor/editormd/lib/sequence-diagram.min.js"></script>
+<script src="/js/clipboard.min.js"></script>
+<!-- ios设置手机禁止缩放 -->
+<script src="/js/iossuofang.js"></script>
+
+<!-- 代码高亮 -->
+<script src="/htjs/highlight.min11.js"></script>
+<script th:inline="javascript" type="text/javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+var ls=new Storage();
+var id = [[${bokeId}]];
+var b_boke_2 = [[${boke}]];
+var b_userId = [[${boke.userId}]];
+var testEditor;
+// 按下Ctrl + Enter 提交留言或者评论
+function pinglune(e) {
+    if (e.ctrlKey && e.keyCode === 13){
+        pinglun();
+    }
+}
+</script>
+<script th:src="@{/bokejscss/bokexq.js}" ></script>
+</html>

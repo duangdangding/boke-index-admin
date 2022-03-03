@@ -1,0 +1,39 @@
+body,.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer {
+    color: #d1e5ef;
+    background: rgba(45,56,62) !important;
+}
+.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer{color: #d1e5ef;}
+
+.layui-layer-dialog .layui-layer-padding{
+    color: black !important;
+}
+#cate_v_b {color: black}
+/*  鼠标放上去显示大图  */
+<!--
+.d_imgbox{position:relative;}
+.d_imgbox span img{ /*CSS for enlarged image*/
+    border-width: 0;
+    padding: 2px;
+    width:200px;
+}
+.d_imgbox span{
+    position: absolute;
+    padding: 3px;
+    border: 1px solid gray;
+    visibility: hidden;
+    background-color:#FFFFFF;
+}
+.d_imgbox:hover{
+    background-color:transparent;
+}
+.d_imgbox:hover span{
+    visibility: visible;
+    top:0;
+    left:60px;
+}
+-->
+.editormd-toolbar,.editormd .CodeMirror {
+    z-index: 1;
+}
+
+

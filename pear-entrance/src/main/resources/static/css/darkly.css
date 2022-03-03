@@ -1,0 +1,76 @@
+/*主题色更换-暗色黑*/
+.tailoring-container .tailoring-content,.w-e-text,body,.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer{    background: rgba(45,56,62);}
+.w-e-toolbar {
+    background: rgba(45,56,62) !important;
+}
+#cate_v_b{color: black}
+/* 复制按钮 */
+/*.copy-btn .clippy,.clippy {background-color: white}*/
+#navigator{    background: hsla(0,0%,100%,0.1);}
+#sideBar {
+    background: rgba(215,215,215,1);
+}
+/*.set_btn{ background: rgba(215,215,215,1);}*/
+/*.day {border: white 1px solid;}*/
+.cnblogs-markdown code, .cnblogs-post-body code {
+    background: #E0E0E0 !important;
+}
+
+.day .postTitle a:link {
+    /*color: #d1e5ef;*/
+}
+.day .c_b_p_desc {
+    /*color: #d1e5ef;*/
+}
+.wd_header,.w-e-text,.w-e-text a,.pagination span,.poem-wrap h1 ,.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer
+,.poem-wrap #poem_sentence,.poem-wrap #poem_info {
+    /*color: #7396a7;*/
+    color: #d1e5ef;
+    transition: color .3s ease
+}
+
+blockquote {
+    padding: 0 10px;
+    color: #7E958B;
+    border: none;
+    border-left: 4px solid #7f8c93;
+    padding-left: 20px;
+    margin-left: 0;
+    font-size: 14px;
+    font-style: italic;
+}
+hr{
+    background-color: #7E958B;
+    border: 0;
+    height: 1px;
+    margin: 10px 0;
+}
+#cnblogs_post_body th, #cnblogs_post_body td, .cnblogs-post-body th, .cnblogs-post-body td{    border: 1px solid #7E958B!important;}
+table {
+    margin: 10px 0;
+}
+#cnblogs_post_body th, .cnblogs-post-body th {
+    background-color: #495A60;
+}
+#author_profile_follow {
+    color: #7f8c93;
+}
+.comment_textarea{    background-color: #E0E0E0!important;}
+.OwO .OwO-logo{    background: #D7D7D7!important;}
+#cnblogs_post_body table::-webkit-scrollbar-thumb{    background-color: #2D383E;}
+#cnblogs_post_body table::-webkit-scrollbar-track{background-color: #7f8c93!important}
+
+/*poper弹出消息暗黑系*/
+.tippy-box{background-color: rgba(45,56,62)!important;}
+.tippy-box[data-theme~='tomato'] {
+  background-color: rgba(45,56,62)!important;
+}
+.tippy-arrow{color:rgba(45,56,62)!important}
+@media (min-width: 1300px){
+    /*暗色黑*/
+    div#sideBar {
+        background: none!important;
+    }
+}
+div#mainContent {background-color: #afafaf00}
+#cb_post_title_url {color: #d1e5ef !important}

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+    
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <!-- 添加成功之后弹窗 -->
+        <div id="addResultBox" class="hidden">
+            <div id="addResult"></div>
+        </div>
+        <!-- json添加 -->
+        <div id="addJsonStrWin" class="hidden">
+            <textarea id="jsonStr" class="layui-textarea" rows="22" cols="43"></textarea>
+            <input class="url_input" type="text" id="tSourceApi" value="api" required="required">
+            <input class="url_input" type="text" id="tSourceName" value="name" required="required">
+            <input class="url_input" type="text" id="parseApi_s" value="parseApi" required="required">
+            <input class="url_input" type="text" id="parseGroup_s" value="group" required="required">
+            <select class="url_input" id="sourceType_j" name="sourceType">
+                <option value="1">正常</option>
+                <option value="2">不正常</option>
+                <option value="3">m3u8</option>
+                <option value="4">网址</option>
+            </select>
+            <select class="url_input" id="exporType_j" name="exporType">
+                <option value="1">默认</option>
+                <option value="2">ZY格式</option>
+            </select><br>
+            <button class="l-btn" id="addJsonBtn" onclick="toJsonStr()">添加</button>
+            <button class="l-btn" onclick="jsonClear('jsonStr')">清空</button>
+            <button class="l-btn" onclick="closelayer(showAddBtn)">取消</button>
+        </div>
+        <div class="p_container">
+            <div class="menuBox">
+                <select class="url_input" id="createType">
+                    <option value="">全部</option>
+                    <option value="1">正常</option>
+                    <option value="2">有色</option>
+                </select>
+                <select class="url_input" id="exporType_c" name="exporType" onchange="hideXZY()">
+                    <option value="1">V影</option>
+                    <option value="3">猫影</option>
+                    <option value="4">残影</option>
+                    <option value="2">ZyPlayer</option>
+                </select>
+                <select class="url_input" id="is_jiexi" name="is_jiexi">
+                    <option value="0">无需解析</option>
+                    <option value="">全部</option>
+                    <option value="1">需要解析</option>
+                </select>
+                <button class="l-btn" onclick="open_createWin()">生成JSON</button>
+                <button class="l-btn" onclick="downjson()">下载JSON</button> |
+<!--                <button class="l-btn" onclick="jianceUrls()">检测可用性</button>-->
+            </div>
+            <!-- 详细 -->
+            <table style="margin: 0 auto;" class="desc_table">
+                <tr>
+                    <th>总资源数：<span id="zzys"></span></th>
+                    <th>未检测：<span id="wjcs"></span></th>
+                    <th>可用：<span id="kys"></span></th>
+                    <th>需解析：<span id="xjxs"></span></th>
+                    <th>正常：<span id="zcs"></span>有色：<span id="hss"></span>m3u8：<span id="m3u8s"></span>网址：<span id="wzs"></span></th>
+                </tr>
+            </table>
+            <div class="menuBox">
+                可用：
+                <select class="url_input" id="webAvailable">
+                    <option value = ''>全部</option>
+                    <option value="1">不可用</option>
+                    <option value="0">可用</option>
+                </select>
+                类型：
+                <select class="url_input" id="videoType">
+                    <option value = ''>全部</option>
+                    <option value="1">正常</option>
+                    <option value="2">不正常</option>
+                    <option value="3">m3u8</option>
+                    <option value="4">网址</option>
+                </select>
+                解析：
+                <select class="url_input" id="needParse">
+                    <option value = ''>全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+                检测：
+                <select class="url_input" id="shoudong">
+                    <option value = ''>全部</option>
+                    <option value="1">未检测</option>
+                    <option value="0">已检测</option>
+                </select>
+                <button class="l-btn" onclick="startSelect()">开始查询</button>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="videoListTable" lay-filter="videoListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="open_addJsonStrWin">json添加</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="deleteState">禁用</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="shoudong">检测</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="serJX">解析</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="setType">类型</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">禁用</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="shoudong">检测</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="serJX">解析</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="setType">类型</a>
+                    </script>
+                    <!-- 链接自定义 -->
+                    <script type="text/html" id="custemUrl">
+                        <a target="_blank" href="{{d.sourceApi}}">{{d.sourceApi}}</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+<div class="hidden" id="setTypeWin">
+    <input type="hidden" id="batchIds">
+    <select class="url_input" id="setTypeSel">
+        <option value="1">正常</option>
+        <option value="2">不正常</option>
+        <option value="3">m3u8</option>
+        <option value="4">网址</option>
+    </select>
+    <button class="l-btn" onclick="batchSetType()">确定</button>
+    <button class="l-btn" onclick="closelayer()">取消</button>
+</div>
+</body>
+<script>
+    
+    $(function () {
+    })
+    let videoTable;
+    let videolist_url = '/admin/video/page';
+    let videoUpOrAdd = '/admin/video/mbpage';
+    let videoDel = '/admin/video/deleteState';
+    let videoJx = '/admin/video/setJx';
+    let videoTypeUrl = '/admin/video/setType';
+    let videoSD = '/admin/video/shoudong';
+    let tttt;
+    function batchSetType() {
+        let type = $("#setTypeSel").val();
+        tttt = type;
+        let ids = $("#batchIds").val();
+        param_sucfun_get(videoTypeUrl,{ids:ids,type:type},function () {
+            startSelect();
+            closelayer();
+        })
+    }
+    layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util'], function () {
+        let table = layui.table;
+        videoTable = table.render({
+            elem: '#videoListTable'
+            ,url: videolist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'sourceId', width:80, title: 'ID', sort: true}
+                    ,{field:'sourceName', width:130, title: '名字'}
+                    ,{field:'sourceApi', width:300, title: '链接',templet: '#custemUrl'}
+                    ,{field:'sourceType', width:60, title: '源类型'}
+                    ,{field:'parseId', width:60, title: '解析ID'}
+                    ,{field:'webAvailable', width:70, title: '可用', templet: function (d) {return d.webAvailable === 1 ? '不可用' : '可用'}}
+                    ,{field:'needParse', width:70, title: '解析', templet: function (d) {return d.needParse === 1 ? '需要解析' : '无需解析'}}
+                    ,{field:'shoudong', width:70, title: '检测', templet: function (d) {return d.shoudong === 1 ? '未检测' : '已检测'}}
+                    ,{field:'createTime', width:160, title: '添加时间'}
+                    ,{field:'category', width:200, title: '分类'}
+                    ,{field:'操作',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(videoListTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            let selects = checkStatus.data;
+            let len = selects.length;
+            let bs = '';
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    bs += selects[i].sourceId + ',';
+                }
+                bs = bs.substr(0, bs.length-1);
+            }
+            switch(obj.event){
+                case 'deleteState':
+                    if (len > 0) {
+                        layer.confirm('确定要禁用这'+len+'个吗？', function(index){
+                            param_sucfun_get(videoDel,{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'shoudong':
+                    if (len > 0) {
+                        layer.confirm('确定要禁用这'+len+'个吗？', function(index){
+                            param_sucfun_get(videoSD,{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'setType':
+                    if (len > 0) {
+                        $("#batchIds").val(bs);
+                        openWind3('选择类型','setTypeWin');
+                    }
+                    break;
+                case 'serJX':
+                    if (len > 0) {
+                        layer.confirm('确定要禁用这'+len+'个吗？', function(index){
+                            param_sucfun_get(videoJx,{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'open_addJsonStrWin':
+                    open_addJsonStrWin();
+                    break;
+                case 'reload':
+                    startSelect();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(videoListTable)', function(obj){
+            let b = obj.data;
+            let sourceId = b.sourceId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要禁用吗？', function(index){
+                    param_sucfun_get(videoDel,{ids:sourceId},function () {
+                        obj.update({
+                            webAvailable: '1',
+                        });
+                        layer.close(index);
+                    })
+                });
+            } else if(obj.event === 'shoudong') {
+                param_sucfun_get(videoSD,{ids:sourceId},function () {
+                    obj.update({
+                        shoudong: '0',
+                    });
+                    layer.close(index);
+                })
+            } else if(obj.event === 'setType') {
+                $("#batchIds").val(sourceId);
+                openWind3('选择类型','setTypeWin');
+                obj.update({
+                    sourceType: tttt,
+                });
+            } else if(obj.event === 'serJX') {
+                param_sucfun_get(videoJx,{ids:sourceId},function () {
+                    obj.update({
+                        needParse: '1',
+                    });
+                    layer.close(index);
+                })
+            }
+        });
+    });
+    
+    function startSelect() {
+        let webAvailable = $("#webAvailable").val();
+        let videoType = $("#videoType").val();
+        let needParse = $("#needParse").val();
+        let shoudong = $("#shoudong").val();
+        
+        let where = {
+            active:webAvailable,
+            sourceType:videoType,
+            parse:needParse,
+            shoudong:shoudong
+        }
+        videoTable.reload({
+            where:where,
+            page:{curr:1}
+        })
+    }
+
+    $(function () {
+        setCount();
+    })
+
+    function setCount() {
+        noParam_sucfun_get("/descCount",function (data) {
+            $("#zzys").text(data.z);
+            $("#wjcs").text(data.sz);
+            $("#kys").text(data.ky);
+            $("#xjxs").text(data.jx);
+            $("#zcs").text(data.tys[0]);
+            $("#hss").text(data.tys[1]);
+            $("#m3u8s").text(data.tys[2]);
+            $("#wzs").text(data.tys[3]);
+        });
+    }
+
+    // 打开json添加接口
+    function open_addJsonStrWin() {
+        // 先清空
+        // $("#jsonStr").val("");
+        openWind("添加json数据","addJsonStrWin",'auto','95%',function () {
+            $("#addJsonBtn").show();
+        });
+    }
+    // 打开生成json
+    function open_createWin() {
+        // 先清空
+        $("#jsonStr").val("");
+        let type = $("#createType").val();
+        let app = $("#exporType_c").val();
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        let jx = $("#is_jiexi").val();
+        let startId = $("#startId").val();
+        let endId = $("#endId").val();
+        let data = {sourceType:type,appType:app,parse:jx,startTime:startTime,endTime:endTime,startId:startId,endId:endId};
+        param_sucfun_get("/udownJson",data,function (data) {
+            $("#jsonStr").val(data);
+            open_addJsonStrWin();
+        });
+        $("#addJsonBtn").hide();
+    }
+    // 通过json字符串添加
+    function toJsonStr() {
+        let json = $("#jsonStr").val();
+        let api = $("#tSourceApi").val();
+        let name = $("#tSourceName").val();
+        let parse = $("#parseApi_s").val();
+        let group = $("#parseGroup_s").val();
+        let type = $("#sourceType_j").val();
+        let t = $("#exporType_j").val();
+        if (t === 1) {
+            param_post("/jsonAdd2",{jsonStr:json,api:api,name:name,type:type},openAddResultBox,2,2)
+        }
+        if (t === 2) {
+            param_post("/jsonAdd4",{jsonStr:json,api:api,name:name,type:type,parse:parse,group:group},openAddResultBox,2,2)
+        }
+    }
+    function openAddResultBox(data) {
+        $("#addResult").html(data);
+        openWind("添加结果","addResultBox","700px","600px");
+        startSelect();
+    }
+    function setStr(text) {
+        $("#jsonStr").val(text);
+    }
+    function resetAserachstr() {
+        $("#a_seach").text(sf_temp(serachStat));
+        reloadjsonh()
+    }
+    // 创建loadding
+    function createLoadding(e,index) {
+        let load = '<img src="/imgs/loadding.gif" id="loadding_'+index+'" style="width: 20px;margin: -5px 0">';
+        e.append(load);
+    }
+
+    // 导出json
+    function downjson() {
+        let type = $("#createType").val();
+        let zy = $("#exporType_c").val();
+        let jx = $("#is_jiexi").val();
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        let startId = $("#startId").val();
+        let endId = $("#endId").val();
+        let data = {sourceType:type,appType:zy,parse:jx,startTime:startTime,endTime:endTime,startId:startId,endId:endId};
+        param_sucfun_get("/udownJson",data,exportJson);
+    }
+    // 下载json文件
+    function exportJson(data) {
+        if(!data) {
+            alert('保存的数据为空');
+            return;
+        }
+        let filename ;
+        let zy = $("#exporType_c").val();
+        if (zy == 1) {
+            filename = 'vy_yuan.json'
+        }
+        if (zy == 2) {
+            filename = 'zyplarer_yuan.json'
+        }
+
+        if(typeof data === 'object'){
+            data = JSON.stringify(data, undefined, 4)
+        }
+        var blob = new Blob([data], {type: 'text/json'}),
+            e = document.createEvent('MouseEvents'),
+            a = document.createElement('a')
+        a.download = filename
+        a.href = window.URL.createObjectURL(blob)
+        a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+        e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+        a.dispatchEvent(e)
+    }
+    // 清空
+    function jsonClear(id) {
+        $("#" + id).val("");
+        $("#tSourceApi").val("api");
+        $("#tSourceName").val("name");
+    }
+    function hideXZY() {
+        let v = $("#exporType_c").val();
+        if (v === '2') {
+            $("#crejson_btn").hide();
+        } else {
+            $("#crejson_btn").show();
+        }
+    }
+    function showAddBtn() {
+        $("#addJsonBtn").show();
+    }
+</script>
+</html>

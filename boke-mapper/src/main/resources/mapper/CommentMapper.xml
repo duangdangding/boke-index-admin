@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.birthday.CommentMapper">
+
+    <resultMap id="commontMap" type="com.lsh.birthday.Comment">
+        <id column="comment_id" property="commentId" />
+        <id column="context" property="context" />
+        <id column="createtime" property="createtime" />
+        <association property="userMsg" column="user_id" javaType="com.lsh.birthday.UserMsg"
+                     select="com.lsh.mapper.birthday.UserMsgMapper.findByUserId"/>
+    </resultMap>
+    <!-- 查找信息 -->
+    <select id="selectByPage1" resultMap="commontMap">
+        select * from comment ct
+        left join user_msg um on um.user_id = ct.user_id
+        order by createtime desc
+    </select>
+    
+</mapper>

@@ -1,0 +1,56 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+.url_input {
+    color:#333;
+    line-height:normal;
+    font-family:"Microsoft YaHei",Tahoma,Verdana,SimSun;
+    font-style:normal;
+    font-variant:normal;
+    font-size-adjust:none;
+    font-stretch:normal;
+    font-weight:normal;
+    font-size:14px;
+    outline-width:medium;
+    outline-style:none;
+    outline-color:invert;
+    text-shadow:0px 1px 2px #fff;
+    background-attachment:scroll;
+    background-repeat:repeat-x;
+    background-position-x:left;
+    background-position-y:top;
+    background-size:auto;
+    background-origin:padding-box;
+    background-clip:border-box;
+    background-color:rgb(255,255,255);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /*width: 100%;*/
+    margin: 10px 0;
+}
+.l-btn{
+    display: inline-block;
+    outline: none;
+    resize: none;
+    padding:5px 10px;
+    background: #8C85E6;
+    color: #fff;
+    border:solid 1px #8C85E6;
+    border-radius: 3px;
+    font-size: 14px;
+}
+.l-btn:hover{
+    background: #8078e3;
+    animation: anniu 1s infinite;
+}
+.l-btn:active{
+    box-shadow: 0 2px 3px rgba(0,0,0,.2) inset;
+}
+.p_container {
+    margin: 10px 0 50px;
+}
+.hidden {
+    display: none;
+}

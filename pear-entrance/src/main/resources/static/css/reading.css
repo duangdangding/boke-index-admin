@@ -1,0 +1,25 @@
+/*主题色更换-阅读模式reading*/
+.tailoring-container .tailoring-content,.w-e-text,body,.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer{background: #FFF9DD;}
+.w-e-toolbar {
+    background: #FFF9DD !important;
+}
+#navigator{background: hsla(49,100%,97%,.6);}
+div#catalogue{background: #FFF9DD;}
+div#sideBar{background: #FFF9DD;}
+@media (max-width: 767px){
+    #set_btn_box {
+        background: hsla(49,100%,97%,.6)
+    }
+}
+
+.wd_header,.w-e-text,#q_title,.pagination span,.postTitle .titleTop,.postTitle #cb_post_title_url,.aplayer .aplayer-miniswitcher,.aplayer.aplayer-fixed .aplayer-body,.aplayer
+,.poem-wrap h1,.poem-wrap #poem_sentence,.poem-wrap #poem_info,.day .postTitle a:link,.day .c_b_p_desc,.day .postTitle a:visited,.day .postTitle a:active {
+    /*color: #7396a7;*/
+    color: black;
+    transition: color .3s ease
+}
+.markdown-body h2 {
+    border-bottom: 1px solid #a0a0a0;
+}
+div#mainContent {background-color: #afafaf00}
+#cb_post_title_url {color: black !important}

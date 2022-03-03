@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset='utf-8'>
+<head>
+    <meta charset="utf-8" />
+    <link rel="alternate" href="http://blog.suweibk.xyz">
+    <!--    // 防止页面放大-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="site" content="http://blog.suweibk.xyz/" />
+    <meta name="referer" content="origin" />
+    <meta name="referrer" content="no-referrer"/>
+
+    <!--    <meta http-equiv="Cache-Control" content="no-transform" />-->
+    <!--    <meta http-equiv="Cache-Control" content="no-siteapp" />-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>苏喂苏喂喔 - 导航页</title>
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/select/layui.css}" type="text/css"/>
+
+    <script src="/js/constains.js"></script>
+    <script src="/js/jquery-3.8.min.js"></script>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <script src="/js/gogal_ajax.js"></script>
+    <!-- 判断是否手机端 必须js -->
+    <script src="/js/checkpc_moile.js"></script>
+    <link rel="stylesheet" href="/css/index.css" />
+    <!-- ios设置手机禁止缩放 -->
+    <script src="/js/iossuofang.js"></script>
+    <style>
+        div#mainContent {
+            background: none;
+            border-radius: 0;
+            margin-top: 0;
+            width: calc(100% - 55px);
+            clear: both;
+        }
+        #frantContent {
+            clear: both;
+        }
+        .classify {
+            display: inline-block;
+            text-align: left;
+            padding: 3px 6px;
+            font-size: 18px;
+            margin: 10px 0 0 0;
+            border-left: white 3px solid;
+            color: white;
+            font-weight: 400;
+        }
+        .handle {
+            padding: 0 5px;
+            margin: 0px -2px 0 10px;
+            background-color: rgb(0 0 0 / 15%);
+            cursor: move;
+        }
+        .headerBtn {
+            padding: 10px 5px;
+            float: right
+        }
+        .headerBtn a {
+            padding: 0 10px;
+        }
+        .handle {
+            display: none;
+        }
+        .seachBox {
+            clear: both;
+            display: flex;
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .seachBtn {
+            border-radius: 0 10px 10px 0;
+        }
+        #frantContent img {
+            width: 20px;
+            margin-right: 10px;
+            margin-top: -3px;
+        }
+        .frant_a {
+            font-size: 15px;
+            color: #bec2f1 !important;
+            font-weight: 400;
+        }
+        .drag-handle,.js-remove-f,.js-remove-z {
+            display: none;
+        }
+        .frant_items {
+            margin-left: 15px;
+        }
+        .layui-layer-tips .layui-layer-content {
+            border-radius: 10px !important;
+            background: #1b1b1b !important;
+        }
+        .layui-layer-tips .layui-layer-content,.layui-layer-tips .layui-layer-content i {
+            border-right-color: #1b1b1b !important;
+        }
+        body {
+            background: #272626;
+        }
+        .headerTip {
+            color: white;clear: both;text-align: center
+        }
+    </style>
+    <link href="/Sortable-master/st/app.css" rel="stylesheet" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    <script src="/Sortable-master/Sortable.js"></script>
+</head>
+<body>
+<div id="home">
+    <div id="main" style="margin-bottom: 120px">
+        <div id="mainContent">
+            <p class="headerBtn">
+                <a target="_blank" href="http://blog.suweibk.xyz/">苏喂苏喂喔</a>
+                <a href="javascript:;" id="customBtn" onclick="setFrants()">自定义</a>
+                <a id="saveFrantsBtn" style="display: none" href="javascript:;" onclick="saveFrants()">保存</a>
+                <a id="cancelFrantsBtn" style="display: none" href="javascript:;" onclick="cancelFrants()">取消</a>
+                <a class="addC" href="javascript:;" onclick="openAddOrEditClassifyWin()">加分类</a>
+                <a class="addC" href="javascript:;" onclick="openAddOrEditFrantPageWin()">加导航</a>
+                <a href="javascript:;" onclick="startResetFrants()">重置</a>
+            </p>
+            <p class="headerTip">
+                在线征集优秀网站，如果您有好的网站请不要私藏，发送邮件到<span id="email" onclick="copyEmail()">2538808545@qq.com</span>~
+            </p>
+            <p class="headerTip">
+                为了方便打开可以设置成你的浏览器主页~也可以点击自定义对内容添加、删减、排序
+            </p>
+            <p class="headerTip">
+                如果页面错乱请点击刷新或者右上角重置
+            </p>
+            <div class="seachBox">
+                <select id="seachPlate" class="layui-select shadow_hover" style="text-align: center;border-radius: 10px 0 0 10px;cursor: pointer;color: black">
+                    <option value="baidu">百度搜索</option>
+                    <option value="sougou">搜狗搜索</option>
+                    <option value="kaifa">开发者搜索</option>
+                    <option value="google">谷歌搜索</option>
+                    <option value="yahoo">雅虎搜索</option>
+                    <option value="bing">微软/必应</option>
+                    <option value="360">360搜索</option>
+                </select>
+                <input type="text" id="seachWord" onkeydown="return toSeach(event);" name="title" lay-verify="required" autocomplete="on" class="layui-input shadow_hover">
+                <!--                左上角  右上角  右下角  左下角;-->
+                <button class="layui-btn layui-btn-normal seachBtn" onclick="seachWord()">搜索</button>
+            </div>
+            <div id="frantContent"></div>
+        </div><!--end: mainContent 主体内容容器-->
+    </div>
+    <block th:include="boke/common :: page_footer_html"/>
+</div>
+<textarea id="emaileText" style="display: none"></textarea>
+<!-- 导航分类添加窗口 -->
+<div id="addOrEditClassifyWin" class="layui-panel-window" style="display: none">
+    <form class="layui-form" id="winForm" lay-filter="form_hx" style="padding: 0;margin: 0">
+        <!--<div class="layui-form-item layui-hide">
+            <label class="layui-form-label">ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="id" autocomplete="off" class="layui-input">
+            </div>
+        </div>-->
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">是否可用：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" id="deleteStateIfy" name="deleteState">
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                </select>
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">名称：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="title" lay-verify="required" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">排序：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="number" name="sort" lay-verify="number" autocomplete="off" class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item" style="text-align: center">
+            <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认">
+            <input class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="closelayer()" value="取消">
+        </div>
+    </form>
+</div>
+<!-- 导航添加窗口 -->
+<div id="addOrEditFrantPageWin" class="layui-panel-window" style="display: none">
+    <form class="layui-form" id="winForm2" lay-filter="form_hx2" style="padding: 0;margin: 0">
+        <!--<div class="layui-form-item layui-hide">
+            <label class="layui-form-label">ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="frantId" autocomplete="off" class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航分类：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" id="classifyId" name="classifyId">
+                </select>
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">是否可用：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <select class="layui-select" name="deleteState">
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                </select>
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航名称：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantTitle" lay-verify="required" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航链接：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantUrl" autocomplete="on" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航图标：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="text" name="frantIcon" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航排序：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="number" name="frantSort" lay-verify="number" autocomplete="off" class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航描述：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <textarea type="text" name="frantDesc" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="kFormSubmit2" id="kFormSubmit2" value="确认">
+            <input class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="closelayer()" value="取消">
+        </div>
+    </form>
+</div>
+</body>
+
+
+<script type="text/javascript">
+    // 关闭窗口是否提示当前未保存的状态
+    var is_confirm = false;
+    var customestate = false;
+    (function(){
+        // 关闭窗口时弹出确认提示
+        $(window).bind('beforeunload', function(){
+            // 只有在标识变量is_confirm不为false时，才弹出确认提示
+            if(window.is_confirm && customestate) {
+                return not_save;
+            }
+        }).bind('mouseover mouseleave', function(event){
+            // mouseleave mouseover事件也可以注册在body、外层容器等元素上
+            is_confirm = event.type === 'mouseleave';
+        });
+    })();
+    let broserType = jQuery.browser.mobile;
+
+    let seachPlate = 'seachPlate'; // 查询平台缓存
+    let frantItem = 'frantItems'; // 网址导航缓存
+    $(function () {
+        let plate = get_item(seachPlate);
+        if (plate) {
+            $("#seachPlate").val(plate);
+        }
+        $("#seachWord").focus();
+        let frantItems = get_item(frantItem);
+        if (frantItems) {
+            $("#frantContent").html(frantItems);
+            // createResources("script","/Sortable-master/Sortable.js","Sortable_js");
+            // createResources("script","/Sortable-master/st/app.js","appsss");
+        } else {
+            resetFrants();
+        }
+        // 给手机端加详情页弹出
+        if (jQuery.browser.mobile) {
+            let lis = $(".frant_items li");
+            if (lis) {
+                lis.each(function () {
+                    let t = $(this);
+                    let desc = t.attr('data-d');
+                    if (desc && desc !== 'null') {
+                        let a = $(t.find('a')[0]);
+                        a.click(function () {
+                            layer.confirm(desc,{btn:['跳转页面','留在此页']},function (index) {
+                                window.open(a.attr('data-h'));
+                                layer.close(index);
+                            })
+                        })
+                    }
+                })
+            }
+        }
+        var byId = function (id) { return document.getElementById(id); }
+
+        // Editable list
+        Sortable.create(byId('editable'), {
+            animation: 150,
+            filter: '.js-remove-f',
+            handle: '.drag-handle',
+            onFilter: function (evt) {
+                layer.confirm('确定要移除此分类下所有网址吗？', function(index){
+                    evt.item.parentNode.removeChild(evt.item);
+                    layer.close(index);
+                });
+            }
+        });
+        let items = $(".frant_items");
+        for (let i = 0; i < items.length; i++) {
+            let id = $(items[i]).attr('id');
+            Sortable.create(byId(id), {
+                animation: 150,
+                filter: '.js-remove-z',
+                handle: '.drag-handle',
+                onFilter: function (evt) {
+                    layer.confirm('确定要移除此网址吗？', function(index){
+                        evt.item.parentNode.removeChild(evt.item);
+                        layer.close(index);
+                    });
+                }
+            });
+        }
+    })
+    const beforeUnloadListener = (event) => {
+        event.preventDefault();
+        return event.returnValue = "你的更改为保存是否继续?";
+    };
+    function setFrants() {
+        is_confirm = true;
+        customestate = true;
+        $(".drag-handle").show();
+        $(".js-remove-f").show();
+        $(".js-remove-z").show();
+        $("#saveFrantsBtn").show();
+        $("#cancelFrantsBtn").show();
+        $("#customBtn").hide();
+        $(".addC").hide();
+        addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    }
+    function saveFrants() {
+        layer.confirm('确定要保存更改吗？', function(index) {
+            $(".drag-handle").hide();
+            $(".js-remove-f").hide();
+            $(".js-remove-z").hide();
+            set_item(frantItem,$("#frantContent").html(),true);
+            $("#saveFrantsBtn").hide();
+            $("#cancelFrantsBtn").hide();
+            $("#customBtn").show();
+            is_confirm = false;
+            customestate = false;
+            removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+            $(".addC").show();
+            layer.close(index);
+        });
+    }
+    function cancelFrants() {
+        layer.confirm('确定要取消更改吗？', function(index) {
+            is_confirm = false;
+            customestate = false;
+            removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+            // layer.close(index);
+            $(".addC").show();
+            location.reload();
+        });
+    }
+
+    function startResetFrants() {
+        layer.confirm('重置会使之前的更改消失，确定重置吗？', function(index){
+            clear_item(frantItem);
+            // 刷新当前页面
+            location.reload();
+            // resetFrants();
+        });
+    }
+    function resetFrants() {
+        let fb = $("#frantContent");
+        // fb.html('');
+        asyncAjax('/frant/list',{},'get',function (data) {
+            let frabts = '<ul id="editable">';
+            for (let i = 0; i < data.length; i++) {
+                let classify = data[i];
+                frabts += '          <li class="classifyBigBox"><div class="classifyBox"><span class="drag-handle">&#9776;</span><span class="classify">'+classify.title+'</span><i class="js-remove-f">✖</i></div>' +
+                    '              <ul id="editable'+i+'" class="frant_items">';
+                let items = classify.frantPages;
+                for (let j = 0; j < items.length; j++) {
+                    let item = items[j];
+                    frabts += createFrantItem(item);
+                }
+                frabts += '    </ul></li>';
+            }
+            frabts += '</ul>';
+            set_item(frantItem,frabts,true);
+            fb.append(frabts)
+
+            // createResources("script","/Sortable-master/Sortable.js","Sortable_js");
+            // createResources("script","/Sortable-master/st/app.js","appsss");
+        },1,2)
+    }
+    function resetFrantsbak() {
+        let fb = $("#frantContent");
+        fb.html('');
+        noParam_sucfun_get('/frant/list',function (data) {
+            let frabts = '';
+            for (let i = 0; i < data.length; i++) {
+                let classify = data[i];
+                frabts += '<div class="clear"><span class="classify">'+classify.title+'</span>' +
+                    '          <div class="frant_items" id="sortable'+i+'">';
+                let items = classify.frantPages;
+                let itemse = '';
+                for (let j = 0; j < items.length; j++) {
+                    let item = items[j];
+                    let icon = item.frantIcon
+                    icon = icon ? icon : 'http://blog.suweibk.xyz/favicon.ico';
+                    itemse += '     <div class="frant_item"><span class="handle frants">+</span>' +
+                        '               <span style="margin-right: -5px"><img src="'+icon+'"></span>' +
+                        '                  <a class="frant_a" target="_blank" href="'+item.frantUrl+'">'+item.frantTitle+'</a></div>';
+                }
+                frabts += itemse + '    </div>' +
+                    '      </div>';
+            }
+            set_item('frantItems',frabts,true);
+            fb.append(frabts)
+        })
+    }
+
+    // 按enter键添加搜索
+    function toSeach(n) {
+        if (n.keyCode === 13) return seachWord(), !1
+    }
+    function seachWord() {
+        let plate = $("#seachPlate").val();
+        let word = $("#seachWord").val().trim();
+        if (word.length > 0) {
+            set_item(seachPlate,plate,true);
+            if (plate === 'baidu') {
+                window.open("https://www.baidu.com/s?ie=UTF-8&wd=" + word);
+            }else if (plate === 'kaifa') {
+                window.open("https://kaifa.baidu.com/searchPage?wd=" + word);
+            } else if (plate === 'google') {
+                window.open("https://www.google.com/search?q=" + word);
+            } else if (plate === 'sougou') {
+                window.open("https://www.sogou.com/web?query=" + word);
+            } else if (plate === 'yahoo') {
+                window.open("https://search.yahoo.com/search?p=" + word);
+            } else if (plate === 'bing') {
+                window.open("https://cn.bing.com/search?q=" + word);
+            } else if (plate === '360') {
+                window.open("https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=" + word);
+            }
+        }
+    }
+
+    function copyEmail() {
+        let input = document.getElementById('emaileText');
+        input.value = $("#email").text();
+        input.select(); // 选中文本
+        document.execCommand("copy"); // 执行浏览器复制命令
+        layer.msg("已复制此邮箱~");
+    }
+    let layer_tips;
+    let currFrantTitle;
+    function showFrantDesc(t) {
+        if (!jQuery.browser.mobile) {
+            let c = $(t).text();
+            if (currFrantTitle && c === currFrantTitle) {
+            } else {
+                currFrantTitle = $(t).text();
+                let desc = $(t).attr('data-d');
+                if (desc && desc !== 'null') {
+                    layer_tips = layer.tips(desc,t,{
+                        tips:[1,'#3595CC'],
+                        time:0
+                    })
+                }
+            }
+        }
+    }
+    function hideFrantDesc() {
+        if (!jQuery.browser.mobile) {
+            currFrantTitle = '';
+            layer.close(layer_tips);
+        }
+    }
+
+    function openAddOrEditClassifyWin() {
+        openWind('新增导航类别','addOrEditClassifyWin','620px','350px',function (){
+        });
+    }
+    function openAddOrEditFrantPageWin() {
+        layui.use('form', function(){
+            var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+            let selectObj = $("#classifyId");
+            selectObj.empty();
+            let types = $(".classify");
+            for (let i = 0; i < types.length; i++) {
+                let text = $(types[i]).text();
+                let op = "<option value='" + i + "'>" + text + "</option>"
+                selectObj.append(op);
+            }
+            form.render('select');
+            //form.render();
+        });
+        
+        openWind('新增导航','addOrEditFrantPageWin','620px','550px',function (){
+        });
+    }
+
+    /**
+     * 生成导航item
+     * @param d
+     * @returns {string}
+     */
+    function createFrantItem(d) {
+        let url = d.frantUrl;
+        let title = d.frantTitle;
+        let icon = d.frantIcon;
+        icon = icon ? icon : 'http://blog.suweibk.xyz/favicon.ico';
+        let desc = d.frantDesc;
+        let liBox = '<li data-d="'+desc+'"';
+        let b = '_blank';
+        let h = '';
+        let u;
+        if (!broserType) {
+            liBox += ' onmouseleave="hideFrantDesc()" onmouseover="showFrantDesc(this)"';
+            u = url;
+        } else {
+            b = '';
+            h = url;
+            u = 'javascript:void(0)';
+        }
+        liBox += '><span class="drag-handle">&#9776;</span>' +
+            '<span style="margin-right: -5px"><img src="'+icon+'"></span>' +
+            '<a class="frant_a" target="'+b+'" data-h="'+h+'" href="'+u+'">'+title+'</a>' +
+            '<i class="js-remove-z">✖</i></li>';
+        return liBox;
+    }
+    
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        let elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, table2 = layui.table;
+        form.on('submit(kFormSubmit)', function (data) {
+            let d = data.field.title.trim();
+            let items = $('.classify');
+            for (let i = 0; i < items.length; i++) {
+                let item = $(items[i]).text();
+                if (item === d) {
+                    show_err_msg('此分类已存在');
+                    return;
+                }
+            }
+            let box = $('#editable');
+            box.prepend('<li class="classifyBigBox"><div class="classifyBox"><span class="drag-handle">&#9776;</span><span class="classify">'+d+'</span><i class="js-remove-f">✖</i></div>' +
+                '<ul id="editable1" class="frant_items">    </ul>' +
+                '</li>');
+            set_item(frantItem,$('#frantContent').html(),true);
+            location.reload();
+            closelayer();
+        });
+        form.on('submit(kFormSubmit2)', function (data) {
+            let d = data.field;
+            let types = $(".classifyBigBox");
+            for (let i = 0; i < types.length; i++) {
+                if (i === parseInt(d.classifyId)) {
+                    let type = $(types[i]);
+                    if (type.has('ul')) {
+                        let aaa = createFrantItem(d);
+                        let eee = type.find("ul").get(0);
+                        // 添加元素到第一位
+                        // type.find("ul").get(0).prepend('' + );
+                        $(eee).prepend(aaa)
+                    } else {
+                        // 获取最大的index
+                        let items = $('.frant_items');
+                        let arrs = [];
+                        for (let j = 0; j < items.length; j++) {
+                            arrs.push(parseInt($(items[j]).attr('id').replace('editable')));
+                        }
+                        // 取最大值
+                        let index = Math.max.apply(null, arrs) + 1;
+                        let ulBox = '<ul id="editable'+index+'" class="frant_items">' + createFrantItem(d) + '</ul>';
+                        $(types[i]).prepend(ulBox);
+                    }
+                }
+            }
+            let box = $('#frantContent');
+            // console.log($('#frantContent').text())
+            set_item(frantItem,box.html(),true);
+            location.reload();
+            closelayer();
+        });
+    })
+    
+</script>
+<!--<script src="/Sortable-master/Sortable.js"></script>-->
+<!--<script src="/Sortable-master/st/app.js"></script>-->
+</html>

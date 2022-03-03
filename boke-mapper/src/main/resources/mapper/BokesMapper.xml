@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.BokesMapper">
+
+    <select id="getBokes" resultType="com.pearadmin.boke.vo.BokeListEntry">
+        select b.boke_id,b.title,date_format(b.create_time, '%Y-%m-%d %H:%i:%s') createTime,b.cate_id,b.update_time,b.user_id,
+        b.introduction,b.create_date,bt.top_order topOrder,bt.top_time,b.share_num,b.label_names,b.boke_examine,
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name userName from bokes b
+        
+        left join categorys c on c.cate_id = b.cate_id
+        left join users u on u.user_id = b.user_id
+        left join boke_top bt on bt.boke_id = b.boke_id
+        <where>
+            b.delete_state = 1
+            <if test="labelId != null">
+                and FIND_IN_SET(#{labelId},b.label_id)
+            </if>
+            <if test="cateId != null">
+                and b.cate_id = #{cateId}
+            </if>
+            <if test="title != null and title != ''">
+                and b.title like concat('%',#{title},'%')
+            </if>
+            <if test="createDate != null and createDate != ''">
+                and b.create_date = #{createDate}
+            </if>
+            <choose>
+                <when test="userId != null">
+                    and (b.pri_pub = 1 or ( b.user_id = #{userId} and b.pri_pub = 2))
+                </when>
+                <otherwise>
+                    and b.pri_pub = 1 and b.boke_examine = 1
+                </otherwise>
+            </choose>
+        </where>
+        order by bt.top_time desc,b.update_time desc
+    </select>
+    <select id="getBokesList" resultType="com.pearadmin.boke.vo.BokeListEntry" parameterType="com.pearadmin.boke.vo.query.QueryBokeVo">
+        select b.boke_id,b.title,date_format(b.create_time, '%Y-%m-%d %H:%i:%s') createTime,b.cate_id,b.update_time,b.user_id,
+        b.introduction,b.create_date,bt.top_order topOrder,bt.top_time,b.share_num,b.label_names,b.boke_zip bokeZip,b.delete_state deleteState,
+        b.boke_examine bokeExamine,
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name userName from bokes b
+        left join categorys c on c.cate_id = b.cate_id
+        left join users u on u.user_id = b.user_id
+        left join boke_top bt on bt.boke_id = b.boke_id
+        <where>
+            <if test="vo.labelId != null">
+                and FIND_IN_SET(#{vo.labelId},b.label_id)
+            </if>
+            <if test="vo.bokeType != null">
+                and b.cate_id = #{vo.bokeType}
+            </if>
+            <if test="vo.pass != null">
+                and b.boke_examine = #{vo.pass}
+            </if>
+            <if test="vo.top != null">
+                and top_order is not null
+            </if>
+            <if test="vo.deleteState != null">
+                and b.delete_state = #{vo.deleteState}
+            </if>
+            <if test="vo.editType != null">
+                and b.editor_type = #{vo.editType}
+            </if>
+            <if test="vo.bokeZip != null">
+                and boke_zip = #{vo.bokeZip}
+            </if>
+            <if test="vo.pubPri != null">
+                and pri_pub = #{vo.pubPri}
+            </if>
+            <if test="vo.title != null and vo.title != ''">
+                and b.title like concat('%',#{vo.title},'%')
+            </if>
+            <if test="vo.userName != null and vo.userName != ''">
+                and u.user_name like concat('%',#{vo.userName},'%')
+            </if>
+        </where>
+        order by b.update_time desc
+    </select>
+
+    <select id="getBokesById" resultType="com.pearadmin.boke.vo.BokeListEntry">
+        select b.boke_id,b.title,b.create_time,b.cate_id,b.update_time,b.boke_cont bokeCont,b.user_id,b.introduction,b.create_date,b.md_content,
+        b.boke_zip,bt.top_order,b.share_num,b.delete_state,b.label_names,
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type editorType,c.cate_name cateName,u.user_name,u.signature  from bokes b
+        
+        left join categorys c on c.cate_id = b.cate_id
+        left join users u on u.user_id = b.user_id
+        left join boke_top bt on bt.boke_id = b.boke_id
+        <where>
+            b.boke_id=#{bokeId}
+            <if test="userId != null">
+                and b.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+    <select id="getBokesByEmId" resultType="com.pearadmin.boke.vo.BokeListEntry">
+        select b.boke_id,b.title,date_format(b.create_time, '%Y-%m-%d %H:%i:%s') createTime,b.cate_id,b.boke_zip,b.share_num,b.delete_state,
+        date_format(b.update_time, '%Y-%m-%d %H:%i:%s') updateTime,b.boke_cont bokeCont,b.user_id,b.introduction,b.create_date,b.label_names,
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type editorType,b.md_content mdContent,c.cate_name cateName,u.user_name,
+        u.signature  from bokes b 
+        left join categorys c on c.cate_id = b.cate_id
+        left join users u on u.user_id = b.user_id
+        <where>
+            b.boke_id=#{bokeId}
+            <if test="userId != null">
+                and b.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getCateCount" resultType="com.pearadmin.boke.entry.CategoryCount">
+        SELECT b.*,c.cate_name cateName FROM (select COUNT(1) count,cate_id cateId FROM bokes 
+        <where>
+            delete_state = 1
+        </where>
+        group by cate_id ) b
+        left join categorys c on c.cate_id = b.cateId order by b.count desc
+    </select>
+    <!--<select id="getCateCount2" resultType="com.lsh.boke.entry.CategoryCount">
+        SELECT b.*,c.cate_name cateName FROM (select COUNT(1) count,cate_id cateId FROM bokes 
+        <where>
+            delete_state = 1
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+        </where>
+        group by cate_id ) b
+        left join categorys c on c.cate_id = b.cateId order by b.count desc
+    </select>-->
+    
+    <select id="getCreates" resultType="com.pearadmin.boke.entry.CreateDates">
+        SELECT count(1) count,create_date createDate from bokes
+        <where>
+            delete_state = 1
+        </where>
+        group by create_date order by create_date desc limit 10
+    </select>
+    
+    <select id="getLookups" resultType="com.pearadmin.boke.entry.Lookups">
+        select boke_id bokeId,title title,look_num lookNum from bokes
+        <where>
+            delete_state = 1
+        </where>
+        order by look_num desc limit 10
+    </select>
+    
+    <update id="setLookUp">
+        update bokes set look_num = look_num + 1 where boke_id = #{bokeId}
+    </update>
+    <update id="setLikeNum">
+        update bokes set like_num = like_num + 1 where boke_id = #{bokeId}
+    </update>
+    <update id="setCommentNum">
+        update bokes set reply_num = reply_num + 1 where boke_id = #{bokeId}
+    </update>
+    
+    <select id="getSLLNumById" resultType="map">
+        select look_num,like_num,reply_num,share_num from bokes
+        where boke_id = #{bokeId}
+    </select>
+
+</mapper>

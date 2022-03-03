@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.MenuMapper">
+
+    <resultMap id="useMenuMap" type="com.pearadmin.boke.entry.Menu">
+        <id property="menuId" column="menu_id" />
+        <result property="menuParentId" column="menu_parent_id" />
+        <result property="menuName" column="menu_name" />
+        <result property="menuUrl" column="menu_url" />
+        <result property="menuIcon" column="menu_icon" />
+        <result property="sort" column="sort" />
+        <result property="createTime" column="create_time" />
+        <result property="deleteState" column="delete_state" />
+        <collection property="menus" column="menu_id" ofType="com.pearadmin.boke.entry.Menu"
+                    select="getMenuListByPid"/>
+    </resultMap>
+
+    <select id="menuLisPage" resultType="com.pearadmin.boke.entry.Menu">
+        select m.*,m2.menu_name menuParentName from menu m
+        left join menu m2 on m2.menu_id = m.menu_parent_id
+        order by m.menu_parent_id asc,m.sort ASC
+    </select>
+    
+    <select id="allUseMenuList" resultMap="useMenuMap">
+        select * from menu where delete_state = 1 and menu_parent_id = 0
+    </select>
+    
+    <select id="getMenuListByPid" resultType="com.pearadmin.boke.entry.Menu">
+        select * from menu where delete_state = 1 and menu_parent_id = #{menuId}
+    </select>
+    
+</mapper>

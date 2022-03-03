@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!-- 百度SEO -->
+    <meta name="baidu-site-verification" content="code-w4nRNj0vMe" />
+<!--    <meta name="baidu-site-verification" content="code-zqJOlgVi8w" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="Access-Control-Allow-Origin" content="*" />
+    <meta name="site" content="http://suweibk.xyz:11521" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>苏喂苏喂喔 - BUG制造聚集地</title>
+    <link rel="alternate" href="http://blog.suweibk.xyz">
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+    <link type="text/css" rel="stylesheet" href="/css/fenye.css" />
+    <script src="/js/clipboard.min.js"></script>
+<style>
+</style>
+    <link type="text/css" rel="stylesheet" href="/bokejscss/shouye.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+</head>
+<body>
+<img th:src="@{/imgs/a.png}" class="suwei_logo">
+<!--<div class="postDesc">posted @ <span th:text="${bok.userName == null ? '苏喂苏喂喔' : bok.userName}"></span> <span th:text="${bok.createTime}"></span>
+        <span>阅读(<span th:text="${bok.lookNum}"></span>)</span>
+        <span>评论(<span th:text="${bok.replyNum}"></span>)</span>
+        <span>点赞(<span th:text="${bok.likeNum}"></span>)</span>
+        <span>分享(<span th:text="${bok.shareNum}"></span>)</span>
+    </div>
+    <p>标签:<a th:text="${bok.labelNames}" target="_blank">标签</a></p>-->
+<!--done-->
+<block th:include="boke/common :: page_header_html" />
+<div id="home">
+    <div id="main">
+        <div id="mainContent">
+            <div id="nav_title_b">
+                <a th:href="@{/}" >全部</a><span id="seachTitle" class="nnnav_d" th:text="${navTitle}"></span>
+            </div>
+            <div class="forFlow">
+                <div class="page_container middle">
+                    <div class="pagination">
+                        <span class="card-box prev iconfont icon-jiantou-zuo">上一页</span>
+                        <ul class="page_li"></ul>
+                        <span class="card-box next">下一页<span class="iconfont icon-jiantou-you" style="padding-left: 0;"></span></span>
+                    </div>
+                </div>
+                <div id="bolg_contents" th:fragment="content_refresh">
+                    <input type="hidden" id="ref_cur" th:value="${bokes.current}">
+                    <input type="hidden" id="ref_all" th:value="${bokes.pages}">
+                    <div class="day" th:each="bok,bokStat:${bokes.records}">
+                        <div class="postTitle">
+                            <span class="titleTop" style="white-space: nowrap;" th:text="${bok.topOrder == 1 ? '[置顶]' : ''}"></span>
+                            <a class="postTitle2 vertical-middle" th:text="'['+${bok.cateName}+']'" th:href="@{'/?navTitle=分类：' + ${bok.cateName} + '&cateId=' + ${bok.cateId}}" ></a>
+                            <a class="postTitle3 vertical-middle" th:id="'bok_url' + ${bokStat.index}" th:href="@{'/boke/'+${bok.bokeId}}" target="_blank">
+                                <span th:text="${bok.title}">标题</span>
+                            </a>
+                        </div>
+                        <div class="postCon" th:id="'bok_desc' + ${bokStat.index}">
+                            <div class="c_b_p_desc">
+                                摘要：<span th:text="${bok.introduction == null?'暂无':bok.introduction}"></span>...
+                            </div>
+                        </div>
+                        
+                        <div class="fxBtnBox">
+                            <span>
+                                分享到：<span class="wzShare" th:vlt="${bok.bokeId}" th:id="'wz_share_' + ${bokStat.index}"></span>
+                                <span class="b_c_s" th:vlt="${bok.bokeId}"></span>
+                            </span>
+                            <span class="labels_box" th:attr="labelIds=${bok.labelId},labelNames=${bok.labelNames}" th:id="'labels_box_' + ${bokStat.index}"></span>
+                        </div>
+                        <div class="postDesc">
+                            <span th:text="${bok.createTime}"></span>
+                            <span id="bpke_xqj">
+                                <span><img th:src="@{/imgs/ll_blue.gif}">(<span th:text="${bok.lookNum}"></span>) | </span>
+                                <span class="like_img"><img style="cursor: pointer" th:src="@{/imgs/fax.gif}" th:onclick="setLikeNum([[${bok.bokeId}]])">
+                                    (<span th:id="'i_l_'+${bok.bokeId}" th:text="${bok.likeNum}"></span>)</span> | 
+                                <span><img th:src="@{/imgs/fx.gif}">(<span th:text="${bok.shareNum}"></span>)</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="twoPagebtn" class="page_container middle" style="padding: 20px 0;margin-bottom: 100px">
+                    <div class="pagination">
+                        <span class="card-box prev iconfont icon-jiantou-zuo">上一页</span>
+                        <ul class="page_li"></ul>
+                        <span class="card-box next">下一页<span class="iconfont icon-jiantou-you" style="padding-left: 0;"></span></span>
+                    </div>
+                </div>
+            </div><!--end: forFlow -->
+        </div><!--end: mainContent 主体内容容器-->
+        <block th:include="boke/common :: page_right2_html" />
+    </div><!--end: main -->
+    <block th:include="boke/common :: page_footer_html" />
+</div><!--end: home 自定义的最大容器 -->
+<block th:include="boke/common :: page_right1_html" />
+<block th:include="boke/common :: page_shici_html" />
+<block th:include="boke/common :: page_end_html" />
+<!--<div id="url_cont" style="opacity: 0"></div>-->
+</body>
+<link type="text/css" rel="stylesheet" href="/share/css/share.min.css" />
+<script src="/share/js/jquery.share.min.js"></script>
+<script th:inline="javascript">
+    set_item("b_host",[[${b_host}]]);
+    var condition = [[${navParam == null ? '' : navParam}]];
+    var navUserid = [[${navUserid == null ? '' : navUserid}]];
+    // console.log("condition~" + condition + "~navUserid" + navUserid)
+    var cur_page;
+    var all_page;
+    function setLikeNum(bid) {
+        if (!get_item("like" + bid)) {
+            noParam_sucfun_get("/setLikeNum/" + bid, function () {
+                set_item("like" + bid, bid)
+                layer.msg("谢谢您的支持~~")
+                let bidb = $("#i_l_" + bid);
+                bidb.text(bidb.val() + 1);
+            });
+        }
+    }
+</script>
+<script src="/bokejscss/shouye.js"></script>
+</html>

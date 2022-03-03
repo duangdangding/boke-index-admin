@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+    
+    <title>苏喂苏喂喔 - 博客园</title>
+
+    <link rel="stylesheet" href="/css/blog-common.min.css" />
+    <!-- 代码高亮css -->
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/css/bundle-custom-mobile.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/index.css" />
+
+    <style>
+    </style>
+    <link rel="stylesheet" th:href="@{/404/main.css}" type="text/css"/>
+    
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <block th:include="common :: page_header_html" />
+    <div id="main">
+        <header class="panel-cover">
+            <div class="panel-main">
+                <div class="panel-main__inner panel-inverted">
+                    <div class="panel-main__content" th:utext="${msg}">
+                        <!--                @{css/reset.css}-->
+<!--                        <a th:href="@{/toindex}" title="前往宴会会场"><img th:src="@{404/few.jpg}" width="150" alt="Noisky logo" class="panel-cover__logo logo"></a>-->
+                        <h1 class="panel-cover__title panel-title" style="color: #7f8c93;font-weight: bold"><a style="color: #7f8c93" th:href="@{/}" title="回到首页">404</a></h1>
+                        <hr class="panel-cover__divider">
+                        <p class="panel-cover__description" style="font-size: 22px">小萌很认真的告诉你：没有这个页面哦~(＞人＜；)</p>
+                        <p class="panel-cover__description" style="font-size: 22px">让管理员给你开个特权，加个页面呐</p>
+                        <hr class="panel-cover__divider panel-cover__divider--secondary">
+                        <!--                <p class="panel-cover__description">欢迎来到我的个人世界!</p>-->
+                        <p class="panel-cover__description" style="margin-top: 30px"><a th:href="@{/}" class="go-back">车到山前没有路了，退回去吧</a></p>
+                        <!--                <p class="footer">404模板 © 2020  |  <a style="TEXT-DECORATION: none" href="http://www.miibeian.gov.cn" rel="nofollow" target="_blank"><font color="#b3b3b3">京ICP备00000000号</font></a></p>-->
+<!--                        <p class="footer">没有这个页面啦</p>-->
+                    </div>
+                </div>
+                <!-- 遮罩层 -->
+<!--                <div class="panel-cover&#45;&#45;overlay cover-slate"></div>-->
+            </div>
+        </header>
+    </div><!--end: main -->
+<!--    <block th:include="common :: page_footer_html" />-->
+</div><!--end: home 自定义的最大容器 -->
+
+<block th:include="common :: page_end_html" />
+</body>
+<script th:inline="javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+</script>
+</html>

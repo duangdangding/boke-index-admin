@@ -1,0 +1,30 @@
+.page_container ul {
+  list-style: none;
+  display: inline;
+  padding-left: 0;
+  font-size: 16px;
+}
+
+.page_container li {
+  counter-increment: pagination;
+  display: inline-block;
+  /*width: 2.5rem;*/
+  /*height: 1.5rem;*/
+  border-radius: 5px;
+  line-height: 1.5rem;
+  margin: .3rem;
+  color: black;
+  background-color: white;
+  border: solid 1px #d6d6d6;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.3rem 0.7rem;
+  opacity: .9;
+  cursor: pointer;
+  font-weight: 500;
+}
+/*.page_container li:nth-child(1) {
+  counter-reset: pagination;
+}*/
+

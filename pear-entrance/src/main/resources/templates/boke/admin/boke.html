@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+                分类：
+                <select class="url_input" id="cateItems">
+                    <option value = ''>全部</option>
+                </select>
+                编辑器：
+                <select class="url_input" id="editType">
+                    <option value = ''>全部</option>
+                    <option value="1">富文本</option>
+                    <option value="2">markdown</option>
+                </select>
+                删除：
+                <select class="url_input" id="deleteState">
+                    <option value = ''>全部</option>
+                    <option value="0">已删除</option>
+                    <option value="1">未删除</option>
+                </select>
+                置顶：
+                <select class="url_input" id="top">
+                    <option value = ''>全部</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+                压缩：
+                <select class="url_input" id="bokeZip">
+                    <option value = ''>全部</option>
+                    <option value="0">未压缩</option>
+                    <option value="1">压缩</option>
+                </select>
+                审核：
+                <select class="url_input" id="pass">
+                    <option value = ''>全部</option>
+                    <option value="1">通过</option>
+                    <option value="2">不通过</option>
+                </select>
+                私有：
+                <select class="url_input" id="pubPri">
+                    <option value = ''>全部</option>
+                    <option value="1">公开</option>
+                    <option value="2">私有</option>
+                </select>
+                标签：
+                <select class="url_input" id="labelIds" style="width: 120px">
+                    <option value = ''>全部</option>
+                </select>
+                <!--                用户：<input class="url_input" type="text" id="userName">-->
+                标题：<input class="url_input" type="text" id="title">
+                <button class="l-btn" onclick="startSelect()">开始查询</button>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="bokeListTable" lay-filter="bokeListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="deleteState">删除</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="unPass">不通过</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="forever">永久删除</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除<i class="layui-icon layui-icon-close"></i></a>
+                        <a class="layui-btn layui-btn-xs" id="topBtn{{d.bokeId}}"
+                           lay-event="setTop">
+                            {{#  if(d.topOrder == 0){ }}
+                            设置置顶
+                            {{#  } else { }}
+                            取消置顶
+                            {{#  } }}
+                        </a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="unPass">不通过</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="forever">永久删除</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+<script>
+
+    $(function () {
+        initSelectOptions3("cateItems", "/getAllCates","cateId","cateName");
+        initSelectOptions3("labelIds", "/admin/label/getAllLabels","labelId","labelName");
+    })
+    let bokeTable;
+    let bokelist_url = '/admin/boke/mbpage';
+    let del_url = '/admin/boke/forever';
+    layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util'], function () {
+        let table = layui.table;
+        let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        bokeTable = table.render({
+            elem: '#bokeListTable'
+            ,id: 'bokeListTableT'
+            ,url: bokelist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'bokeId', width:60, title: 'ID', sort: true}
+                    ,{field:'title', width:200, title: '标题'}
+                    // ,{field:'createTime', width:160, title: '创建时间'}
+                    ,{field:'updateTime', width:160, title: '最后修改时间'}
+                    ,{field:'cateName', width:100, title: '类别'}
+                    ,{field:'labelNames', width:130, title: '标签'}
+                    // ,{field:'introduction', width:100, title: '简述'}
+                    ,{field:'editorType', width:100, title: '编辑器',templet: function (d) {return d.editorType===1?'富文本':'MarkDown'}}
+                    ,{field:'priPub', width:60, title: '私有',templet: function (d) {return d.priPub===1?'公开':'私有'}}
+                    ,{field:'topOrder', width:60, title: '置顶',templet: function (d) {return yesOrNo(d.topOrder)}}
+                    ,{field:'bokeZip', width:60, title: '压缩',templet: function (d) {return yesOrNo(d.bokeZip)}}
+                    ,{field:'likeNum', width:60, title: '喜欢'}
+                    ,{field:'replyNum', width:60, title: '回复'}
+                    ,{field:'lookNum', width:60, title: '浏览'}
+                    ,{field:'shareNum', width:60, title: '分享'}
+                    ,{field:'deleteState', width:50, title: '删除',templet: function (d) {return d.deleteState===1?'否':'是'}}
+                    ,{field:'bokeExamine', width:60, title: '审核',templet: function (d) {if (d.bokeExamine===0){return '未审核'}else if(d.bokeExamine===1){return '通过'}else{return '未通过'}}}
+                    // ,{field:'userName', width:100, title: '作者'}
+                    ,{field:'操作',width:285, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(bokeListTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            let selects = checkStatus.data;
+            let len = selects.length;
+            let bs = [];
+            $.each(selects, function(i, n){
+                bs[i] = n.bokeId;
+            });
+            switch(obj.event){
+                case 'deleteState':
+                    if (len > 0) {
+                        layer.confirm('确定要删除这'+len+'个吗？', function(index){
+                            param_sucfun_get('/admin/boke/deleteState',{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'forever':
+                    if (len > 0) {
+                        layer.confirm('确定要永久删除这'+len+'个吗？', function(index){
+                            param_sucfun_get(del_url,{ids:bs},function () {
+                                // obj.del();
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'unPass':
+                    if (len > 0) {
+                        layer.confirm('确定要不通过这'+len+'个吗？', function(index){
+                            param_sucfun_get('/admin/boke/unPass',{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'reload':
+                    bokeTable.reload();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(bokeListTable)', function(obj){
+            let b = obj.data;
+            let bokeId = b.bokeId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要删除吗？', function(index){
+                    param_sucfun_get('/admin/boke/deleteState',{ids:bokeId},function () {
+                        // obj.del();
+                        obj.update({
+                            deleteState: '0',
+                        });
+                        // startSelect();
+                        layer.close(index);
+                    })
+                });
+            } else if(obj.event === 'setTop'){
+                let top = b.topOrder;
+                if (top === 0) {
+                    param_sucfun_get("/t/top/add",{bokeId:bokeId},function () {
+                        obj.update({
+                            topOrder: '1',
+                        });
+                        $("#topBtn" + bokeId).text('取消置顶');
+                    })
+                } else {
+                    param_sucfun_get("/t/top/cancel",{bokeId:bokeId},function () {
+                        obj.update({
+                            topOrder: '0'
+                        });
+                        $("#topBtn" + bokeId).text('设置置顶');
+                    })
+                }
+            } else if (obj.event === 'unPass') {
+                param_sucfun_get('/admin/boke/unPass',{ids:bokeId},function () {
+                    // obj.del();
+                    obj.update({
+                        bokeExamine: '2'
+                    });
+                    // startSelect();
+                    layer.close(index);
+                })
+            } else if(obj.event === 'forever'){
+                layer.confirm('确定要永久删除吗？', function(index){
+                    param_sucfun_get(del_url,{ids:bokeId},function () {
+                        // obj.del();
+                        startSelect();
+                        layer.close(index);
+                    })
+                });
+            }
+        });
+    });
+
+    function startSelect() {
+        let cateId = $("#cateItems").val();
+        let editType = $("#editType").val();
+        let deleteState = $("#deleteState").val();
+        let top = $("#top").val();
+        let bokeZip = $("#bokeZip").val();
+        let pass = $("#pass").val();
+        let pubPri = $("#pubPri").val();
+        let labelId = $("#labelIds").val();
+        // let userName = $("#userName").val();
+        let title = $("#title").val();
+
+        let where = {
+            bokeType:cateId,
+            editType:editType,
+            deleteState:deleteState,
+            top:top,
+            bokeZip:bokeZip,
+            pass:pass,
+            pubPri:pubPri,
+            labelId:labelId,
+            // userName:userName,
+            title:title
+        }
+        bokeTable.reload({
+            where:where,
+            page:{curr:$(".layui-laypage-curr").text()}
+        })
+    }
+</script>
+</html>

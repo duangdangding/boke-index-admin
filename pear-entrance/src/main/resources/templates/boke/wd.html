@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+    <!--    // 防止页面放大-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+    <meta name="referrer" content="origin" />
+    <!--    <meta name="referrer" content="suweibk.xyz" />-->
+
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>苏喂苏喂喔 - 富文本编辑器</title>
+    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/select/layui.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/select/ySearchSelect.css}" type="text/css"/>
+
+    <script src="/js/constains.js"></script>
+    <script src="/js/jquery-3.8.min.js"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script src="/select/jQuery.Hz2Py-szm-min.js"></script>
+    <script src="/select/ySearchSelect.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <script th:src="@{/js/dateutil.js}" ></script>
+    <!--    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js" ></script>-->
+    <script type="text/javascript" th:src="@{/editor/wangeditor/wangEditor.min.js}" ></script>
+    <!-- 判断是否手机端 必须js -->
+    <script src="/js/checkpc_moile.js"></script>
+<!--    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>-->
+    <script src="/htjs/highlight.min11.js"></script>
+    <!--    <link rel="stylesheet" th:href="@{/editor/wangeditor/hightcode/monokai_sublime.min.css}" type="text/css"/>-->
+    <style>
+        .w-e-m-video {width: 220px}
+    </style>
+    <link type="text/css" rel="stylesheet" href="/bokejscss/editor.css" />
+    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
+    <link rel="stylesheet" href="/editor/wangeditor/wang.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <!-- ios设置手机禁止缩放 -->
+    <script src="/js/iossuofang.js"></script>
+</head>
+<body>
+<!-- 头部 -->
+<!--<block th:include="boke/common :: page_editor_html" />-->
+<!--<div th:insert="boke/common :: page_editor_html"></div>-->
+<div th:replace="boke/common :: page_editor_html"></div>
+<!-- 播放器插件 -->
+<block th:include="boke/common :: page_music_html" />
+<!--spellcheck="false" 关闭拼写检查-->
+<div class="wd-editor" id="wangEdit" onkeydown="showTxtLen()" spellcheck="false"></div>
+<div style="float: right;color: red">
+    <!-- 显示字数 -->
+    <p id="showTextLen"></p>
+    <!-- 显示保存草稿的信息 -->
+    <p id="showsaveCG"></p>
+</div>
+</body>
+<script th:inline="javascript"> // 需要添加 th:inline 才能访问 model 中的属性
+var boke = [[${boke}]];
+
+var boke_type = 1;
+setCodeTheme(boke_type);
+</script>
+<script th:src="@{/bokejscss/editor.js}" ></script>
+<script th:src="@{/bokejscss/wdEditor.js}" ></script>
+</html>

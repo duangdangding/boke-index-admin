@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .hidden{display: none}
+    </style>
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <div class="p_container">
+            <div class="menuBox">
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">私有：0是1否，置顶：0否1是，压缩：0未压缩1压缩，删除：0已删除1未删除，
+                    编辑器：富文本1 markdown 是2，审核：0未审核1通过2不通过</div>
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="friendListTable" lay-filter="friendListTable"></table>
+                    <!-- 模板 -->
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="friendAdd">新增</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" id="fdBtn{{d.friendId}}"
+                           lay-event="deleteState">
+                            {{#  if(d.urlShow == 0){ }}
+                            启用
+                            {{#  } else { }}
+                            禁用
+                            {{#  } }}
+                        </a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="update">修改</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+
+<div id="addOrUpFriendWin" class="hidden">
+    <form class="layui-form" id="friendForm" method="post">
+        <input type="hidden" name="friendId" id="friendId">
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" id="url" name="url" lay-verify="friend" autocomplete="off" placeholder="请输入链接" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" id="name" name="name" lay-verify="friend" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <input type="text" id="imgUrl" name="imgUrl" lay-verify="friend" autocomplete="off" placeholder="请输入头像链接" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input type="text" id="descript" name="descript" lay-verify="friend" autocomplete="off" placeholder="请输入描述" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">序号</label>
+            <div class="layui-input-block">
+                <input type="number" id="sortNum" name="sortNum" lay-verify="friend" autocomplete="off" placeholder="请输入序号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示</label>
+            <div class="layui-input-block">
+                <select class="layui-select" name="urlShow" id="urlShow">
+                    <option value="1">显示</option>
+                    <option value="0">隐藏</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div>
+        <button class="layui-btn" onclick="upOrSave()">确定</button>
+        <button class="layui-btn" onclick="closelayer()">取消</button>
+    </div>
+</div>
+</body>
+<script>
+    
+    $(function () {
+    })
+    // let edit ;
+    let friendTable;
+    let friendlist_url = '/admin/friend/page';
+    let friendAddOrUpdate = '/admin/friend/updateOrAdd';
+    let delUrl = '/admin/friend/del';
+    layui.use('table', function () {
+        let table = layui.table;
+        friendTable = table.render({
+            elem: '#friendListTable'
+            ,url: friendlist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'friendId', width:60, title: 'ID', sort: true}
+                    ,{field:'url', width:120, title: '网址'}
+                    ,{field:'name', width:120, title: '标题'}
+                    ,{field:'imgUrl', width:160, title: '头像'}
+                    ,{field:'descript', width:200, title: '描述'}
+                    ,{field:'createTime', width:160, title: '创建时间'}
+                    ,{field:'sortNum', width:70, title: '排序'}
+                    ,{field:'urlShow', width:70, title: '显示',templet: function (d) {return d.urlShow?'是':'否'}}
+                    ,{field:'caozuo',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: false
+            ,skin: 'row' //表格风格
+        });
+
+        //头工具栏事件
+        table.on('toolbar(friendListTable)', function(obj){
+            switch(obj.event){
+                case 'friendAdd':
+                    // edit = 1;
+                    document.getElementById("friendForm").reset();
+                    openWind('新增','addOrUpFriendWin','50%','80%',function () {
+                        friendTable.reload();
+                    })
+                    break;
+                case 'reload':
+                    reload();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(friendListTable)', function(obj){
+            let b = obj.data;
+            let friendId = b.friendId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要禁用此友链吗？', function(index){
+                    let state = b.urlShow;
+                    let pstate;
+                    let pv;
+                    if (!state) {
+                        pstate = true;
+                        pv = '禁用';
+                    } else {
+                        pstate = false;
+                        pv = '启用';
+                    }
+                    param_suc_post(friendAddOrUpdate,{friendId:friendId,urlShow:pstate},function () {
+                        obj.update({
+                            urlShow: pstate,
+                        });
+                        $("#fdBtn" + friendId).text(pv);
+                        layer.close(index);
+                    })
+                });
+            } else if (obj.event === 'update') {
+                // edit = 2;
+                $("#friendId").val(b.friendId);
+                $("#url").val(b.url);
+                $("#name").val(b.name);
+                $("#imgUrl").val(b.imgUrl);
+                $("#descript").val(b.descript);
+                $("#sortNum").val(b.sortNum);
+                $("#urlShow").val(b.urlShow);
+                openWind('修改','addOrUpFriendWin','50%','80%',function () {
+                    reload();
+                })
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定要删除此项吗？', function(index){
+                    param_sucfun_get(delUrl,{id:friendId},function () {
+                        reload();
+                    })
+                });
+            }
+        });
+    });
+    
+    function upOrSave() {
+        let d = {};
+        let t = $('#friendForm').serializeArray();
+        //t的值为[{name: "a1", value: "xx"},
+        //{name: "a2", value: "xx"}...]
+        $.each(t, function() {
+            d[this.name] = this.value;
+        });
+        param_suc_post(friendAddOrUpdate,d,function () {
+            reload();
+            closelayer();
+        });
+    }
+    function reload() {
+        friendTable.reload();
+    }
+</script>
+</html>

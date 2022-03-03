@@ -1,0 +1,359 @@
+@media screen and (max-device-width:700px){
+    .ed_type li:not(:first-child) {
+        display: none !important;
+    }
+    .ed_type {
+        width: 6.8em;
+    }
+    #label_box {
+        float: left;
+        width: 160px;
+    }
+    #label_t {
+        height: 25px;
+        width: 100px;
+    }
+}
+
+@media screen and (max-device-width:960px){
+    .page_container {
+        width: 100%;
+    }
+    .page_container li {
+        padding: 2px 6px;
+    }
+    .pagination>span {
+        padding: 10px 5px;
+        font-size: 12px;
+    }
+    #navList li {
+        padding: 5px;
+    }
+    /* 首页列表 */
+    .day .postTitle a:link,.day .postTitle{font-size: 16px;}
+    .icon{
+        width: 50px;
+        margin: -3px -9px 0 0;
+    }
+    div#mainContent {
+        width: 90%;
+        padding: 10px;
+    }
+    .fxBtnBox {
+        margin-left: 0;
+        height: auto;
+    }
+    .day {padding: 5px 10px 15px 10px;}
+    span#bpke_xqj {display: block}
+    .day .postTitle {display: inline-block;}
+    .card-box {
+        font-size: 12px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .pagination>span.prev {left: 10px}
+    .pagination>span.next {
+        right: 10px;
+        margin-top: -5px;
+        height: 19px;
+        line-height: 25px;
+    }
+    .icon-jiantou-you:before {font-size: 13px}
+
+    #sideBarMain{height: auto}
+    #set_btn_box{right: 12px}
+    .d_set_btn {display: none}
+    .poem-wrap h1{font-size: 1.3em}
+    #poem_sentence{font-size: 16px}
+    #poem_info{font-size: 10px}
+    .postBody{display: contents;width: 100%}
+    #BlogPostCategory{font-size: 10px}
+    .xq_fl_span{display: block;text-align: center}
+
+    /*    留言*/
+    #editbox{width: 100%}
+    .cm_td_img{width: 50px}
+    .cm_td_img img{width: 50px}
+    .cm_td_img p{font-size: 12px}
+    .comm_title{font-size: 10px}
+    .cm_td_cont{padding: 5px 15px;}
+    .cm_td_hf{font-size: 12px}
+
+    .w-e-toolbar .w-e-menu {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    .cm_td_rp_sp{font-size: 10px}
+    /*wangeditor 表情*/
+    #img_box img{
+        width: 233px;
+        height: 140px;
+    }
+    /*导航栏*/
+    .ed_type{
+        top:25px
+    }
+    .ed_type li{
+        margin: 5px 0;
+    }
+    /*编辑器*/
+    .wd_header{display: block}
+    .tl-price-input{
+        display: block;
+        height: 20px;
+        line-height: 20px;
+        width: 92%;
+    }
+    .modle_sp{display: block}
+    .publish_type {
+        display: flex;
+        justify-content: center;
+        margin-top: 5px !important;
+    }
+    .wd_header select{
+        width: 100px;
+        height: 20px;
+        line-height: 20px;
+        padding-left: 5px;
+    }
+    .wd_header span {
+        height: 20px;
+        line-height: 20px;
+    }
+    /*MD*/
+    .editormd .CodeMirror-linenumbers{
+        padding: 0 !important;
+    }
+    .CodeMirror-foldgutter{
+        width: 0 !important;
+    }
+    .cm-s-pastel-on-dark .CodeMirror-gutters{
+        padding: 0 !important;
+        width: 0 !important;
+    }
+    .CodeMirror-sizer {
+        margin-left: 0 !important;
+    }
+    .CodeMirror-gutter-wrapper{
+        left: -22px !important;
+    }
+    .ant-btn{
+        height: 20px;
+        padding: 0 5px;
+    }
+    .editormd-dialog{
+        width: 100% !important;
+        top:100px !important;
+        left: 0 !important;
+    }
+    .editormd-dialog-container{
+        padding: 0 !important;
+    }
+    .editormd-tab-head li a{
+        padding: 5px !important;
+    }
+    .editormd-grid-table{
+        width: 100% !important;
+        display: block !important;
+    }
+    .editormd-tab-box:last-child .editormd-grid-table-row a{
+        font-size: unset !important;
+    }
+    .markdown-body table{word-break: normal !important;}
+    .editormd-html-entities-box{
+        width: 100% !important;
+        overflow: auto !important;}
+    /*MD表情*/
+    .editormd-emoji-dialog-box{
+        width: 100% !important;
+    }
+    .editormd-emoji-dialog-box .editormd-tab-box {overflow: auto !important;}
+
+    /* 修改信息 */
+    .url_set table {
+        width: 100% !important;
+    }
+    .forFlow main{padding: 0 !important;}
+    .yp_set table{
+        width: 100% !important;
+        font-size: 14px !important;
+    }
+    .tailoring-content .tailoring-box-parcel {
+        position: relative !important;
+        width: 100% !important;
+        height: 250px !important;
+    }
+    .tailoring-content .preview-box-parcel {
+        width: 100% !important;
+        display: inline-flex;
+        justify-content: center;
+        position: relative !important;
+        padding: 0 !important;
+    }
+    .previewImg{
+        width: 100px !important;
+        height: 100px !important;
+        margin: 5px !important;
+    }
+
+    .cropper-container{height: 250px !important;}
+    .tailoring-container .tailoring-content {
+        height: 460px !important;
+    }
+    .tailoring-content .tailoring-content-two {height: 365px !important;}
+
+    /*回到首页*/
+    .wd_header .layui-form-item{
+        font-size: 12px;
+        height: 25px;
+        padding: 5px 0;
+    }
+    .first_line_e{
+        display: flex;
+    }
+    .layui-form-item .layui-form-label{
+        text-overflow:clip;
+    }
+    .ySearchSelect .layui-input{
+        height: 25px;
+        line-height: 25px;
+    }
+    .toIndexBtn {
+        height: 20px;
+        line-height: 20px;
+        padding: 0 5px;
+    }
+    .layui-form-item .layui-input-inline{
+        margin: 0 30px 0 0;
+    }
+    .wd_header .input-text .layui-input{
+        width: 90px !important;
+        height: 25px;
+        line-height: 25px;
+    }
+    .ySearchSelect ul li{
+        height: 25px;
+        line-height: 25px;
+    }
+    .wd_header .layui-form-label{
+        height: 25px;
+        line-height: 10px;
+        margin-right: 5px;
+    }
+    .wd_header .addCate_sp {
+        height: 25px;
+        line-height: 25px;
+    }
+    #cateItem_add{
+        height: 25px;
+        line-height: 25px;
+        /*width: 100px;*/
+    }
+    .addCateBtn{
+        height: 25px;
+        line-height: 25px;
+    }
+    #label_list_box {
+        left: 25px;
+        top:25px
+    }
+    .layui-form-select .layui-edge{
+        right: 10px;
+        top: 50%;
+    }
+    /* 相册 */
+    .content-wrap img {
+        width: 100%;
+        height: 100%;
+    }
+    .colorful1 {
+        font-size: 1rem !important;
+    }
+    #cnblogs_post_body {
+        /*margin-top: 60px !important;*/
+    }
+    .modle_sp {
+        height: 25px;
+        line-height: 25px;
+        padding: 5px;
+        float: left;
+    }
+    .btn3ge {
+        display: block;
+        clear: both;
+    }
+    /* 标签墙 */
+    .labelBody a{
+        font-size: 12px;
+        margin: 5px;
+        border-bottom: 1px solid;
+    }
+    .labelBody {
+        padding: 0;
+        
+    }
+    /* 导航页 */
+    .seachBox {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+    }
+    #seachPlate {
+        width: 70px;
+        font-size: 12px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .seachBtn {
+        width: 50px;
+        text-align: center;
+        padding: 0 10px;
+        height: 30px;
+        line-height: 30px;
+    }
+    #seachWord {
+        height: 30px;
+        line-height: 30px;
+    }
+    .classify {
+        font-size: 14px;
+        /*width: 60px;*/
+    }
+    .frant_item {
+        padding: 5px;
+    }
+    .frant_item img {
+        width: 15px;
+    }
+    .frant_a {
+        font-size: 12px
+    }
+    .frant_items li {
+        width: 127px;
+    }
+    .drag-handle {
+        margin: 0;
+    }
+    .js-remove-f, .js-remove-z {
+        opacity: 1;
+        margin: 2px 0 0 10px;
+    }
+    .classifyBox {
+        margin-bottom: -10px;
+    }
+}
+@media screen and (max-device-width:1100px){
+    #label_box {
+        float: left;
+    }
+    .wd_header .layui-form-item {
+        float: left;
+        clear: none;
+    }
+    #label_t{
+        height: 2em;
+    }
+    #label_list_box{
+        top: 30px;
+    }
+}

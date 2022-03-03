@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin" />
+
+    <!--    <title>苏喂苏喂喔 - 博客园</title>-->
+
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <script th:inline="javascript">
+        //项目根路径
+        // ctx = /*[[@{/}]]*/'';
+        ctx = [[${#request.getContextPath()}]];//应用路径
+    </script>
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+    <link th:href="@{/common/common.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<!--done-->
+<div id="home">
+    <div id="main">
+        <!-- 添加成功之后弹窗 -->
+        <div id="addResultBox" class="hidden">
+            <div id="addResult"></div>
+        </div>
+        <!-- json解析添加 -->
+        <div id="addJXStrWin" class="hidden">
+            <textarea id="jsonJXStr" class="layui-textarea" rows="25" cols="25"></textarea><br>
+            <input class="url_input" type="text" id="tJXApi" value="api" required="required">
+            <input class="url_input" type="text" id="tJXName" value="name" required="required"><br>
+            <button class="l-btn" id="addJXBtn" onclick="toJsonJXStr()">添加</button>
+            <button class="l-btn" onclick="jsonClear('jsonJXStr')">清空</button>
+            <button class="l-btn" onclick="closelayer()">取消</button>
+        </div>
+        <div class="p_container">
+            <div class="menuBox">
+                <select class="url_input" id="exporType_c" name="exporType" onchange="hideXZY()">
+                    <option value="1">默认</option>
+                    <option value="4">残影</option>
+                </select>
+                <button class="l-btn" onclick="open_createWin()">生成JSON</button>
+                <button class="l-btn" onclick="downjson()">下载JSON</button>
+            </div>
+            <div class="menuBox">
+                可用：
+                <select class="url_input" id="parseActive">
+                    <option value = ''>全部</option>
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                </select>
+                检测：
+                <select class="url_input" id="shoudong">
+                    <option value = ''>全部</option>
+                    <option value="1">未检测</option>
+                    <option value="0">已检测</option>
+                </select>
+                <button class="l-btn" onclick="startSelect()">开始查询</button>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">可用：是否可用0不可用1可用</div>
+                <div class="layui-card-body">
+                    <!-- 表格主体 -->
+                    <table class="layui-hide" id="parseListTable" lay-filter="parseListTable"></table>
+                    <!-- 模板 -->
+                    <!-- 链接自定义 -->
+                    <script type="text/html" id="custemUrl">
+                        <a target="_blank" href="{{d.parseUrl}}">{{d.parseUrl}}</a>
+                    </script>
+                    <script type="text/html" id="headerTool">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="deleteState">禁用</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="shoudong">检测</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="open_addjxStrWin">添加解析</button>
+                            <!--                            <button class="layui-btn layui-btn-sm" lay-event="jianceUrls">检测可用性</button>-->
+                        </div>
+                    </script>
+                    <script type="text/html" id="rowTool">
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">禁用</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="shoudong">检测</a>
+                    </script>
+                </div>
+            </div>
+        </div><!-- /container -->
+    </div><!--end: main -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+<script>
+
+    $(function () {
+    })
+    let parseTable;
+    let parselist_url = '/admin/parse/page';
+    let parseUpOrAdd = '/admin/parse/mbpage';
+    let parseDel = '/admin/parse/deleteState';
+    let parseSD = '/admin/parse/shoudong';
+    layui.use(['element', 'form', 'table', 'layer', 'laydate', 'tree', 'util'], function () {
+        let table = layui.table;
+        parseTable = table.render({
+            elem: '#parseListTable'
+            ,url: parselist_url
+            ,toolbar: '#headerTool'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'parseId', width:60, title: 'ID', sort: true}
+                    ,{field:'parseName', width:130, title: '名字'}
+                    ,{field:'parseUrl', width:350, title: '链接',templet: '#custemUrl'}
+                    ,{field:'createTime', width:160, title: '添加时间'}
+                    ,{field:'parseActive', width:60, title: '可用'}
+                    ,{field:'shoudong', width:60, title: '检测'}
+                    ,{field:'操作',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
+                ]
+            ]
+            ,page: true
+            ,skin: 'row' //表格风格
+            ,limits: [30,40,50,60,70,80]
+            ,limit: 50 //每页默认显示的数量
+        });
+
+        //头工具栏事件
+        table.on('toolbar(parseListTable)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            let selects = checkStatus.data;
+            let len = selects.length;
+            let bs = '';
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    bs += selects[i].parseId + ',';
+                }
+                bs = bs.substr(0, bs.length-1);
+            }
+            switch(obj.event){
+                case 'deleteState':
+                    if (len > 0) {
+                        layer.confirm('确定要禁用这'+len+'个吗？', function(index){
+                            param_sucfun_get(parseDel,{ids:bs},function () {
+                                startSelect();
+                                layer.close(index);
+                            })
+                        });
+                    }
+                    break;
+                case 'shoudong':
+                    if (len > 0) {
+                        param_sucfun_get(parseSD,{ids:bs},function () {
+                            startSelect();
+                            layer.close(index);
+                        })
+                    }
+                    break;
+                case 'open_addjxStrWin':
+                    open_addjxStrWin();
+                    break;
+                case 'reload':
+                    startSelect();
+                    break;
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(parseListTable)', function(obj){
+            let b = obj.data;
+            let parseId = b.parseId;
+            if(obj.event === 'deleteState'){
+                layer.confirm('确定要禁用吗？', function(index){
+                    param_sucfun_get(parseDel,{ids:parseId},function () {
+                        obj.update({
+                            parseActive: '1',
+                        });
+                        layer.close(index);
+                    })
+                });
+            } else if(obj.event === 'shoudong'){
+                param_sucfun_get(parseSD,{ids:parseId},function () {
+                    obj.update({
+                        shoudong: '0',
+                    });
+                    layer.close(index);
+                })
+            }
+        });
+    });
+
+    function startSelect() {
+        let parseActive = $("#parseActive").val();
+        let shoudong = $("#shoudong").val();
+
+        let where = {
+            shoudong:shoudong,
+            active:parseActive
+        }
+        parseTable.reload({
+            where:where,
+            page:{curr:1}
+        })
+    }
+    // 打开生成json
+    function open_createWin() {
+        // 先清空
+        $("#jsonJXStr").val("");
+        let type = $("#exporType_c").val();
+        param_sucfun_get("/downJXJson",{type:type},function (data) {
+            $("#jsonJXStr").val(data);
+            open_addjxStrWin();
+        });
+        $("#addJsonBtn").hide()
+    }
+    // 导出json
+    function downjson() {
+        let type = $("#exporType_c").val();
+        param_sucfun_get("/downJXJson",{type:type},exportJson);
+    }
+    // 下载json文件
+    function exportJson(data) {
+        if(!data) {
+            alert('保存的数据为空');
+            return;
+        }
+        let filename = 'jiexi_yuan.json'
+        if(typeof data === 'object'){
+            data = JSON.stringify(data, undefined, 4)
+        }
+        var blob = new Blob([data], {type: 'text/json'}),
+            e = document.createEvent('MouseEvents'),
+            a = document.createElement('a')
+        a.download = filename
+        a.href = window.URL.createObjectURL(blob)
+        a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+        e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+        a.dispatchEvent(e)
+    }
+    // 清空
+    function jsonClear(id) {
+        $("#" + id).val("");
+        $("#tJXApi").val("api");
+        $("#tJXName").val("name");
+    }
+
+    // 解析窗口
+    function open_addjxStrWin() {
+        // 先清空
+        // $("#jsonStr").val("");
+        openWind("添加解析数据","addJXStrWin",'auto','95%');
+    }
+    // 添加解析数据
+    function toJsonJXStr() {
+        let json = $("#jsonJXStr").val();
+        let api = $("#tJXApi").val();
+        let name = $("#tJXName").val();
+        param_post("/jsonJXAdd",{jsonStr:json,api:api,name:name},openAddResultBox,2,2)
+    }
+    function openAddResultBox(data) {
+        $("#addResult").html(data);
+        openWind("添加结果","addResultBox","700px","500px");
+        startSelect();
+    }
+</script>
+</html>

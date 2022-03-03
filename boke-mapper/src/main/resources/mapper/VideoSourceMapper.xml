@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsh.mapper.boke.VideoSourceMapper">
+
+    <select id="getZyplayers" resultType="com.pearadmin.boke.entry.VideoSource" parameterType="com.pearadmin.boke.vo.query.QuerySourceVo">
+        select vs.*,pu.parse_url parseApi from video_source vs
+        left join parse_urls pu on pu.parse_id = vs.parse_id
+        <where>
+            <if test="active != null">
+                and vs.web_available = #{active}
+            </if>
+            <if test="shoudong != null">
+                and vs.shoudong = #{shoudong}
+            </if>
+            <if test="parse != null">
+                and vs.need_parse = #{parse}
+            </if>
+            <if test="sourceType != null">
+                AND vs.source_type = #{sourceType}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[ AND create_time >= #{startTime} and create_time <= #{endTime} ]]>
+            </if>
+            <if test="startId != null and endId != null">
+                <![CDATA[ AND source_id >= #{startId} and source_id <= #{endId} ]]>
+            </if>
+        </where>
+        order by source_id desc
+    </select>
+    <select id="getByuType" resultType="com.pearadmin.boke.entry.VideoSource">
+        select * from video_source
+        <where>
+            source_see = 1
+            and vs.web_available = 0 and vs.shoudong = 0
+            <if test="createType != null">
+                AND source_type = #{createType}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[ AND create_time >= #{startTime} and create_time <= #{endTime}
+            ]]>
+            </if>
+            <if test="needParse != null">
+                and vs.need_parse = #{needParse}
+            </if>
+            <if test="sourceType != null">
+                and vs.source_type = #{sourceType}
+            </if>
+        </where>
+    </select>
+
+    <select id="getListBywebAvai" resultType="com.pearadmin.boke.entry.VideoSource" parameterType="com.pearadmin.boke.vo.query.QuerySourceVo">
+        select * from video_source
+        <where>
+            <if test="vo.shoudong != null">
+                and shoudong = #{vo.shoudong}
+            </if>
+            <if test="vo.active != null">
+                and web_available = #{vo.active}
+            </if>
+            <if test="vo.parse != null and vo.parse != 2">
+                and need_parse = #{vo.parse}
+            </if>
+            <if test="vo.sourceType != null">
+                and source_type = #{vo.sourceType}
+            </if>
+            <if test="vo.startTime != null and vo.startTime != ''">
+                <![CDATA[ AND create_time >= #{vo.startTime} ]]>
+            </if>
+            <if test="vo.endTime != null and vo.endTime != ''">
+                <![CDATA[ AND create_time <= #{vo.endTime} ]]>
+            </if>
+            <if test="vo.startId != null">
+                <![CDATA[ and source_id >= #{vo.startId} ]]>
+            </if>
+            <if test="vo.endId != null">
+                <![CDATA[ and source_id <= #{vo.endId} ]]>
+            </if>
+        </where>
+        order by need_parse asc, source_id desc
+    </select>
+
+
+    <select id="selectNullCate" resultType="com.pearadmin.boke.entry.VideoSource">
+        SELECT * FROM video_source
+        WHERE web_available = 0  AND (source_type = 1 or source_type=2)
+        and (category is NULL or category = '[]')
+    </select>
+
+    <select id="countBycause" resultType="map">
+        select (select count(1) from video_source) z ,
+        (select count(1) from video_source
+        where shoudong = 1) sz,
+        (select count(*) from video_source
+        where shoudong = 0 and web_available = 0 ) ky,
+        (select count(*) from video_source
+        where shoudong = 0 and need_parse = 1) jx,
+        (SELECT GROUP_CONCAT(c) from (select count(*) c from video_source
+        where shoudong = 0  and web_available = 0
+        group by source_type
+        ORDER by source_type asc) v) ty
+        from video_source limit 1
+    </select>
+
+</mapper>
