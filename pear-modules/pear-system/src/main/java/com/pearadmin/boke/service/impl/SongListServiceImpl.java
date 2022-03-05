@@ -29,15 +29,15 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
     private RedisUtil redisUtil;
 
     @Override
-    public SongList getByUserId(Integer userId) {
-        QueryWrapper<SongList> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+    public SongList getByUserId(Long userId) {
         SongList songList;
         String key = Constants.RedisKey.SONGLIST + userId;
         if (redisUtil.hasKey(key)) {
             songList = JSONUtil.toBean(redisUtil.get(key).toString(),SongList.class);
         } else {
-            songList = songListMapper.selectOne(queryWrapper);
+            QueryWrapper<SongList> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in("user_id",userId,0).orderByDesc("user_id");
+            songList = songListMapper.selectList(queryWrapper).get(0);
             redisUtil.set(key,JSONUtil.toJsonStr(songList));
         }
         return songList;

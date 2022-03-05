@@ -1,11 +1,12 @@
 package com.pearadmin.boke.entry;
 
+import java.sql.Timestamp;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
 
-import java.sql.Timestamp;
+import lombok.Data;
 
 /**
  * bokes
@@ -33,7 +34,7 @@ public class Bokes implements java.io.Serializable {
 
     private Timestamp updateTime;
 
-    private Integer userId;
+    private Long userId;
 
     private Integer likeNum;
 

@@ -1,8 +1,7 @@
 package com.pearadmin.secure;
 
-import com.pearadmin.common.config.proprety.SecurityProperty;
-import com.pearadmin.secure.process.*;
-import com.pearadmin.secure.support.SecureCaptchaSupport;
+import javax.annotation.Resource;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,7 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import javax.annotation.Resource;
+import com.pearadmin.common.config.proprety.SecurityProperty;
+import com.pearadmin.secure.process.SecureAccessDeniedHandler;
+import com.pearadmin.secure.process.SecureAuthenticationEntryPoint;
+import com.pearadmin.secure.process.SecureAuthenticationFailureHandler;
+import com.pearadmin.secure.process.SecureAuthenticationSuccessHandler;
+import com.pearadmin.secure.process.SecureLogoutHandler;
+import com.pearadmin.secure.process.SecureLogoutSuccessHandler;
+import com.pearadmin.secure.process.SecureRememberMeHandler;
+import com.pearadmin.secure.process.SecureSessionExpiredHandler;
+import com.pearadmin.secure.support.SecureCaptchaSupport;
 
 /**
  * Describe: Security 安全配置
@@ -113,7 +121,6 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(securityUserDetailsService).passwordEncoder(passwordEncoder);
     }
-
 
     /**
      * Describe: 配置 Security 控制逻辑

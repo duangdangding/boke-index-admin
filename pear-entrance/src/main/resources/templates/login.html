@@ -31,6 +31,9 @@
         <button class="pear-btn pear-btn-success login" lay-filter="login" lay-submit>
             登 入
         </button>
+        <button class="pear-btn pear-btn-success" onclick="toRegister()">
+            注 册
+        </button>
     </div>
 </form>
 <th:block th:include="include :: footer"/>
@@ -108,6 +111,10 @@
         var r = window.location.search.substr(1).match(reg);
         if (r != null) return decodeURI(r[2]);
         return null;
+    }
+    function toRegister() {
+            // 本页面打开
+        window.location.href = "/register";
     }
 </script>
 </body>

@@ -12,6 +12,6 @@ public interface PhotosMapper extends BaseMapper<Photos> {
     int setDeleteStateByUrl(String url);
 
     @Select("select * from photos where photo_url = #{url} and user_id = #{userId}")
-    Photos getByUrlAndUser(String url,Integer userId);
+    Photos getByUrlAndUser(String url,Long userId);
     
 }

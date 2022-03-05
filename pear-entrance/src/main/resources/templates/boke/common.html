@@ -24,7 +24,7 @@
     <script type="text/javascript">
         // 设置副标题
         function loadSubtitle(t) {
-            if (isNull_O(t)) {
+            if (isNull_O(t) || t === '未知账户') {
                 noParam_sucfun_get("/title/sub",setSub);
             } else {
                 setSub(t);

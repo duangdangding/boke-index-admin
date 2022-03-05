@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.mapper.boke.BokesMapper;
 import com.lsh.mapper.boke.DateArchiveMapper;
 import com.pearadmin.boke.entry.Bokes;
@@ -27,7 +28,7 @@ import com.pearadmin.boke.vo.query.QueryBokeVo;
 import cn.hutool.json.JSONUtil;
 
 @Service
-public class BokesServiceImpl extends BaseImpl<BokesMapper, Bokes> implements BokesService {
+public class BokesServiceImpl extends ServiceImpl<BokesMapper, Bokes> implements BokesService {
 
     @Autowired
     private BokesMapper bokesMapper;
@@ -79,7 +80,7 @@ public class BokesServiceImpl extends BaseImpl<BokesMapper, Bokes> implements Bo
     }
 
     @Override
-    public BokeListEntry getBokesById(Integer bokeId, Integer userId) {
+    public BokeListEntry getBokesById(Integer bokeId, Long userId) {
         String key = Constants.RedisKey.BOKEXQ + bokeId;
         BokeListEntry boke;
         if (redisUtil.hasKey(key)) {
@@ -97,7 +98,7 @@ public class BokesServiceImpl extends BaseImpl<BokesMapper, Bokes> implements Bo
     }
 
     @Override
-    public BokeListEntry getBokesByEmId(Integer bokeId, Integer userId) {
+    public BokeListEntry getBokesByEmId(Integer bokeId, Long userId) {
         return bokesMapper.getBokesByEmId(bokeId, userId);
     }
 
@@ -196,7 +197,7 @@ public class BokesServiceImpl extends BaseImpl<BokesMapper, Bokes> implements Bo
         // string数组转list<Integer>
         queryWrapper.in("boke_id",ids);
         Bokes bokes = new Bokes();
-        bokes.setEditorType(unpass);
+        bokes.setBokeExamine(unpass);
         return bokesMapper.update(bokes,queryWrapper);
     }
 

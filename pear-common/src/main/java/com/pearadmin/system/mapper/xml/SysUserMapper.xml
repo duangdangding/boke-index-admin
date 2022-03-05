@@ -22,6 +22,25 @@
         <result property="updateBy" column="update_by"></result>
         <result property="lastTime" column="last_time"></result>
         <result property="remark" column="remark"></result>
+        
+        <result property="loginIp" column="login_ip"></result>
+        <result property="registerTime" column="register_time"></result>
+        <result property="loginTime" column="login_time"></result>
+        <result property="loginType" column="login_type"></result>
+        <result property="registerIp" column="register_ip"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="userAge" column="user_age"></result>
+        <result property="signature" column="signature"></result>
+        <result property="emailBind" column="email_bind"></result>
+        <result property="phoneBind" column="phone_bind"></result>
+        <result property="wxUrl" column="wx_url"></result>
+        <result property="qqUrl" column="qq_url"></result>
+        <result property="csdnUrl" column="csdn_url"></result>
+        <result property="giteeUrl" column="gitee_url"></result>
+        <result property="githubUrl" column="github_url"></result>
+        <result property="weiboUrl" column="weibo_url"></result>
+        <result property="biliUrl" column="bili_url"></result>
+        <result property="userState" column="user_state"></result>
     </resultMap>
 
     <!--根据 Username 加载 SysUser -->
@@ -242,5 +261,42 @@
         <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
             #{deptId}
         </foreach>
+    </update>
+
+    <sql id="userInfo">
+        user_id,user_name,user_email,user_face,date_format(login_time, '%Y-%m-%d %H:%i:%s') login_time,birthday,user_age,signature,
+        wx_url,qq_url,csdn_url,github_url,gitee_url,bili_url,weibo_url,email_bind,phone_bind,user_state
+    </sql>
+    <sql id="userInfoAll">
+        user_id,user_name,login_ip,user_email,user_face,date_format(login_time, '%Y-%m-%d %H:%i:%s') login_time,date_format(register_time, '%Y-%m-%d %H:%i:%s') register_time,
+        birthday,user_age,signature,register_ip,phone,login_type,
+        wx_url,qq_url,csdn_url,github_url,gitee_url,bili_url,weibo_url,email_bind,phone_bind,user_state
+    </sql>
+
+    <!--    and user_state = 1 -->
+    <select id="getUserByNEP" resultMap="SysUserMap" parameterType="SysUser">
+        select * from users where
+        (user_name = #{userName}
+        or (user_email = #{userName} and email_bind = 2)
+        or (phone = #{userName} and phone_bind = 2))
+        and password = #{password}
+    </select>
+
+    <update id="setFace" parameterType="SysUser">
+        update users set user_face = #{userFace} where user_id = #{userId}
+    </update>
+
+    <update id="setUrls">
+        update users set ${column} = #{url} where user_id = #{userId}
+    </update>
+    <update id="setsignature">
+        update users set signature = #{signature} where user_id = #{userId}
+    </update>
+
+    <update id="unOrbdMail">
+        update users set email_bind = #{bd} where user_id = #{userId}
+    </update>
+    <update id="ghMail">
+        update users set user_email = #{email},email_bind = 2 where user_id = #{userId}
     </update>
 </mapper>

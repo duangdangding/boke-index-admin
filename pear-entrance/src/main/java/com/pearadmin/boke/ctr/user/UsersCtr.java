@@ -1,23 +1,13 @@
 package com.pearadmin.boke.ctr.user;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.pearadmin.boke.service.SongListService;
-import com.pearadmin.boke.service.UsersService;
-import com.pearadmin.boke.entry.LoginInfo;
-import com.pearadmin.boke.entry.SongList;
-import com.pearadmin.boke.entry.UserToken;
-import com.pearadmin.boke.entry.Users;
-import com.pearadmin.boke.utils.*;
-import com.pearadmin.boke.utils.contains.BaseCtr;
-import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.utils.ip.IPHelper;
-import com.pearadmin.boke.utils.contains.PassToken;
-import com.pearadmin.boke.vo.ResultDto;
-import com.pearadmin.boke.utils.contains.UserLoginToken;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,18 +15,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.pearadmin.boke.entry.SongList;
+import com.pearadmin.boke.service.SongListService;
+import com.pearadmin.boke.utils.ApiUtil;
+import com.pearadmin.boke.utils.RedisUtil;
+import com.pearadmin.boke.utils.RegExpUtil;
+import com.pearadmin.boke.utils.contains.BaseCtr;
+import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.utils.ip.IPHelper;
+import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.service.ISysUserService;
 
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 public class UsersCtr extends BaseCtr {
     
     @Autowired
-    private UsersService usersService;
+    private ISysUserService sysUserService;
     
     @Autowired
     private SongListService songListService;
@@ -45,21 +46,15 @@ public class UsersCtr extends BaseCtr {
     private RedisUtil redisUtil;
     
     @GetMapping("/userinfo/{userId}")
-    public ResultDto<Users> getUserByid(@PathVariable("userId") String userId) {
-        int id;
-        try {
-            id = Integer.parseInt(userId);
-        } catch (Exception e) {
-            id = 0;
-        }
-        Users byId = usersService.getByUserId(id);
+    public ResultDto<SysUser> getUserByid(@PathVariable("userId") Long userId) {
+        SysUser byId = sysUserService.getById(userId);
         return success(byId);
     }
     
     @PostMapping("/userRegis")
-    public ResultDto<String> userRegis(Users users, HttpServletRequest request) {
-        String userName = users.getUserName();
-        String userEmail = users.getUserEmail();
+    public ResultDto<String> userRegis(SysUser users, HttpServletRequest request) {
+        String userName = users.getUsername();
+        String userEmail = users.getEmail();
         String password = users.getPassword();
         if (!RegExpUtil.checkName(userName)) {
             return fail(NAMEERR);
@@ -78,129 +73,66 @@ public class UsersCtr extends BaseCtr {
         if (!RegExpUtil.checkPwd(password)) {
             return fail(PWDERR);
         }
-        Users one = usersService.getUserByName(users.getUserName());
-        if (one != null) {
+        SysUser userByUsername = sysUserService.getUserByUsername(userName);
+        if (userByUsername != null) {
             return fail(EXISIT);
         }
-        Users byEmail = usersService.getUserByEmail(users.getUserEmail());
-        if (byEmail != null) {
+        SysUser userByEmail = sysUserService.getUserByEmail(userEmail);
+        if (userByEmail != null) {
             return fail(EXISIT);
         }
+        users.setLogin("1");
+        users.setEnable("1");
+        users.setStatus("1");
+        users.setPassword(new BCryptPasswordEncoder().encode(users.getPassword()));
+        sysUserService.saveUserRole(users.getUserId() + "", Arrays.asList(users.getRoleIds().split(",")));
 //        注册IP
         String ip = IPHelper.getIp(request);
         users.setRegisterIp(ip);
-       // 加密密码
-        users.setPassword(PasswordUtil.SHAPwd(password));
-        boolean save = usersService.save(users);
+        Boolean save = sysUserService.save(userByEmail);
         return returnDto(save);
     }
 
-    /**
-     * 用户登录
-     * @param users
-     * @return
-     */
-    @PostMapping("/userLogin")
-    public ResultDto<UserToken> toLogin(Users users, HttpServletRequest request) {
-        Users userByNEP = usersService.getUserByNEP(users);
-        if (userByNEP == null) {
-            return fail(LOGINERR);
-        }
-        if (userByNEP.getUserState() == 0) {
-            return fail(NOTUSER);
-        }
-        String token = TokenUtil.createToken(userByNEP);
-        if (redisUtil.hasKey(token)) {
-            redisUtil.del(token);
-        }
-//        TokenUtil.TOKEN = token;
-        redisUtil.set(token,token);
-        String ip = IPHelper.getIp(request);
-        userByNEP.setLoginIp(ip);
-        userByNEP.setLoginTime(new Timestamp(System.currentTimeMillis()));
-        boolean b = usersService.updateById(userByNEP);
-//        session.setAttribute("user",userByNEP);
-        TokenUtil.USERID = userByNEP.getUserId();
-        LoginInfo info = new LoginInfo();
-        BeanUtil.copyProperties(userByNEP,info);
-        return success(new UserToken(info,token));
-    }
 
-    /**
-     * 修改密码
-     * @param password
-     * @return
-     */
-    @PostMapping("/setPwd")
-    public ResultDto<String> updatePwd(String password) {
-        return null;
-    }
-
-    /**
-     * 重置密码
-     * @param email
-     * @return
-     */
-    @PostMapping("/reasetPwd")
-    public ResultDto<String> reasetPwd(String email) {
-        return null;
-    }
-
-    /**
-     * 为了把token放到ThreadLocal中
-     * @return
-     */
-    @UserLoginToken
-    @PostMapping("/t/to/to")
-    public ResultDto<String> setToken() {
-        return success();
-    }
-    
-    @PassToken
     @RequestMapping("/t/user_info")
     public ModelAndView toUserInfo() {
-        // log.info("toUserInfo ~~~ TokenUtil.USERID = " + TokenUtil.USERID);
-        Integer userId = TokenUtil.USERID;
-        if (userId == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return getView("login",null);
         }
-        Users byUserId = usersService.getByUserId(userId);
+        Long userId = sysUser.getUserId();
+        SysUser byUserId = sysUserService.getById(sysUser.getUserId());
         if (byUserId == null) {
             return getView("login",null);
         } 
         SongList song = songListService.getByUserId(userId);
-        if (song == null) {
-            song = songListService.getByUserId(0);
-        }
         Map<String,Object> map = new HashMap<>();
         map.put("user",byUserId);
         map.put("song",song);
-        return getView("user_info",map);
+        return getView("boke/user_info",map);
     }
     
-    @UserLoginToken
     @PostMapping("/t/seturl")
     public ResultDto<String> setUrls(String url,String column) {
-        Integer userId = TokenUtil.USERID;
-        if (userId == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        int i = usersService.setUrls(column, url, userId);
+        int i = sysUserService.setUrls(column, url, sysUser.getUserId());
         return returnDto(i);
     }
     
-    @UserLoginToken
     @PostMapping("/t/setsignature")
     public ResultDto<String> setsignature(String signature) {
         String rep = signature.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br/>","").replaceAll("&nbsp;","").trim();
         if (rep.length() <= 0) {
             return fail(NULL);
         }
-        Integer userId = TokenUtil.USERID;
-        if (userId == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        int i = usersService.setsignature(signature,userId);
+        int i = sysUserService.setsignature(signature,sysUser.getUserId());
         return returnDto(i);
     }
 
@@ -209,28 +141,28 @@ public class UsersCtr extends BaseCtr {
      * @param song
      * @return
      */
-    @UserLoginToken
     @PostMapping("/t/song")
     public ResultDto<String> setOrUpdateSong(SongList song) {
-        if (TokenUtil.USERID == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        SongList songList = songListService.getByUserId(TokenUtil.USERID);
+        Long userId = sysUser.getUserId();
+        SongList songList = songListService.getByUserId(userId);
         boolean index;
+        song.setUserId(userId);
         if (songList == null) {
-            song.setUserId(TokenUtil.USERID);
             index = songListService.save(song);
         } else {
             songList.setSongNo(song.getSongNo());
             songList.setSongServer(song.getSongServer());
             songList.setSongTheme(song.getSongTheme());
             songList.setAotoPaly(song.getAotoPaly());
-            songList.setUserId(TokenUtil.USERID);
             songListService.update();
             index = songListService.updateByUserId(songList) > 0;
         }
         if (index) {
-            redisUtil.set(Constants.RedisKey.SONGLIST + TokenUtil.USERID,JSONUtil.toJsonStr(song));
+            redisUtil.set(Constants.RedisKey.SONGLIST + userId,JSONUtil.toJsonStr(song));
             return success(song);
         } else {
             return fail();
@@ -242,22 +174,23 @@ public class UsersCtr extends BaseCtr {
      * @param song
      * @return
      */
-    @UserLoginToken
     @PostMapping("/t/song/default")
     public ResultDto<String> setOrUpdateSongDefault(SongList song) {
-        if (TokenUtil.USERID == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        SongList songList = songListService.getByUserId(TokenUtil.USERID);
-        if (songList == null) {
-            songList = songListService.getByUserId(0);
+        Long userId = sysUser.getUserId();
+        SongList songList = songListService.getByUserId(userId);
+        if (songList.getUserId() == 0) {
             return success(songList);
         }
         QueryWrapper<SongList> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",TokenUtil.USERID);
+        wrapper.eq("user_id",userId);
         boolean remove = songListService.remove(wrapper);
         if (remove) {
-            songList = songListService.getByUserId(0);
+            redisUtil.del(Constants.RedisKey.SONGLIST + userId);
+            songList = songListService.getByUserId(0L);
             return success(songList);
         } else {
             return fail();

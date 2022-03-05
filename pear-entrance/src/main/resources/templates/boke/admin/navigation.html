@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -41,12 +41,12 @@
                     <!-- 模板 -->
                     <script type="text/html" id="headerTool">
                         <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
-                            <button class="layui-btn layui-btn-sm" lay-event="navAdd">新增</button>
+                            <button sec:authorize="hasPermission('/admin/navigation/page','sys:navigation:page')" class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-sm" lay-event="navAdd">新增</button>
                         </div>
                     </script>
                     <script type="text/html" id="rowTool">
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" id="navBtn{{d.friendId}}"
+                        <a sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-danger layui-btn-xs" id="navBtn{{d.friendId}}"
                            lay-event="deleteState">
                             {{#  if(d.navShow == 1){ }}
                             启用
@@ -54,7 +54,7 @@
                             禁用
                             {{#  } }}
                         </a>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="update">修改</a>
+                        <a sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="update">修改</a>
                     </script>
                 </div>
             </div>

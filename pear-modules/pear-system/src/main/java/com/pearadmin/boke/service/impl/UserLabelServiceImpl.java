@@ -18,7 +18,7 @@ import com.pearadmin.boke.service.UserLabelService;
 public class UserLabelServiceImpl extends ServiceImpl<UserLabelMapper, UserLabel> implements UserLabelService {
 
     @Override
-    public UserLabel getByUserIdLid(Integer labelId, Integer userId) {
+    public UserLabel getByUserIdLid(Integer labelId, Long userId) {
         QueryWrapper<UserLabel> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",userId).eq("label_id",labelId);
         return getOne(wrapper);

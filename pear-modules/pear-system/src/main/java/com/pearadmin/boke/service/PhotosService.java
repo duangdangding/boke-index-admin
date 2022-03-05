@@ -14,6 +14,6 @@ public interface PhotosService extends IService<Photos> {
     int setDeleteStateByUrl(String url);
     
     Photos getByUrl(String url);
-    Photos getByUrlAndUser(String url,Integer userId);
+    Photos getByUrlAndUser(String url,Long userId);
 
 }

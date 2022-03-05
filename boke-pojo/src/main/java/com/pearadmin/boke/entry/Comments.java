@@ -1,11 +1,12 @@
 package com.pearadmin.boke.entry;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
 
-import java.util.List;
+import lombok.Data;
 
 /**
  * 评论(comments)
@@ -30,7 +31,7 @@ public class Comments implements java.io.Serializable {
 
     private Integer commLikeNum;
 
-    private Integer userId;
+    private Long userId;
 
     private Integer bokeId;
 

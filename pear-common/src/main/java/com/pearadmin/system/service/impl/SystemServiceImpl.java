@@ -1,16 +1,20 @@
 package com.pearadmin.system.service.impl;
 
 
-import com.pearadmin.system.service.SystemService;
-import com.pearadmin.system.domain.*;
-import com.pearadmin.system.mapper.*;
-import com.pearadmin.system.service.ISysLogService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.pearadmin.system.domain.SysLog;
+import com.pearadmin.system.domain.SysRole;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.mapper.SysPowerMapper;
+import com.pearadmin.system.mapper.SysRoleMapper;
+import com.pearadmin.system.mapper.SysUserMapper;
+import com.pearadmin.system.service.ISysLogService;
+import com.pearadmin.system.service.SystemService;
 
 /**
  * Describe: 对外开放的公用服务
@@ -40,7 +44,7 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
-    public SysUser getUserById(String id) {
+    public SysUser getUserById(Long id) {
         return sysUserMapper.selectById(id);
     }
 

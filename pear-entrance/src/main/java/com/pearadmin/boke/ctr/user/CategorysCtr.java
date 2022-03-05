@@ -1,21 +1,22 @@
 package com.pearadmin.boke.ctr.user;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.pearadmin.boke.service.CategorysService;
-import com.pearadmin.boke.entry.Categorys;
-import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.TokenUtil;
-import com.pearadmin.boke.utils.contains.BaseCtr;
-import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.utils.contains.UserLoginToken;
-import com.pearadmin.boke.vo.BootStrapResult;
-import com.pearadmin.boke.vo.ResultDto;
-import com.pearadmin.boke.vo.ResultDtoManager;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.pearadmin.boke.entry.Categorys;
+import com.pearadmin.boke.service.CategorysService;
+import com.pearadmin.boke.utils.RedisUtil;
+import com.pearadmin.boke.utils.contains.BaseCtr;
+import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.vo.BootStrapResult;
+import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.boke.vo.ResultDtoManager;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -42,16 +43,17 @@ public class CategorysCtr extends BaseCtr {
         return new BootStrapResult<>(list,0L);
     }
     
-    @UserLoginToken
     @RequestMapping("/addCate")
     public ResultDto<String> addCategory(Categorys categorys) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
+            return ResultDtoManager.fail(-1,LOGIN);
+        }
+
         String cateName = categorys.getCateName();
         int length = StrUtil.length(cateName);
         if (length == 0 || length > Constants.BokeXZ.CATELABELEN) {
             return fail(outLen(Constants.BokeXZ.CATELABELEN));
-        }
-        if (TokenUtil.USERID == null) {
-            return ResultDtoManager.fail(-1,LOGIN);
         }
         QueryWrapper<Categorys> wrapper = new QueryWrapper();
         wrapper.eq("cate_name",cateName);

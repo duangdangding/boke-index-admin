@@ -1,19 +1,21 @@
 package com.pearadmin.api.modules;
 
-import com.pearadmin.common.plugin.logging.aop.annotation.Logging;
-import com.pearadmin.common.plugin.logging.aop.enums.BusinessType;
-import com.pearadmin.common.tools.SecurityUtil;
-import com.pearadmin.common.web.base.BaseController;
-import com.pearadmin.secure.session.SecureSessionService;
-import io.swagger.annotations.Api;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import com.pearadmin.common.plugin.logging.aop.annotation.Logging;
+import com.pearadmin.common.plugin.logging.aop.enums.BusinessType;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.common.web.base.BaseController;
+import com.pearadmin.secure.session.SecureSessionService;
+
+import io.swagger.annotations.Api;
 
 /**
  * Describe: 入 口 控 制 器
@@ -48,7 +50,7 @@ public class EntranceController extends BaseController {
      * Param: ModelAndView
      * Return: 登录视图
      */
-    @GetMapping("index")
+    @GetMapping("/admin/index")
     @Logging(title = "主页", describe = "返回 Index 主页视图", type = BusinessType.ADD)
     public ModelAndView index() {
         return jumpPage("index");

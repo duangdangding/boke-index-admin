@@ -24,7 +24,7 @@ layui.define(['message', 'table', 'jquery', 'element', 'yaml', 'form', 'tab', 'm
         var pearAdmin = new function() {
 
             var configType = 'yml';
-            var configPath = 'pear.config.yml';
+            var configPath = '/pear.config.yml';
 
             this.setConfigPath = function(path) {
                 configPath = path;
@@ -657,6 +657,9 @@ layui.define(['message', 'table', 'jquery', 'element', 'yaml', 'form', 'tab', 'm
 
         function applyConfig(param) {
             config = param;
+            if (param.msg === '未知账户' && param.code === 500) {
+                location.href = "/login";
+            }
             pearAdmin.logoRender(param);
             pearAdmin.menuRender(param);
             pearAdmin.bodyRender(param);

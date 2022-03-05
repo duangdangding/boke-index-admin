@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pearadmin.boke.entry.Bokes;
 import com.pearadmin.boke.entry.Comments;
-import com.pearadmin.boke.entry.Users;
 import com.pearadmin.boke.service.BokesService;
 import com.pearadmin.boke.service.CommentsService;
-import com.pearadmin.boke.service.UsersService;
 import com.pearadmin.boke.utils.DateUtil;
 import com.pearadmin.boke.utils.MailUtils;
 import com.pearadmin.boke.utils.MyStringUtil;
 import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.TokenUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.utils.ip.IPHelper;
 import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.service.ISysUserService;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class CommontsCtr extends BaseCtr {
     private BokesService bokesService;
 
     @Autowired
-    private UsersService usersService;
+    private ISysUserService usersService;
 
     @Autowired
     private MailUtils mailUtils;
@@ -77,15 +77,10 @@ public class CommontsCtr extends BaseCtr {
         if (boke == null) {
             return fail(NOBOKE);
         }
-        Integer userId = TokenUtil.USERID != null ? TokenUtil.USERID : comments.getUserId();
-        if (userId != null) {
-            Long count1 = usersService.getByUserIdCount(userId);
-            if (count1 == 0) {
-                userId = null;
-            }
-        }
+        SysUser sysUser = SecurityUtil.currentUser();
+        
         String ip = IPHelper.getIp(request);
-        if (userId == null) {
+        if (sysUser == null) {
             String key = Constants.RedisKey.PL + ip;
             if (redisUtil.hasKey(key)) {
                 int count = (int) redisUtil.get(key);
@@ -97,7 +92,7 @@ public class CommontsCtr extends BaseCtr {
                 redisUtil.set(key,1, DateUtil.getSeconds());
             }
         } else {
-            comments.setUserId(userId);
+            comments.setUserId(sysUser.getUserId());
         }
         comments.setUserIp(ip);
         comments.setCommTime(Constants.DateFormat.DATETIME.format(new Date()));
@@ -105,13 +100,13 @@ public class CommontsCtr extends BaseCtr {
         if (save > 0) {
             bokesService.setCommentNum(boke.getBokeId());
             // 发送邮件
-            Users byUserId = usersService.getByUserId(boke.getUserId());
+            SysUser byUserId = usersService.getById(boke.getUserId());
             // 如果此文章没有用户
             if (byUserId == null) {
                 return fail(BOKEILL);
             }
             try {
-                String userEmail = byUserId.getUserEmail();
+                String userEmail = byUserId.getEmail();
                 if (StrUtil.isNotEmpty(userEmail)) {
                     // JavaMailSenderImpl mailSender = mailUtil.createMailSender();
                     // String fromMail = mailSender.getUsername();

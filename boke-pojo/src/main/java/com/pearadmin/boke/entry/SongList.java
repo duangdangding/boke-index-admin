@@ -41,6 +41,6 @@ public class SongList {
     private Boolean leftFixed;
     
     @ApiModelProperty(value = "userId")
-    private Integer userId;
+    private Long userId;
         
 }

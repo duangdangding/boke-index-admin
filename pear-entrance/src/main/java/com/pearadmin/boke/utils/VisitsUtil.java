@@ -9,6 +9,8 @@ import com.pearadmin.boke.entry.Visits;
 import com.pearadmin.boke.service.VisitsService;
 import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.utils.ip.IPHelper;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -34,8 +36,9 @@ public class VisitsUtil {
             // 如果是第一次则查询 ip地址 客户端系统
             if (one == null) {
                 Visits visits = new Visits();
-                if (TokenUtil.USERID != null) {
-                    visits.setUserId(TokenUtil.USERID);
+                SysUser sysUser = SecurityUtil.currentUser();
+                if (sysUser != null) {
+                    visits.setUserId(sysUser.getUserId());
                 }
                 visits.setVisitIp(ip);
                 String client = MyStringUtil.getClient(userAgent);
@@ -55,8 +58,9 @@ public class VisitsUtil {
 //                第二次只保存次数
                 Visits visits = new Visits();
                 visits.setVisitId(one.getVisitId());
-                if (TokenUtil.USERID != null) {
-                    visits.setUserId(TokenUtil.USERID);
+                SysUser sysUser = SecurityUtil.currentUser();
+                if (sysUser != null) {
+                    visits.setUserId(sysUser.getUserId());
                 }
                 visits.setVisitCount(one.getVisitCount() + 1);
                 boolean b = visitsService.updateById(visits);

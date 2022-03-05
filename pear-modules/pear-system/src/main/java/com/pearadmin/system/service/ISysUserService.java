@@ -33,8 +33,9 @@ public interface ISysUserService {
      * Describe: 根据 id 获取用户数据
      * Param: id
      * Return: SysUser
+     * @param id
      */
-    SysUser getById(String id);
+    SysUser getById(Long id);
 
     /**
      * Describe: 根据 id 删除用户数据
@@ -78,7 +79,31 @@ public interface ISysUserService {
      */
     List<SysRole> getUserRole(String userId);
 
+    /**
+     * Describe: 根据用户名查询用户
+     * Param: username
+     * Return: 用户
+     */
+    SysUser getUserByUsername(String username);
+    
+    /**
+     * Describe: 根据邮箱查询用户
+     * Param: username
+     * Return: 用户
+     */
+    SysUser getUserByEmail(String email);
 
+    int setDeleteState(String ids,Integer deleteState);
+
+    int setFace(SysUser users);
+
+    int setUrls(String column,String url,Long userId);
+
+    int setsignature(String signature,Long userId);
+
+    int unOrbdMail(Long userId,int bd);
+
+    int ghMail(String email,Long userId);
 
 }
 

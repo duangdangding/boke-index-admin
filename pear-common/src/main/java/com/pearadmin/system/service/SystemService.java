@@ -1,10 +1,10 @@
 package com.pearadmin.system.service;
 
+import java.util.List;
+
 import com.pearadmin.system.domain.SysLog;
 import com.pearadmin.system.domain.SysRole;
 import com.pearadmin.system.domain.SysUser;
-
-import java.util.List;
 
 /**
  * Describe: 系统基础 API
@@ -28,7 +28,7 @@ public interface SystemService {
      * @param id
      * @return
      */
-    SysUser getUserById(String id);
+    SysUser getUserById(Long id);
 
     /**
      * 通过用户账号查询角色集合

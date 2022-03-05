@@ -6,26 +6,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.pearadmin.boke.entry.FileRecode;
-import com.pearadmin.boke.service.FileRecodeService;
-import com.pearadmin.boke.utils.TokenUtil;
-import com.pearadmin.boke.utils.contains.Constants;
-import com.lsh.mapper.boke.FileRecodeMapper;
-import com.lsh.mapper.boke.PhotosMapper;
-import com.pearadmin.boke.vo.query.QueryFileRecodeVo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lsh.mapper.boke.FileRecodeMapper;
+import com.lsh.mapper.boke.PhotosMapper;
+import com.pearadmin.boke.entry.FileRecode;
+import com.pearadmin.boke.service.FileRecodeService;
+import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.vo.query.QueryFileRecodeVo;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @Author lushao
@@ -99,9 +98,9 @@ public class FileRecodeServiceImpl extends ServiceImpl<FileRecodeMapper, FileRec
      * @param uploadType 上传类型 1、ftp，2txy，3阿里，4七牛
      */
     @Override
-    public void saveUploadRecode(MultipartFile file, Map<String,String> showUrl, Integer own, Integer uploadType) {
+    public void saveUploadRecode(MultipartFile file, Map<String,String> showUrl, Integer own, Integer uploadType,Long userId) {
         FileRecode recode = new FileRecode();
-        recode.setUserId(TokenUtil.USERID);
+        recode.setUserId(userId);
         recode.setFileType(file.getContentType());
         recode.setFileSize(file.getSize());
         recode.setFileUrl(showUrl.get(Constants.UploadDir.FILLPATH));
@@ -121,9 +120,9 @@ public class FileRecodeServiceImpl extends ServiceImpl<FileRecodeMapper, FileRec
      * @param uploadType
      */
     @Override
-    public void saveUploadRecode(InputStream inputStream, String key, Map<String,String> showUrl, Integer own, Integer uploadType) {
+    public void saveUploadRecode(InputStream inputStream, String key, Map<String,String> showUrl, Integer own, Integer uploadType,Long userId) {
         FileRecode recode = new FileRecode();
-        recode.setUserId(TokenUtil.USERID);
+        recode.setUserId(userId);
         recode.setFileType("缩略图");
         try {
             recode.setFileSize(inputStream.available());

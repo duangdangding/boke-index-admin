@@ -1,6 +1,6 @@
 <!doctype html>
 <!--<html lang="en" class="no-js">-->
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>图片上传</title>
@@ -126,7 +126,7 @@
                             uploaded_filePaths.push(File_PhysicalPath).copy-btn .clippy;
                         }
                     })*/
-                });queuecomplete
+                });
                 this.on("queuecomplete", function(file,response) { //当上传队列中的所有文件上传完成时调用.
                     // console.log(response)
                     if (accept_num === file_count) {
@@ -186,7 +186,7 @@
             <td><input type="text" id="otherFileFloder" class="url_input" value="text/" /></td>
         </tr>
         <tr>
-            <td colspan="3"><button class="l-btn" onclick="otherFileUpload()">开始上传</button></td>
+            <td colspan="3"><button sec:authorize="hasPermission('/admin/other/t/kodo/other','sys:other:kodoother')" class="l-btn" onclick="otherFileUpload()">开始上传</button></td>
         </tr>
         <tr>
             <td colspan="3"><textarea class="layui-textarea" style="min-height: 40px" id="fileMsg"></textarea><button id="othercopyBtn" class="l-btn" onclick="copyText('fileMsg')">复制</button></td>
@@ -225,7 +225,7 @@
         </select>
         文件名：<input class="url_input" type="text" id="fileName">
         路径：<input class="url_input" type="text" id="urlPath">
-        <button class="l-btn" onclick="startSelect()">开始查询</button>
+        <button sec:authorize="hasPermission('/admin/recode/list','sys:recode:list')" class="l-btn" onclick="startSelect()">开始查询</button>
     </div>
     <div class="layui-card-header">上传类型：1、ftp，2txy，3阿里，4七牛 | 文件所属位置1、富文本2、markdown3、头像4、相册5、其他</div>
     <div class="layui-card-body">
@@ -234,12 +234,12 @@
         <!-- 模板 -->
         <script type="text/html" id="headerTool">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
+                <button sec:authorize="hasPermission('/admin/recode/list','sys:recode:list')" class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                <a sec:authorize="hasPermission('/admin/recode/delete','sys:recode:delete')" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
             </div>
         </script>
         <script type="text/html" id="rowTool">
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
+            <a sec:authorize="hasPermission('/admin/recode/delete','sys:recode:delete')" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteState">删除</a>
         </script>
     </div>
 </div>
@@ -268,7 +268,7 @@
     })
 
     let fileTable;
-    let filelist_url = '/admin/recode/page';
+    let filelist_url = '/admin/recode/list';
     let fileDel = '/admin/recode/delete';
     layui.use('table', function () {
         let table = layui.table;

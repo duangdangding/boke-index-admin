@@ -19,8 +19,8 @@ public interface BokesService extends IService<Bokes> {
     IPage<BokeListEntry> getBokes(int page, int size, Bokes bokes);
     IPage<BokeListEntry> getBokesList(QueryBokeVo vo);
 
-    BokeListEntry getBokesById(Integer bokeId,Integer userId);
-    BokeListEntry getBokesByEmId(Integer bokeId,Integer userId);
+    BokeListEntry getBokesById(Integer bokeId,Long userId);
+    BokeListEntry getBokesByEmId(Integer bokeId,Long userId);
 
     List<CategoryCount> getCateCount(Integer userId);
 

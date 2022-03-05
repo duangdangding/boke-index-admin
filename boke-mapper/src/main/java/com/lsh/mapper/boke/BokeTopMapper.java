@@ -5,5 +5,5 @@ import com.pearadmin.boke.entry.BokeTop;
 
 public interface BokeTopMapper extends BaseMapper<BokeTop> {
     
-    int getByuserIdCount(Integer userId);
+    int getByuserIdCount(Long userId);
 }

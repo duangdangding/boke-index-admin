@@ -1,14 +1,16 @@
 package com.pearadmin.system.service.impl;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.pearadmin.system.domain.SysPower;
 import com.pearadmin.system.mapper.SysPowerMapper;
 import com.pearadmin.system.mapper.SysRolePowerMapper;
 import com.pearadmin.system.service.ISysPowerService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 
 /**
@@ -48,6 +50,7 @@ public class SysPowerServiceImpl implements ISysPowerService {
      */
     @Override
     public boolean save(SysPower sysPower) {
+        sysPower.setEnable(true);
         int result = sysPowerMapper.insert(sysPower);
         return result > 0;
     }

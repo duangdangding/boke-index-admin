@@ -2,23 +2,22 @@ package com.pearadmin.boke.ctr.user;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.pearadmin.boke.service.MailService;
-import com.pearadmin.boke.service.UsersService;
-import com.pearadmin.boke.entry.Users;
-import com.pearadmin.boke.utils.PasswordUtil;
-import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.RegExpUtil;
-import com.pearadmin.boke.utils.TokenUtil;
-import com.pearadmin.boke.utils.contains.BaseCtr;
-import com.pearadmin.boke.utils.ip.IPHelper;
-import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.vo.ResultDto;
-import com.pearadmin.boke.vo.ResultDtoManager;
-import com.pearadmin.boke.utils.contains.UserLoginToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.pearadmin.boke.service.MailService;
+import com.pearadmin.boke.utils.RedisUtil;
+import com.pearadmin.boke.utils.RegExpUtil;
+import com.pearadmin.boke.utils.contains.BaseCtr;
+import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.utils.ip.IPHelper;
+import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.boke.vo.ResultDtoManager;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.service.ISysUserService;
 
 @RestController
 public class MailCtr extends BaseCtr {
@@ -28,30 +27,30 @@ public class MailCtr extends BaseCtr {
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private UsersService usersService;
+    private ISysUserService usersService;
 
     /**
-     * 发送验证码
+     * 发送绑定邮箱验证码
      * @return
      */
-    @UserLoginToken
     @PostMapping("/t/mail/bd")
     public ResultDto<String> sendMail(int index, String to) {
-        if (TokenUtil.USERID == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        Users byUserId = usersService.getByUserId(TokenUtil.USERID);
+        /*SysUser byUserId = usersService.getById(sysUser.getUserId());
         if (byUserId == null) {
             return fail(RELOGIN);
-        }
+        }*/
         String key = "";
         String object = "";
         if (index == 2) {
-            if (byUserId.getEmailBind() == 2) {
+            if (sysUser.getEmailBind() == 2) {
                 return ResultDtoManager.fail(-1,BINDMAIL);
             }
             key = Constants.RedisKey.BD;
-            to = byUserId.getUserEmail();
+            to = sysUser.getEmail();
             object = "绑定邮箱的验证码";
         } /*else if (index == 2) {
             if (byUserId.getEmailBind() == 2) {
@@ -84,23 +83,20 @@ public class MailCtr extends BaseCtr {
      * @param index
      * @return
      */
-    @UserLoginToken
     @PostMapping("/t/mail/sbd")
     public ResultDto<String> bangdingMail(String valitionCode,int index,String to) {
-        if (TokenUtil.USERID == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return fail(LOGIN);
         }
-        Users byUserId = usersService.getByUserId(TokenUtil.USERID);
-        if (byUserId == null) {
-            return fail(RELOGIN);
-        }
+        Long userId = sysUser.getUserId();
         String key = "";
         if (index == 2) {
-            if (byUserId.getEmailBind() == 2) {
+            if (sysUser.getEmailBind() == 2) {
                 return fail(BINDMAIL);
             }
             key = Constants.RedisKey.BD;
-            to = byUserId.getUserEmail();
+            to = sysUser.getEmail();
         } /*else if (index == 2) {
             if (byUserId.getEmailBind() == 2) {
                 return ResultDtoManager.fail(-1,BINDMAIL);
@@ -122,47 +118,14 @@ public class MailCtr extends BaseCtr {
             return fail(ERRYZM);
         }
         if (index == 2) {
-            int i = usersService.unOrbdMail(TokenUtil.USERID, index);
+            int i = usersService.unOrbdMail(userId, index);
             return returnDto(i);
         } else if (index == 3) {
-            int i = usersService.ghMail(to, TokenUtil.USERID);
+            int i = usersService.ghMail(to,userId);
             return returnDto(i);
         } else {
             return fail(ERRYZM);
         }
-    }
-
-    /**
-     * 更换密码
-     * @param pwd
-     * @param valitionCode
-     * @return
-     */
-    @UserLoginToken
-    @PostMapping("/t/set/pwd")
-    public ResultDto<String> setPwd(String pwd,String valitionCode) {
-        if (TokenUtil.USERID == null) {
-            return fail(RELOGIN);
-        }
-
-        Users byUserId = usersService.getByUserId(TokenUtil.USERID);
-        if (byUserId == null) {
-            return fail(RELOGIN);
-        }
-        String to = byUserId.getUserEmail();
-        String key = Constants.RedisKey.MM;
-        if (!redisUtil.hasKey(to + key)) {
-            return fail(SXYZM);
-        }
-        if (!redisUtil.get(to + key).equals(valitionCode)) {
-            return fail(ERRYZM);
-        }
-        if (!RegExpUtil.checkPwd(pwd)) {
-            return fail(PWDERR);
-        }
-        String s = PasswordUtil.SHAPwd(pwd);
-        int i = usersService.updatePWD(s, TokenUtil.USERID);
-        return returnDto(i);
     }
     
     @RequestMapping("/mail/qus")

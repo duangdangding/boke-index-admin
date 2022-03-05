@@ -1,13 +1,13 @@
 package com.pearadmin.boke.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pearadmin.boke.entry.BokeTop;
 
-import java.util.List;
-
 public interface BokeTopService extends IService<BokeTop> {
     
-    List<BokeTop> getByuserId(Integer userId);
+    List<BokeTop> getByuserId(Long userId);
 
-    int getByuserIdCount(Integer userId);
+    int getByuserIdCount(Long userId);
 }

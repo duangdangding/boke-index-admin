@@ -11,7 +11,7 @@ import com.pearadmin.boke.entry.SongList;
 */
 public interface SongListService extends IService<SongList> {
 
-    SongList getByUserId(Integer userId);
+    SongList getByUserId(Long userId);
     
     int updateByUserId(SongList song);
 

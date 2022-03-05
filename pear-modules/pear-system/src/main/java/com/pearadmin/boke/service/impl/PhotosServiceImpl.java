@@ -57,7 +57,7 @@ public class PhotosServiceImpl extends ServiceImpl<PhotosMapper, Photos> impleme
     }
 
     @Override
-    public Photos getByUrlAndUser(String url, Integer userId) {
+    public Photos getByUrlAndUser(String url, Long userId) {
         return photosMapper.getByUrlAndUser(url,userId);
     }
 

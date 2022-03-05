@@ -1,5 +1,23 @@
 package com.pearadmin.system.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.pearadmin.common.constant.ControllerConstant;
 import com.pearadmin.common.tools.SecurityUtil;
 import com.pearadmin.common.tools.SequenceUtil;
@@ -8,18 +26,9 @@ import com.pearadmin.common.web.domain.response.Result;
 import com.pearadmin.common.web.domain.response.module.ResultTable;
 import com.pearadmin.common.web.domain.response.module.ResultTree;
 import com.pearadmin.system.domain.SysPower;
-import com.pearadmin.system.domain.SysUser;
 import com.pearadmin.system.service.ISysPowerService;
-import io.swagger.annotations.Api;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.List;
+import io.swagger.annotations.Api;
 
 /**
  * Describe: 权 限 控 制 器
@@ -116,7 +125,7 @@ public class SysPowerController extends BaseController {
             return failure("请选择上级菜单");
         }
         sysPower.setUpdateTime(LocalDateTime.now());
-        sysPower.setUpdateBy(SecurityUtil.currentUser().getUserId());
+        sysPower.setUpdateBy(SecurityUtil.currentUser().getUserId() + "");
         boolean result = sysPowerService.update(sysPower);
         return decide(result);
     }

@@ -1,9 +1,10 @@
 package com.pearadmin.boke.entry;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-
 import java.sql.Timestamp;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+
+import lombok.Data;
 
 /**
  * @Author lushao
@@ -18,7 +19,7 @@ public class FileRecode {
     private String fileUrl;
     private String fileName;
     private String fileType;
-    private Integer userId;
+    private Long userId;
 //    1、ftp，2txy，3阿里，4七牛
     private Integer uploadTypeId;
 //    文件所属位置1、富文本2、markdown3、头像4、相册5、其他

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -32,7 +32,7 @@
             <div class="menuBox">
                 客户端：<input class="url_input" type="text" id="cilent">
                 地址：<input class="url_input" type="text" id="addr">
-                <button class="l-btn" onclick="startSelect()">开始查询</button>
+                <button sec:authorize="hasPermission('/admin/visit/main','sys:visit:main')" class="l-btn" onclick="startSelect()">开始查询</button>
             </div>
             <div class="layui-card">
                 <div class="layui-card-header"></div>
@@ -42,7 +42,7 @@
                     <!-- 模板 -->
                     <script type="text/html" id="headerTool">
                         <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
+                            <button sec:authorize="hasPermission('/admin/visit/page','sys:visit:page')" class="layui-btn layui-btn-sm" lay-event="reload">刷新</button>
                         </div>
                     </script>
                 </div>

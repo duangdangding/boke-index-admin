@@ -12,21 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pearadmin.boke.entry.Bokes;
 import com.pearadmin.boke.entry.Comments;
 import com.pearadmin.boke.entry.Replys;
-import com.pearadmin.boke.entry.Users;
 import com.pearadmin.boke.service.BokesService;
 import com.pearadmin.boke.service.CommentsService;
 import com.pearadmin.boke.service.ReplysService;
-import com.pearadmin.boke.service.UsersService;
 import com.pearadmin.boke.utils.DateUtil;
-import com.pearadmin.boke.utils.MailUtil;
 import com.pearadmin.boke.utils.MailUtils;
 import com.pearadmin.boke.utils.MyStringUtil;
 import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.TokenUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.utils.ip.IPHelper;
 import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.service.ISysUserService;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +45,8 @@ public class ReplysCtr extends BaseCtr {
     private RedisUtil redisUtil;
     
     @Autowired
-    private UsersService usersService;
+    private ISysUserService usersService;
     
-    @Autowired
-    private MailUtil mailUtil;
     @Autowired
     private MailUtils mailUtils;
 
@@ -75,15 +72,9 @@ public class ReplysCtr extends BaseCtr {
             return fail(VIOLATIONSTR);
         }
         String ip = IPHelper.getIp(request);
-        Integer userId = TokenUtil.USERID != null ? TokenUtil.USERID : reply.getUserId();
-        if (userId != null) {
-            Long count1 = usersService.getByUserIdCount(userId);
-            if (count1 == 0) {
-                userId = null;
-            }
-        }
-        if (userId != null) {
-            reply.setUserId(userId);
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser != null) {
+            reply.setUserId(sysUser.getUserId());
         } else {
             String key = Constants.RedisKey.PL + ip;
             if (redisUtil.hasKey(key)) {
@@ -102,13 +93,13 @@ public class ReplysCtr extends BaseCtr {
         if (save) {
             bokesService.setCommentNum(boke.getBokeId());
             // 发送邮件
-            Users byUserId = usersService.getByUserId(boke.getUserId());
+            SysUser byUserId = usersService.getById(boke.getUserId());
             // 如果此文章没有用户
             if (byUserId == null) {
                 return fail(BOKEILL);
             }
             try {
-                String userEmail = byUserId.getUserEmail();
+                String userEmail = byUserId.getEmail();
                 if (StrUtil.isNotEmpty(userEmail)) {
                     String fromEmail = mailUtils.getFromEmail();
                     if (!fromEmail.equals(userEmail)) {
@@ -120,21 +111,6 @@ public class ReplysCtr extends BaseCtr {
             } catch (Exception e) {
                 log.error("发送邮件失败：" + e.getMessage());
             }
-            /*String userEmail = byUserId.getUserEmail();
-            if (StrUtil.isNotEmpty(userEmail)) {
-                JavaMailSenderImpl mailSender = mailUtil.createMailSender();
-                String username = (String) mailSender.getJavaMailProperties().get("username");
-                if (!username.equals(userEmail)) {
-                    log.info(username + "开始给" + userEmail + "发送邮件~");
-
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setFrom(mailUtil.getUsername());
-                    message.setSubject("问题留言邮件~");
-                    message.setText("有人在<a href='http://suweibk.xyz:11521/boke/"+ boke.getBokeId() +"' target='_blank'>" + boke.getTitle() + "</a>回复了您的留言~<br>请不要回复此邮件！！！");
-                    message.setTo(userEmail);
-                    mailSender.send(message);
-                }
-            }*/
             return success(reply);
         } else {
             return fail(FAILD);

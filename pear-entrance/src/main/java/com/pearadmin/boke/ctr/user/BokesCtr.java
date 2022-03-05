@@ -28,16 +28,15 @@ import com.pearadmin.boke.service.DateArchiveService;
 import com.pearadmin.boke.service.VisitsService;
 import com.pearadmin.boke.utils.MyStringUtil;
 import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.TokenUtil;
 import com.pearadmin.boke.utils.VisitsUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.BookType;
 import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.utils.contains.PassToken;
-import com.pearadmin.boke.utils.contains.UserLoginToken;
 import com.pearadmin.boke.vo.BokeListEntry;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -95,8 +94,9 @@ public class BokesCtr extends BaseCtr {
         if (ObjectUtil.isEmpty(pageNumber) || pageNumber <= 0) {
             pageNumber = 1;
         }
-        if (TokenUtil.USERID != null) {
-            bokes.setUserId(TokenUtil.USERID);
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser != null) {
+            bokes.setUserId(sysUser.getUserId());
         }
         IPage<BokeListEntry> bokes1 = bokesService.getBokes(pageNumber, Constants.PageSize.SIZE10, bokes);
         Map<String, Object> param = new HashMap<>(2);
@@ -123,7 +123,7 @@ public class BokesCtr extends BaseCtr {
             }
             param.put("navParam", condition + "&");
         }
-        Integer userId = bokes.getUserId();
+        Long userId = bokes.getUserId();
         if (userId != null) {
             param.put("navUserid", userId + "&");
         }
@@ -162,14 +162,13 @@ public class BokesCtr extends BaseCtr {
         return getView("boke/boke", model);
     }
 
-    //    @UserLoginToken
-    @PassToken
     @RequestMapping("/t/editor/{bokeId}")
     public ModelAndView gotoEditor(@PathVariable("bokeId") Integer bokeId) {
-        if (TokenUtil.USERID == null) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
             return toLoginView();
         }
-        BokeListEntry boke = bokesService.getBokesByEmId(bokeId, TokenUtil.USERID);
+        BokeListEntry boke = bokesService.getBokesByEmId(bokeId, sysUser.getUserId());
         if (boke == null) {
             return to400View();
         }
@@ -195,16 +194,17 @@ public class BokesCtr extends BaseCtr {
         return getView(model, map);
     }
 
-    @UserLoginToken
     @PostMapping("/t/addBoke")
     public ResultDto<String> addBoke(Bokes bokes) {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
+            return ResultDtoManager.fail(-1, "请先登录！");
+        }
+        Long userId = sysUser.getUserId();
         String html = bokes.getBokeCont();
         String rep = html.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("<br/>", "").replaceAll("&nbsp;", "").trim();
         if (rep.length() <= 0) {
             return ResultDtoManager.fail(-1, "请输入内容~");
-        }
-        if (TokenUtil.USERID == null) {
-            return ResultDtoManager.fail(-1, "请先登录！");
         }
         String introduction = bokes.getIntroduction();
         if (!StrUtil.isBlank(introduction) && introduction.length() > Constants.BokeXZ.INCTRLEN) {
@@ -220,7 +220,7 @@ public class BokesCtr extends BaseCtr {
             }
         } else {
             QueryWrapper<Bokes> wrapper = new QueryWrapper<>();
-            wrapper.eq("user_id", TokenUtil.USERID);
+            wrapper.eq("user_id", userId);
             wrapper.eq("boke_id", bokes.getBokeId());
             Bokes one = bokesService.getOne(wrapper);
             if (one == null) {
@@ -228,7 +228,7 @@ public class BokesCtr extends BaseCtr {
             }
             bokes.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         }
-        bokes.setUserId(TokenUtil.USERID);
+        bokes.setUserId(userId);
 //        对文章进行压缩，有js和后台压缩这里采用后台压缩
         // 因为可能存在汉字，如果存在汉字则不能使用length判断长度
         int length = MyStringUtil.getLength(html);

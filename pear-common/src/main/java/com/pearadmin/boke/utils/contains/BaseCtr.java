@@ -1,16 +1,17 @@
 package com.pearadmin.boke.utils.contains;
 
-import cn.hutool.core.util.ObjectUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.servlet.ModelAndView;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.pearadmin.boke.vo.BootStrapResult;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
 
-import org.springframework.web.servlet.ModelAndView;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.util.ObjectUtil;
 
 public abstract class BaseCtr {
     public static final String SUCCESS = "操作成功~";
@@ -50,6 +51,8 @@ public abstract class BaseCtr {
     public static final String EXSIT = "已存在此数据~";
     public static final String NOTUSER = "该账户不可用~";
     public static final String NOCOMMENT = "此评论不存在~";
+    
+    public static final String ADMINPATHPRE = "boke/admin/";
 
     protected ModelAndView getView(String modelName, Map<String, Object> param) {
         ModelAndView modelAndView = new ModelAndView(modelName);
@@ -57,6 +60,9 @@ public abstract class BaseCtr {
             modelAndView.getModel().putAll(param);
         }
         return modelAndView;
+    }
+    protected ModelAndView getView(String modelName) {
+        return new ModelAndView(modelName);
     }
     
     protected String outLen(int len) {

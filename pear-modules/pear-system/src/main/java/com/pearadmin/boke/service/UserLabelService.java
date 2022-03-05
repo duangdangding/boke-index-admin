@@ -11,6 +11,6 @@ import com.pearadmin.boke.entry.UserLabel;
 */
 public interface UserLabelService extends IService<UserLabel> {
     
-    UserLabel getByUserIdLid(Integer labelId,Integer userId);
+    UserLabel getByUserIdLid(Integer labelId,Long userId);
     
 }

@@ -25,7 +25,6 @@ import com.pearadmin.common.plugin.logging.aop.annotation.Logging;
 import com.pearadmin.common.plugin.logging.aop.enums.BusinessType;
 import com.pearadmin.common.plugin.submit.annotation.RepeatSubmit;
 import com.pearadmin.common.tools.SecurityUtil;
-import com.pearadmin.common.tools.SequenceUtil;
 import com.pearadmin.common.web.base.BaseController;
 import com.pearadmin.common.web.domain.request.PageDomain;
 import com.pearadmin.common.web.domain.response.Result;
@@ -135,9 +134,9 @@ public class SysUserController extends BaseController {
         sysUser.setLogin("0");
         sysUser.setEnable("1");
         sysUser.setStatus("1");
-        sysUser.setUserId(SequenceUtil.makeStringId());
+        // sysUser.setUserId(SequenceUtil.makeStringId());
         sysUser.setPassword(new BCryptPasswordEncoder().encode(sysUser.getPassword()));
-        sysUserService.saveUserRole(sysUser.getUserId(), Arrays.asList(sysUser.getRoleIds().split(",")));
+        sysUserService.saveUserRole(sysUser.getUserId() + "", Arrays.asList(sysUser.getRoleIds().split(",")));
         Boolean result = sysUserService.save(sysUser);
         return decide(result);
     }
@@ -150,8 +149,8 @@ public class SysUserController extends BaseController {
     @GetMapping("edit")
     @ApiOperation(value = "获取用户修改视图")
     @PreAuthorize("hasPermission('/system/user/edit','sys:user:edit')")
-    public ModelAndView edit(Model model, String userId) {
-        model.addAttribute("sysRoles", sysUserService.getUserRole(userId));
+    public ModelAndView edit(Model model, Long userId) {
+        model.addAttribute("sysRoles", sysUserService.getUserRole(userId + ""));
         model.addAttribute("sysUser", sysUserService.getById(userId));
         return jumpPage(MODULE_PATH + "edit");
     }
@@ -178,7 +177,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "管理员修改用户密码")
     @PreAuthorize("hasPermission('/system/user/editPasswordAdmin','sys:user:editPasswordAdmin')")
     public Result editPasswordAdmin(@RequestBody EditPassword editPassword) {
-        SysUser editUser = sysUserService.getById(editPassword.getUserId());
+        SysUser editUser = sysUserService.getById(Long.valueOf(editPassword.getUserId()));
         editUser.setPassword(new BCryptPasswordEncoder().encode(editPassword.getNewPassword()));
         boolean result = sysUserService.update(editUser);
         return decide(result, "修改成功", "修改失败");
@@ -232,7 +231,7 @@ public class SysUserController extends BaseController {
     @PreAuthorize("hasPermission('/system/user/edit','sys:user:edit')")
     @Logging(title = "修改用户", describe = "修改用户", type = BusinessType.EDIT)
     public Result update(@RequestBody SysUser sysUser) {
-        sysUserService.saveUserRole(sysUser.getUserId(), Arrays.asList(sysUser.getRoleIds().split(",")));
+        sysUserService.saveUserRole(sysUser.getUserId() + "", Arrays.asList(sysUser.getRoleIds().split(",")));
         boolean result = sysUserService.update(sysUser);
         return decide(result);
     }
@@ -246,7 +245,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "修改用户头像")
     @Logging(title = "修改头像", describe = "修改头像", type = BusinessType.EDIT)
     public Result updateAvatar(@RequestBody SysUser sysUser) {
-        String userId = SecurityUtil.currentUser().getUserId();
+        Long userId = SecurityUtil.currentUser().getUserId();
         sysUser.setUserId(userId);
         boolean result = sysUserService.update(sysUser);
         return decide(result);
@@ -318,7 +317,14 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "个人资料")
     public ModelAndView center(Model model) {
         SysUser sysUser = SecurityUtil.currentUser();
-        model.addAttribute("userInfo", sysUserService.getById(sysUser.getUserId()));
+        if (sysUser == null || sysUser.getUserId() == null) {
+            return jumpPage("/login");
+        }
+        SysUser byId = sysUserService.getById(sysUser.getUserId());
+        if (byId == null) {
+            return jumpPage("/login");
+        }
+        model.addAttribute("userInfo", byId);
         model.addAttribute("logs", sysLogService.selectTopLoginLog(sysUser.getUsername()));
         return jumpPage(MODULE_PATH + "center");
     }

@@ -1,16 +1,21 @@
 package com.pearadmin.system.domain;
 
-import com.pearadmin.common.web.base.BaseDomain;
-import lombok.Getter;
-import lombok.Setter;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.pearadmin.common.web.base.BaseDomain;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Describe: 用户领域模型
@@ -24,10 +29,19 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
 
     private static final long serialVersionUID = 1L;
 
+    public SysUser() {
+    }
+
+    public SysUser(Long userId, String userName) {
+        this.userId = userId;
+        this.username = userName;
+    }
+
     /**
      * 编号
      */
-    private String userId;
+    @TableId
+    private Long userId;
 
     /**
      * 账户
@@ -59,6 +73,37 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
      */
 
     private String email;
+
+    private String loginIp;
+
+    // private String userFace;
+
+    private Timestamp registerTime;
+
+    private Timestamp loginTime;
+    private String loginType;
+
+    private String registerIp;
+
+    private Date birthday;
+
+    private Integer userAge;
+
+    private String signature;
+
+    private Integer emailBind;
+
+    private Integer phoneBind;
+
+    private String wxUrl;
+    private String qqUrl;
+    private String csdnUrl;
+    private String giteeUrl;
+    private String githubUrl;
+    private String weiboUrl;
+    private String biliUrl;
+
+    private int userState;
 
     /**
      * 头像

@@ -1,21 +1,22 @@
 package com.pearadmin.boke.ctr.user;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.pearadmin.boke.service.PhotosService;
-import com.pearadmin.boke.service.VisitsService;
-import com.pearadmin.boke.entry.Photos;
-import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.VisitsUtil;
-import com.pearadmin.boke.utils.contains.BaseCtr;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.pearadmin.boke.entry.Photos;
+import com.pearadmin.boke.service.PhotosService;
+import com.pearadmin.boke.service.VisitsService;
+import com.pearadmin.boke.utils.RedisUtil;
+import com.pearadmin.boke.utils.VisitsUtil;
+import com.pearadmin.boke.utils.contains.BaseCtr;
 
 @RestController
 public class PhotosCtr extends BaseCtr {
@@ -38,7 +39,7 @@ public class PhotosCtr extends BaseCtr {
         IPage<Photos> photosList = photosService.getPhotosList(page,photoType);
         map.put("photos",photosList);
         VisitsUtil.setVisitCount(request,visitsService,redisUtil);
-        return getView("photos",map);
+        return getView("boke/photos",map);
     }
     
     @RequestMapping("/photos/fy")

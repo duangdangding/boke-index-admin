@@ -24,3 +24,4 @@ classes
 /target/
 node_modules
 rebel.xml
+**/rebel.xml

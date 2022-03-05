@@ -1,15 +1,8 @@
 package com.pearadmin.boke.ctr.user;
 
-import com.pearadmin.boke.service.LabelsService;
-import com.pearadmin.boke.service.UserLabelService;
-import com.pearadmin.boke.entry.Labels;
-import com.pearadmin.boke.entry.UserLabel;
-import com.pearadmin.boke.utils.RedisUtil;
-import com.pearadmin.boke.utils.TokenUtil;
-import com.pearadmin.boke.utils.contains.BaseCtr;
-import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.utils.contains.UserLoginToken;
-import com.pearadmin.boke.vo.ResultDto;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.pearadmin.boke.entry.Labels;
+import com.pearadmin.boke.entry.UserLabel;
+import com.pearadmin.boke.service.LabelsService;
+import com.pearadmin.boke.service.UserLabelService;
+import com.pearadmin.boke.utils.RedisUtil;
+import com.pearadmin.boke.utils.contains.BaseCtr;
+import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.vo.ResultDto;
+import com.pearadmin.common.tools.SecurityUtil;
+import com.pearadmin.system.domain.SysUser;
 
 import cn.hutool.core.util.StrUtil;
 
@@ -56,7 +56,6 @@ public class LabelsCtr extends BaseCtr {
         return returnDto(labelsService.labelRank());
     }
     
-    @UserLoginToken
     @RequestMapping("/add")
     public ResultDto addLabelByUserId(String labelName) {
         int length = StrUtil.length(labelName);
@@ -88,10 +87,10 @@ public class LabelsCtr extends BaseCtr {
         return success(byLabelName);
     }
     
-    @UserLoginToken
     @RequestMapping("/del/{labelId}")
     public ResultDto delByLabelIdUserId(@PathVariable("labelId") Integer labelId) {
-        UserLabel byUserIdLid = userLabelService.getByUserIdLid(labelId, TokenUtil.USERID);
+        SysUser sysUser = SecurityUtil.currentUser();
+        UserLabel byUserIdLid = userLabelService.getByUserIdLid(labelId, sysUser.getUserId());
         if (byUserIdLid == null) {
             return fail(NOTEXSIT);
         } else {
@@ -117,7 +116,7 @@ public class LabelsCtr extends BaseCtr {
         Map<String,Object> map = new HashMap<>();
         map.put("labels",useLabels);
         map.put("labelCount",useLabels.size());
-        return getView("labels",map);
+        return getView("boke/labels",map);
     }
 
 }

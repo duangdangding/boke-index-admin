@@ -1,5 +1,23 @@
 package com.pearadmin.system.controller;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.pearadmin.common.constant.ControllerConstant;
 import com.pearadmin.common.web.base.BaseController;
 import com.pearadmin.common.web.domain.response.Result;
@@ -8,18 +26,8 @@ import com.pearadmin.common.web.session.HttpSessionContext;
 import com.pearadmin.common.web.session.HttpSessionContextHolder;
 import com.pearadmin.system.domain.SysOnlineUser;
 import com.pearadmin.system.domain.SysUser;
-import io.swagger.annotations.Api;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.annotations.Api;
 
 /**
  * Describe: 在线用户控制器
@@ -47,7 +55,7 @@ public class SysOnlineController extends BaseController {
         for (Object obj : allPrincipalsUser) {
             SysOnlineUser sysOnlineUser = new SysOnlineUser();
             SysUser objs = (SysUser) obj;
-            sysOnlineUser.setUserId(objs.getUserId());
+            sysOnlineUser.setUserId(objs.getUserId() + "");
             sysOnlineUser.setUsername(objs.getUsername());
             sysOnlineUser.setRealName(objs.getRealName());
             sysOnlineUser.setLastTime(objs.getLastTime());
@@ -81,7 +89,7 @@ public class SysOnlineController extends BaseController {
         List<Object> principals = sessionRegistry.getAllPrincipals();
         for (Object principal : principals) {
             SysUser userDetails = (SysUser) principal;
-            String userId = userDetails.getUserId();
+            String userId = userDetails.getUserId() + "";
             if (onlineId.equals(userId)) {
                 // 不允许操作admin用户下线
                 if ("admin".equals(userDetails.getUsername())) {

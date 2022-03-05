@@ -1,15 +1,17 @@
 package com.pearadmin.boke.ctr.user;
 
-import com.pearadmin.boke.service.SongListService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.pearadmin.boke.entry.SongList;
+import com.pearadmin.boke.service.SongListService;
 import com.pearadmin.boke.utils.RedisUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.vo.ResultDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,15 +31,13 @@ public class SongListCtr extends BaseCtr {
     private RedisUtil redisUtil;
     
     @GetMapping("/song/{userId}")
-    public ResultDto<SongList> getByUserId(@PathVariable("userId") Integer userId) {
-        if (userId == null) {
-            userId = 0;
-        }
+    public ResultDto<SongList> getByUserId(@PathVariable("userId") Long userId) {
         SongList byUserId = songListService.getByUserId(userId);
         return success(byUserId);
     }
     
     @GetMapping("/song/updateById")
+    @PreAuthorize("hasPermission('/song/updateById','sys:song:updateById')")
     public ResultDto<SongList> updateById(SongList song) {
         boolean b = songListService.updateById(song);
         if (b) {

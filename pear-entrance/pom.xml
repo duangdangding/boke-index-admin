@@ -109,12 +109,97 @@
 
     <!-- 构建工具 -->
     <build>
-        <!-- Maven 构 建 插 件 -->
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--                <version> 2.5.4</version>-->
             </plugin>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compilerPlugin.version}</version>
+            </plugin>-->
+            <!--打包jar-->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    &lt;!&ndash;不打包资源文件&ndash;&gt;
+                    &lt;!&ndash;<excludes>&ndash;&gt;
+                    &lt;!&ndash;<exclude>*.**</exclude>&ndash;&gt;
+                    &lt;!&ndash;<exclude>*/*.xml</exclude>&ndash;&gt;
+                    &lt;!&ndash;</excludes>&ndash;&gt;
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            &lt;!&ndash;MANIFEST.MF 中 Class-Path 加入前缀&ndash;&gt;
+                            <classpathPrefix>lib/</classpathPrefix>
+                            &lt;!&ndash;jar包不包含唯一版本标识&ndash;&gt;
+                            <useUniqueVersions>false</useUniqueVersions>
+                            &lt;!&ndash;指定入口类&ndash;&gt;
+                            <mainClass>com.lll.boke.MybokeApplication</mainClass>
+                        </manifest>
+                        &lt;!&ndash;<manifestEntries>&ndash;&gt;
+                        &lt;!&ndash;&lt;!&ndash;MANIFEST.MF 中 Class-Path 加入资源文件目录&ndash;&gt;&ndash;&gt;
+                        &lt;!&ndash;<Class-Path>./resources/</Class-Path>&ndash;&gt;
+                        &lt;!&ndash;</manifestEntries>&ndash;&gt;
+                    </archive>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>-->
+
+            <!--拷贝依赖 copy-dependencies-->
+            <!--也可以执行mvn copy-dependencies 命令打包依赖-->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/lib/
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <!--spring boot repackage，依赖 maven-jar-plugin 打包的jar包 重新打包成 spring boot 的jar包-->
+            <!--<plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    &lt;!&ndash;重写包含依赖，包含不存在的依赖，jar里没有pom里的依赖&ndash;&gt;
+                    <includes>
+                        <include>
+                            <groupId>null</groupId>
+                            <artifactId>null</artifactId>
+                        </include>
+                    </includes>
+                    <layout>ZIP</layout>
+                    &lt;!&ndash;使用外部配置文件，jar包里没有资源文件&ndash;&gt;
+                    <addResources>true</addResources>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            &lt;!&ndash;配置jar包特殊标识 配置后，保留原文件，生成新文件 *-run.jar &ndash;&gt;
+                            &lt;!&ndash;配置jar包特殊标识 不配置，原文件命名为 *.jar.original，生成新文件 *.jar &ndash;&gt;
+                            &lt;!&ndash;<classifier>run</classifier>&ndash;&gt;
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
         </plugins>
     </build>
 </project>

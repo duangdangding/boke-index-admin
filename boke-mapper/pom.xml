@@ -6,10 +6,13 @@
     <parent>
         <groupId>com.lsh.boke</groupId>
         <artifactId>boke-index-admin</artifactId>
-        <version>1.5.4</version>
+        <version>${revision}</version>
     </parent>
+
+    <!-- 基本信息 -->
     <artifactId>boke-mapper</artifactId>
-    <version>1.5.4</version>
+<!--    <name>公共模块</name>-->
+<!--    <version>1.5.4</version>-->
 <!--    <packaging>jar</packaging>-->
     <dependencies>
         <!--<dependency>

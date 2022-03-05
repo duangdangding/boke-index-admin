@@ -1,10 +1,11 @@
 package com.pearadmin.boke.entry;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+
+import lombok.Data;
 
 @Data
 public class Photos implements Serializable {
@@ -21,7 +22,7 @@ public class Photos implements Serializable {
     
     private Timestamp createTime;
     
-    private Integer userId;
+    private Long userId;
     
     private String oosKey;
     

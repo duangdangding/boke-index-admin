@@ -1,11 +1,12 @@
 package com.pearadmin.boke.entry;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+
+import lombok.Data;
 
 @Data
 public class Visits implements Serializable {
@@ -19,7 +20,7 @@ public class Visits implements Serializable {
     
     private long visitCount;
     
-    private Integer userId;
+    private Long userId;
     
     @TableField(exist = false)
     private String userName;

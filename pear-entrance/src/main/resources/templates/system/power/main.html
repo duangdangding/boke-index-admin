@@ -56,6 +56,13 @@
     <span>按钮</span>
     {{# } }}
 </script>
+<script id="open-type" type="text/html">
+    {{#if (d.openType == '_iframe') { }}
+    <span>框架内部</span>
+    {{# }else if(d.openType == '_blank'){ }}
+    <span>新页面</span>
+    {{# } }}
+</script>
 
 <script id="power-enable" type="text/html">
     <input type="checkbox" name="enable" value="{{d.powerId}}" lay-skin="switch" lay-text="启用|禁用"
@@ -79,13 +86,14 @@
         let MODULE_PATH = "/system/power/";
 
         treetable.render({
-            treeColIndex: 1,
-            treeSpid: 0,
-            treeIdName: 'powerId',
-            treePidName: 'parentId',
+            treeColIndex: 1, // 树形图标显示在第几列
+            treeSpid: 0,  // 最上级的父级id
+            treeIdName: 'powerId',  // 	id字段的名称
+            treePidName: 'parentId', // 	pid字段的名称
             skin: 'line',
             method: 'get',
-            treeDefaultClose: false,
+            treeDefaultClose: true, ////是否默认折叠
+            treeLinkage: true,      //父级展开时是否自动展开所有子级
             toolbar: '#power-toolbar',
             elem: '#power-table',
             url: '/system/power/data',
@@ -101,6 +109,9 @@
                     {field: 'powerName', minWidth: 200, title: '权限名称'},
                     {field: 'icon', title: '图标', templet: '#icon'},
                     {field: 'powerType', title: '权限类型', templet: '#power-type'},
+                    {field: 'openType', title: '打开类型', templet: '#open-type'},
+                    {field: 'powerUrl', title: '路径'},
+                    {field: 'powerCode', title: '标识'},
                     {field: 'enable', title: '是否可用', templet: '#power-enable'},
                     {field: 'sort', title: '排序'},
                     {title: '操作', templet: '#power-bar', width: 150, align: 'center'}

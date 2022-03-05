@@ -22,7 +22,6 @@ import com.pearadmin.boke.service.UploadFileService;
 import com.pearadmin.boke.utils.MyImgUtil;
 import com.pearadmin.boke.utils.MyStringUtil;
 import com.pearadmin.boke.utils.RegExpUtil;
-import com.pearadmin.boke.utils.TokenUtil;
 import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.utils.exception.BizException;
 import com.pearadmin.boke.utils.upload.QnyUtil;
@@ -47,12 +46,12 @@ public class UploadFileServiceImpl implements UploadFileService {
 
     @Override
     @Transactional
-    public Map<String, Object> uploadPhotoReturnPath(MultipartFile image, Integer photoType) {
+    public Map<String, Object> uploadPhotoReturnPath(MultipartFile image, Integer photoType,Long userId) {
         PhotoType byId = photoTypeMapper.selectById(photoType);
         String floder = byId.getFolder() + "/";
 //      上传原图
         Map<String,String> s = qnyUtil.upload2Qiniu(image, Constants.UploadDir.PHOTOS + floder);
-        recodeService.saveUploadRecode(image,s,Constants.UploadDir.OWN_PH,Constants.UploadDir.OSSTYPE_QN);
+        recodeService.saveUploadRecode(image,s,Constants.UploadDir.OWN_PH,Constants.UploadDir.OSSTYPE_QN,userId);
         String key = s.get(Constants.UploadDir.OOSKEY);
         String[] keys = key.split("\\.");
         String imageType = "." + keys[1];
@@ -61,7 +60,7 @@ public class UploadFileServiceImpl implements UploadFileService {
         InputStream inputStream = MyImgUtil.scalImgToInput(image, 0.3f, imageType);
 //        上传缩略图
         Map<String, String> thumbMap = qnyUtil.upload2QiniuStream(inputStream, uploadKey);
-        recodeService.saveUploadRecode(inputStream,key,thumbMap,Constants.UploadDir.OWN_PH,Constants.UploadDir.OSSTYPE_QN);
+        recodeService.saveUploadRecode(inputStream,key,thumbMap,Constants.UploadDir.OWN_PH,Constants.UploadDir.OSSTYPE_QN,userId);
         String path = s.get(Constants.UploadDir.FILLPATH);
         Photos photos = new Photos();
         photos.setPhotoType(photoType);
@@ -109,7 +108,7 @@ public class UploadFileServiceImpl implements UploadFileService {
             photos.setNewWidth(120);
             photos.setNewHeight(120);
         }
-        photos.setUserId(TokenUtil.USERID);
+        photos.setUserId(userId);
         photos.setPhotoTitle(byId.getTypeName());
         photos.setPhotoUrl(path);
         photos.setOosKey(s.get(Constants.UploadDir.OOSKEY));
@@ -128,27 +127,27 @@ public class UploadFileServiceImpl implements UploadFileService {
      * @param keys 一个或者多个
      */
     @Override
-    public void deleteByKeys(Object keys,Integer type) {
+    public void deleteByKeys(Object keys,Integer type,Long userId) {
         if (ObjectUtil.isNotEmpty(keys)) {
             if (keys instanceof String) {
-                deleteByKey(keys.toString(),type);
+                deleteByKey(keys.toString(),type,userId);
             } else if (keys instanceof String[]) {
-                deleteKeys((String[]) keys,type);
+                deleteKeys((String[]) keys,type,userId);
             }
         }
     }
 
-    private void deleteKeys(String[] keys,Integer type) {
+    private void deleteKeys(String[] keys,Integer type,Long userId) {
         for (String key : keys) {
-            deleteByKey(key,type);
+            deleteByKey(key,type,userId);
         }
     }
 
     @Override
-    public void deleteByKey(String key, Integer type) {
+    public void deleteByKey(String key, Integer type,Long userId) {
         String fill = new String(key);
         if (type == 1) {
-            Photos byUrl = photosMapper.getByUrlAndUser(key, TokenUtil.USERID);
+            Photos byUrl = photosMapper.getByUrlAndUser(key, userId);
             if (ObjectUtil.isEmpty(byUrl)) {
                 throw new BizException("没有这个图片~");
             }

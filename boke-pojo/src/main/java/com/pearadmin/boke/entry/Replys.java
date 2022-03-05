@@ -1,11 +1,12 @@
 package com.pearadmin.boke.entry;
 
+import java.io.Serializable;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
 
-import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class Replys implements Serializable {
@@ -13,7 +14,7 @@ public class Replys implements Serializable {
     @TableId(value = "reply_id",type = IdType.AUTO)
     private Integer replyId;
     
-    private Integer userId;
+    private Long userId;
     
     private Integer bokeId;
     

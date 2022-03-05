@@ -63,11 +63,49 @@ pear:
     remember-key: PEAR_REMEMBER
     # 不 需 要 权 限 拦 截 的 接 口 配 置
     open-api:
+      - /  # 开放首页接口
+      - /index  # 开放首页接口
+      - /song/** # 用户歌曲
       - /login/**  # 开放登录接口
+      - /register # 注册页面
+      - /userRegis # 用户点击注册
       - /system/captcha/** # 开放验证码接口
+      - /title/sub # 副标题
+      - /mail/qus # 首页发送邮件
+      - /comment/to # 评论
+      - /label/labelPage # 标签列表页
+      - /archive/get # 日期
+      - /boke/* # 详情页
+      - /navicon/all/** # 首页导航栏
+      - /getCateCount # 获取分类数
+      - /getLookups # 获取浏览量
+      - /userinfo/** # 获取用户信息
+      - /photos # 相册页
+      - /pt/all # 相册分类
+      - /photos/fy #相册分页列表
+      - /label/get/labelRank # 标签排行
+      - /frantPage # 导航页
       - /assets/** # 开放静态资源
       - /admin/** # 开放静态资源
       - /component/** # 开放静态资源
+      - /404/** # 开放静态资源
+      - /css/** # 开放静态资源
+      - /music/** # 开放静态资源
+      - /bokejscss/** # 开放静态资源
+      - /common/** # 开放静态资源
+      - /editor/** # 开放静态资源
+      - /fonts/** # 开放静态资源
+      - /htjs/** # 开放静态资源
+      - /imgs/** # 开放静态资源
+      - /js/** # 开放静态资源
+      - /kbn/** # 开放静态资源
+      - /layui/** # 开放静态资源
+      - /mulitupload/** # 开放静态资源
+      - /select/** # 开放静态资源
+      - /share/** # 开放静态资源
+      - /Sortable-master/** # 开放静态资源
+      - /tabs/** # 开放静态资源
+      - /zoom-zx/** # 开放静态资源
       - /favicon.ico # 开放FAVICON
 
   # 上传配置

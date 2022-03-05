@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pearadmin.system.domain.SysUser;
@@ -14,7 +15,7 @@ import com.pearadmin.system.domain.SysUser;
  * CreateTime: 2019/10/23
  */
 // @Mapper
-public interface SysUserMapper {
+public interface SysUserMapper extends BaseMapper<SysUser> {
 
     /**
      * Describe: 根据 username 查询用户
@@ -28,7 +29,7 @@ public interface SysUserMapper {
      * Param: id
      * Return: SysUser
      */
-    SysUser selectById(@Param("id") String id);
+    SysUser selectById(@Param("id") Long id);
 
     /**
      * Describe: 根据 SysUser 条件查询用户
@@ -50,14 +51,14 @@ public interface SysUserMapper {
      * Param: username
      * Return: Integer
      */
-    Integer insert(SysUser sysUser);
+    // Integer insert(SysUser sysUser);
 
     /**
      * Describe: 根据 Id 修改用户
      * Param: username
      * Return: Integer
      */
-    Integer updateById(SysUser sysUser);
+    // Integer updateById(SysUser sysUser);
 
     /**
      * Describe: 根据 Id 删除用户
@@ -87,4 +88,18 @@ public interface SysUserMapper {
      * Return: Integer
      */
     Integer resetDeptByDeptIds(String[] deptIds);
+
+    SysUser getUserByNEP(SysUser users);
+
+    int setFace(SysUser users);
+
+    int setUrls(String column,String url,Long userId);
+
+    int setsignature(String signature,Long userId);
+
+    int unOrbdMail(int bd,Long userId);
+
+    int ghMail(String email,Long userId);
+
+
 }
