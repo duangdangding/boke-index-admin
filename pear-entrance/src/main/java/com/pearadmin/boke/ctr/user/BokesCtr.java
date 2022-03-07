@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,6 +75,22 @@ public class BokesCtr extends BaseCtr {
         StringBuffer requestURL = request.getRequestURL();
         map.put("b_host", requestURL.substring(0, requestURL.lastIndexOf("/")));
         return getView("boke/index", map);
+    }
+    // sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')"
+    // <ul class=\"ed_type\"><li><a sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')" onclick=\"return toeditor();\" href=\"/t/wd\">富文本编辑器</a></li><li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" onclick=\"return toeditor();\" href=\"/t/md\">markdown编辑器</a></li></ul>
+    //<ul class="ed_type"><li><a sec:authorize="hasPt/to/toermission('/admin/boke/wd','sys:boke:wd')" onclick="return toeditor();" href="/t/wd">富文本编辑器</a></li><li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" onclick="return toeditor();" href="/t/md">markdown编辑器</a></li></ul>
+    @RequestMapping({"/boke/md"})
+    // <ul class="ed_type"><li><a sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')" href="/t/wd">富文本编辑器</a></li>
+    // <li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" href="/t/md">markdown编辑器</a></li></ul>
+    @PreAuthorize("hasPermission('/admin/boke/md','sys:boke:md')")
+    public ModelAndView toMDPage() {
+        return getView("boke/md");
+    }
+    @RequestMapping({"/boke/wd"})
+    // sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')"
+    @PreAuthorize("hasPermission('/admin/boke/wd','sys:boke:wd')")
+    public ModelAndView toWDPage() {
+        return getView("boke/wd");
     }
     
     /**
@@ -163,6 +180,7 @@ public class BokesCtr extends BaseCtr {
     }
 
     @RequestMapping("/t/editor/{bokeId}")
+    @PreAuthorize("hasPermission('/t/boke/editor','sys:boke:editor')")
     public ModelAndView gotoEditor(@PathVariable("bokeId") Integer bokeId) {
         SysUser sysUser = SecurityUtil.currentUser();
         if (sysUser == null) {

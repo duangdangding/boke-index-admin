@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <!-- 百度SEO -->
@@ -63,7 +63,7 @@
                             <span th:text="${boke.createTime}"></span> | <span><img th:src="@{/imgs/ll_blue.gif}">(<span id="b_ll" ></span>) </span>
                             <span class="like_img"><img style="cursor: pointer" onclick="setLikeNum()" th:src="@{/imgs/fax.gif}">(<span id="b_ln" ></span>) </span>
                             <span><img th:src="@{/imgs/fx.gif}">(<span id="b_sn"></span>)</span>
-                            <span class="xq_fl_span"><a style="display:none;" onclick="return toeditor();" class="to_edit_e"
+                            <span class="xq_fl_span"><a sec:authorize="hasPermission('/t/boke/editor','sys:boke:editor'" class="to_edit_e"
                                                         th:href="@{'/t/editor/' + ${boke.bokeId}}" target="_blank">编辑</a></span>
                             <p style="padding: 2px 0">
                                 分类:<a th:href="@{'/?navTitle=分类：'+${boke.cateName}+ '&cateId=' +${boke.cateId}}" th:text="${boke.cateName}" target="_blank">每日一题</a>

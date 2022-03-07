@@ -15,7 +15,6 @@
 
     <!-- 项目描述 -->
     <name>工作流程</name>
-    <description>Demo project for Spring Boot</description>
 
     <dependencies>
         <!-- 工 作 流 -->
@@ -26,12 +25,6 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-json-converter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.activiti</groupId>
-                    <artifactId>activiti-bpmn-model</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>

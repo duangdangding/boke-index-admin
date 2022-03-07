@@ -15,7 +15,6 @@
 
     <!-- 模块描述 -->
     <name>定时任务</name>
-    <description>Demo project for Spring Boot</description>
 
     <!-- 依赖管理 -->
     <dependencies>
@@ -30,9 +29,9 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <!-- 分页框架 -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

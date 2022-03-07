@@ -2,6 +2,7 @@ package com.pearadmin.boke.utils.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,17 @@ public class MyExceptionHander {
 	 */
 	@ExceptionHandler(value = BizException.class)
 	public ResultDto bizExceptionHandler(BizException e){
+		logger.error("发生业务异常！原因是：{}",e.getErrorMsg());
+		return ResultDtoManager.fail(-1,e.getErrorMsg());
+	}
+
+    /**
+     * 权限不够
+     * @param e
+     * @return
+     */
+	@ExceptionHandler(value = AccessDeniedException.class)
+	public ResultDto accessDeniedException(BizException e){
 		logger.error("发生业务异常！原因是：{}",e.getErrorMsg());
 		return ResultDtoManager.fail(-1,e.getErrorMsg());
 	}

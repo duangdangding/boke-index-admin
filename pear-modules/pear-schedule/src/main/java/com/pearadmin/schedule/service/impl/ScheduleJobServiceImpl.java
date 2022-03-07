@@ -1,19 +1,19 @@
 package com.pearadmin.schedule.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.pearadmin.common.web.domain.request.PageDomain;
-import com.pearadmin.schedule.domain.ScheduleJob;
-import com.pearadmin.schedule.handler.ScheduleHandler;
-import com.pearadmin.schedule.mapper.ScheduleJobMapper;
-import com.pearadmin.schedule.service.IScheduleJobService;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.quartz.Scheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.pearadmin.schedule.domain.ScheduleJob;
+import com.pearadmin.schedule.handler.ScheduleHandler;
+import com.pearadmin.schedule.mapper.ScheduleJobMapper;
+import com.pearadmin.schedule.service.IScheduleJobService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Describe: 定时任务服务
@@ -47,12 +47,12 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
      * Param: ScheduleJob PageDomain
      * Return: pageInfo
      */
-    @Override
-    public PageInfo<ScheduleJob> page(ScheduleJob param, PageDomain pageDomain) {
-        PageHelper.startPage(pageDomain.getPage(), pageDomain.getLimit());
-        List<ScheduleJob> list = scheduleJobMapper.selectList(param);
-        return new PageInfo<>(list);
-    }
+    // @Override
+    // public PageInfo<ScheduleJob> page(ScheduleJob param, PageDomain pageDomain) {
+    //     PageHelper.startPage(pageDomain.getPage(), pageDomain.getLimit());
+    //     List<ScheduleJob> list = scheduleJobMapper.selectList(param);
+    //     return new PageInfo<>(list);
+    // }
 
     /**
      * Describe: 定时任务列表

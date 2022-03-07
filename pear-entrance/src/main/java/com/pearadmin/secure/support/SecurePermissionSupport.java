@@ -1,17 +1,19 @@
 package com.pearadmin.secure.support;
 
-import com.pearadmin.common.config.proprety.SecurityProperty;
-import com.pearadmin.system.domain.SysPower;
-import com.pearadmin.system.domain.SysUser;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import com.pearadmin.common.config.proprety.SecurityProperty;
+import com.pearadmin.system.domain.SysPower;
+import com.pearadmin.system.domain.SysUser;
 
 /**
  * Describe: 自定义 Security 权限注解实现
@@ -31,7 +33,11 @@ public class SecurePermissionSupport implements PermissionEvaluator {
      */
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        SysUser securityUserDetails = (SysUser) authentication.getPrincipal();
+        Object principal = authentication.getPrincipal();
+        if (principal.equals("anonymousUser")) {
+            return false;
+        }
+        SysUser securityUserDetails = (SysUser) principal;
         if (securityProperty.isSuperAuthOpen() && securityProperty.getSuperAdmin().equals(securityUserDetails.getUsername())) {
             return true;
         }

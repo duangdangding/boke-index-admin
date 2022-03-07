@@ -3,20 +3,20 @@
 <mapper namespace="com.pearadmin.system.mapper.SysDeptMapper">
 
     <resultMap id="SysDeptMap" type="SysDept">
-        <id column="dept_id" property="deptId"></id>
-        <result column="dept_name" property="deptName"></result>
-        <result column="parent_id" property="parentId"></result>
-        <result column="leader" property="leader"></result>
-        <result column="email" property="email"></result>
-        <result column="phone" property="phone"></result>
-        <result column="status" property="status"></result>
-        <result column="sort" property="sort"></result>
-        <result column="create_by" property="createBy"></result>
-        <result column="create_time" property="createTime"></result>
-        <result column="update_by" property="updateBy"></result>
-        <result column="update_time" property="updateTime"></result>
-        <result column="remark" property="remark"></result>
-        <result column="address" property="address"></result>
+        <id column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName" />
+        <result column="parent_id" property="parentId" />
+        <result column="leader" property="leader" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="address" property="address"/>
     </resultMap>
 
     <select id="selectList" resultMap="SysDeptMap">

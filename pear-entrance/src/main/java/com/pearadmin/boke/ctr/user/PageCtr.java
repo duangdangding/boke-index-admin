@@ -29,6 +29,7 @@ public class PageCtr {
     public String user_info() {
         return "redirect:/t/user_info";
     }
+    
     @RequestMapping("/u/x/c")
     public String u_xiangce() {
         // return "u_xiangce";

@@ -15,7 +15,6 @@
 
     <!-- 项目信息 -->
     <name>启动模块</name>
-    <description>Demo project for Spring Boot</description>
 
     <!-- 依赖管理 -->
     <dependencies>
@@ -33,17 +32,29 @@
         <dependency>
             <groupId>com.lsh.boke</groupId>
             <artifactId>pear-schedule</artifactId>
+            <!--<exclusions>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>-->
         </dependency>
         <!-- 工 作 流 程 -->
         <dependency>
             <groupId>com.lsh.boke</groupId>
             <artifactId>pear-process</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- 三方依赖 -->
-        <dependency>
+       <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
+        </dependency>-->
         <!-- Web 模块 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,7 +71,7 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>-->
         <!-- 分 页 组 件 -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <exclusions>
@@ -68,8 +79,12 @@
                     <artifactId>jsqlparser</artifactId>
                     <groupId>com.github.jsqlparser</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-spring</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <!-- Spring Boot 监控 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

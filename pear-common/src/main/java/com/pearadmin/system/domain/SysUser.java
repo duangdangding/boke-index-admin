@@ -11,6 +11,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.pearadmin.common.web.base.BaseDomain;
 
@@ -46,6 +47,7 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
     /**
      * 账户
      */
+    @TableField("username")
     private String username;
 
     /**

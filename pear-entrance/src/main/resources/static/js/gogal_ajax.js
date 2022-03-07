@@ -156,7 +156,7 @@ function getInfo(suibi_index) {
             $(".csdn_c a").attr("href",user.csdnUrl);
             $(".bili_c a").attr("href",user.biliUrl);
             $("#uuuuu").text(user.userName)
-            $("#navList li").eq(suibi_index).show();
+            
             $("#user_login_a").hide();
         }
     })

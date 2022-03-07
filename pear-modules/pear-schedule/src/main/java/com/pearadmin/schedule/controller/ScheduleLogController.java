@@ -1,20 +1,21 @@
 package com.pearadmin.schedule.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.pearadmin.common.constant.ControllerConstant;
-import com.pearadmin.common.web.base.BaseController;
-import com.pearadmin.common.web.domain.request.PageDomain;
-import com.pearadmin.common.web.domain.response.module.ResultTable;
-import com.pearadmin.schedule.domain.ScheduleLog;
-import com.pearadmin.schedule.service.IScheduleLogService;
-import io.swagger.annotations.Api;
+import javax.annotation.Resource;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
+import com.pearadmin.common.constant.ControllerConstant;
+import com.pearadmin.common.web.base.BaseController;
+import com.pearadmin.common.web.domain.request.PageDomain;
+import com.pearadmin.common.web.domain.response.module.ResultTable;
+import com.pearadmin.schedule.domain.ScheduleLog;
+import com.pearadmin.schedule.service.IScheduleLogService;
+
+import io.swagger.annotations.Api;
 
 /**
  * Describe: 定时任务日志控制器
@@ -51,7 +52,8 @@ public class ScheduleLogController extends BaseController {
     @GetMapping("data")
     @PreAuthorize("hasPermission('/schdule/log/data','sch:log:data')")
     public ResultTable data(ScheduleLog scheduleLogBean, PageDomain pageDomain) {
-        PageInfo<ScheduleLog> pageInfo = scheduleLogService.page(scheduleLogBean, pageDomain);
-        return pageTable(pageInfo.getList(), pageInfo.getTotal());
+        // PageInfo<ScheduleLog> pageInfo = scheduleLogService.page(scheduleLogBean, pageDomain);
+        // return pageTable(pageInfo.getList(), pageInfo.getTotal());
+        return null;
     }
 }

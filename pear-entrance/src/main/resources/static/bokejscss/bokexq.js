@@ -112,7 +112,7 @@ $(function () {
     addCodeCopy(b_boke_2.editorType === 2 ? 'md' : 'wd');
 
     if (get_item(lo_userId) == b_userId) {
-        $(".to_edit_e").show();
+        // $(".to_edit_e").show();
         $(".to_top_e").show();
         $(".to_top_e").text(b_boke_2.topOrder === 0 ? '[设置置顶]' : '[取消置顶]');
         $(".to_top_e").attr("onclick",b_boke_2.topOrder === 0 ? 'topAdd()' : 'topCancel()');

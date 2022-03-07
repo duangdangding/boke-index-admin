@@ -1,6 +1,20 @@
 package com.pearadmin.schedule.controller;
 
-import com.github.pagehelper.PageInfo;
+// import com.github.pagehelper.PageInfo;
+import java.time.LocalDateTime;
+
+import javax.annotation.Resource;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.pearadmin.common.constant.ControllerConstant;
 import com.pearadmin.common.tools.SequenceUtil;
 import com.pearadmin.common.web.base.BaseController;
@@ -9,13 +23,8 @@ import com.pearadmin.common.web.domain.response.Result;
 import com.pearadmin.common.web.domain.response.module.ResultTable;
 import com.pearadmin.schedule.domain.ScheduleJob;
 import com.pearadmin.schedule.service.IScheduleJobService;
+
 import io.swagger.annotations.Api;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
 
 /**
  * Describe: 定时任务控制器
@@ -52,9 +61,11 @@ public class ScheduleJobController extends BaseController {
     @GetMapping("data")
     @PreAuthorize("hasPermission('/schdule/job/data','sch:job:data')")
     public ResultTable data(PageDomain pageDomain, ScheduleJob param) {
-        PageInfo<ScheduleJob> pageInfo = scheduleJobService.page(param, pageDomain);
-        return pageTable(pageInfo.getList(), pageInfo.getTotal());
+        // PageInfo<ScheduleJob> pageInfo = scheduleJobService.page(param, pageDomain);
+        // return pageTable(pageInfo.getList(), pageInfo.getTotal());
+        return null;
     }
+    
 
     /**
      * Describe: 获取定时任务新增视图

@@ -1,10 +1,8 @@
 package com.pearadmin.schedule.service;
 
-import com.github.pagehelper.PageInfo;
-import com.pearadmin.common.web.domain.request.PageDomain;
-import com.pearadmin.schedule.domain.ScheduleLog;
-
 import java.util.List;
+
+import com.pearadmin.schedule.domain.ScheduleLog;
 
 /**
  * Describe: 定时任务日志服务接口
@@ -33,6 +31,6 @@ public interface IScheduleLogService {
      * Param: ScheduleJob
      * Return: pageInfo
      */
-    PageInfo<ScheduleLog> page(ScheduleLog scheduleLogBean, PageDomain pageDomain);
+    // PageInfo<ScheduleLog> page(ScheduleLog scheduleLogBean, PageDomain pageDomain);
 
 }

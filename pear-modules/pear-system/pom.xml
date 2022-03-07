@@ -14,7 +14,6 @@
     <artifactId>pear-system</artifactId>
 
     <name>系统模块</name>
-    <description>Demo project for Spring Boot</description>
 
     <!-- 引 用 依 赖 -->
     <dependencies>

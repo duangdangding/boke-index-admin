@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>公共页面引用</title>
@@ -119,6 +119,7 @@
             }
             showFish();
         });
+        // 显示动态鱼
         function showFish() {
             let s = get_item(switchFish);
             clearFishCommont();
@@ -326,7 +327,7 @@
             if (isNull_O(userId)) {
                 userId = 0;
             }
-            // 记录新随笔出现的索引
+            // 记录新随笔出现的索引 导航栏
             var suibi_index;
             $.ajax({
                 url:"/navicon/all/" + userId,
@@ -344,13 +345,14 @@
                     /* 右边栏头像 */
                     let token = get_item(lo_token);
                     if (isNull_O(token)) {
-                        $("#navList li").eq(suibi_index).hide();
-                        $("#user_info").hide();
+                        // $("#navList li").eq(suibi_index).hide();
+                        // $("#user_info").hide();
                         $("#user_logout").hide();
                         $("#user_login_a").show();
                     } else {
                         getInfo(suibi_index);
                     }
+                    $("#navList li").eq(suibi_index).show();
                     /* 导航栏 随笔 */
                     // 判断是否是手机
                     if (jQuery.browser.mobile) {

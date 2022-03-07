@@ -19,10 +19,10 @@
         select * from sys_role
         <where>
             <if test="vo.roleCode!=null and vo.roleCode!=''">
-                and role_code like "%"#{vo.roleCode}"%"
+                and role_code like concat('%',#{vo.roleCode},'%')
             </if>
             <if test="vo.roleName!=null and vo.roleName!=''">
-                and role_name like "%"#{vo.roleName}"%"
+                and role_name like concat('%',#{vo.roleName},'%')
             </if>
         </where>
     </select>

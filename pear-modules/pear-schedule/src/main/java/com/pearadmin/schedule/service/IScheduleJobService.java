@@ -1,10 +1,8 @@
 package com.pearadmin.schedule.service;
 
-import com.github.pagehelper.PageInfo;
-import com.pearadmin.common.web.domain.request.PageDomain;
-import com.pearadmin.schedule.domain.ScheduleJob;
-
 import java.util.List;
+
+import com.pearadmin.schedule.domain.ScheduleJob;
 
 /**
  * Describe: 定时任务服务接口
@@ -67,7 +65,7 @@ public interface IScheduleJobService {
      * Param: ScheduleJob PageDomain
      * Return: pageInfo
      */
-    PageInfo<ScheduleJob> page(ScheduleJob param, PageDomain pageDomain);
+    // PageInfo<ScheduleJob> page(ScheduleJob param, PageDomain pageDomain);
 
     /**
      * Describe: 根据编号获取定时任务
