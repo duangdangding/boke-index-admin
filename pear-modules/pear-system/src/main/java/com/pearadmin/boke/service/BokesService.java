@@ -39,4 +39,6 @@ public interface BokesService extends IService<Bokes> {
     int setUnPass(List<Long> ids,Integer unPass);
 
     Map<String,Object> getSLLNumById(Integer bokeId);
+    
+    Bokes selectByUidAndBid(Long userId,Long bokeId);
 }

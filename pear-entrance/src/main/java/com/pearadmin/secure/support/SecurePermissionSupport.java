@@ -7,10 +7,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.pearadmin.boke.entry.Bokes;
+import com.pearadmin.boke.service.BokesService;
 import com.pearadmin.common.config.proprety.SecurityProperty;
 import com.pearadmin.system.domain.SysPower;
 import com.pearadmin.system.domain.SysUser;
@@ -25,6 +28,9 @@ public class SecurePermissionSupport implements PermissionEvaluator {
 
     @Resource
     private SecurityProperty securityProperty;
+    
+    @Autowired
+    private BokesService bokesService;
 
     /**
      * Describe: 自定义 Security 权限认证 @hasPermission
@@ -34,11 +40,20 @@ public class SecurePermissionSupport implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
         Object principal = authentication.getPrincipal();
-        if (principal.equals("anonymousUser")) {
+        if ("anonymousUser".equals(principal)) {
             return false;
         }
         SysUser securityUserDetails = (SysUser) principal;
-        if (securityProperty.isSuperAuthOpen() && securityProperty.getSuperAdmin().equals(securityUserDetails.getUsername())) {
+        String username = securityUserDetails.getUsername();
+        Long userId = securityUserDetails.getUserId();
+        String s = targetDomainObject.toString();
+        if ("sys:boke:editor".equals(permission) && s.contains("/t/boke/editor")) {
+            String replace = s.replace("/t/boke/editor/","");
+            Bokes bokes = bokesService.selectByUidAndBid(userId, Long.valueOf(replace));
+            return "葵花籽儿".equals(username) || bokes != null;
+        }
+        
+        if (securityProperty.isSuperAuthOpen() && securityProperty.getSuperAdmin().equals(username)) {
             return true;
         }
         List<SysPower> powerList = securityUserDetails.getPowerList();

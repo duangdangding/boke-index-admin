@@ -41,6 +41,9 @@
             border-radius: 0 0 10px 10px;
         }
     </style>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
 </head>
 <body>
 <!--th:src="@{/imgs/a.png}"-->
@@ -63,8 +66,17 @@
                             <span th:text="${boke.createTime}"></span> | <span><img th:src="@{/imgs/ll_blue.gif}">(<span id="b_ll" ></span>) </span>
                             <span class="like_img"><img style="cursor: pointer" onclick="setLikeNum()" th:src="@{/imgs/fax.gif}">(<span id="b_ln" ></span>) </span>
                             <span><img th:src="@{/imgs/fx.gif}">(<span id="b_sn"></span>)</span>
-                            <span class="xq_fl_span"><a sec:authorize="hasPermission('/t/boke/editor','sys:boke:editor'" class="to_edit_e"
-                                                        th:href="@{'/t/editor/' + ${boke.bokeId}}" target="_blank">编辑</a></span>
+                            <!--<a {{ d }} sec:authorize="hasPermission('/t/boke/editor/{{ d }}','sys:boke:editor')" class="to_edit_e"
+                               th:href="@{'/t/editor/' + ${boke.bokeId}}" target="_blank">编辑</a>-->
+                            <script id="demo" type="text/html">
+                                <span class="xq_fl_span"> 
+                                    <input value="{{d}}">
+                                    <a sec:authorize="hasPermission('/t/boke/editor/{{d}}','sys:boke:editor')" class="to_edit_e"
+                                       th:href="@{'/t/editor/' + ${boke.bokeId}}" target="_blank">编辑</a>
+                                </span>
+                            </script>
+                            <div id="view"></div>
+                            
                             <p style="padding: 2px 0">
                                 分类:<a th:href="@{'/?navTitle=分类：'+${boke.cateName}+ '&cateId=' +${boke.cateId}}" th:text="${boke.cateName}" target="_blank">每日一题</a>
                                 <!-- 标签 -->
@@ -183,6 +195,19 @@ function pinglune(e) {
         pinglun();
     }
 }
+window.onload = function () {
+    layui.use('laytpl', function() {
+        let demo = document.getElementById('demo');
+        var laytpl = layui.laytpl;
+        var getTpl = demo.innerHTML
+            ,view = document.getElementById('view');
+        laytpl(getTpl).render(id, function(html){
+            view.innerHTML = html;
+        });
+    })
+}
+
+    
 </script>
 <script th:src="@{/bokejscss/bokexq.js}" ></script>
 </html>

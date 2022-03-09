@@ -205,4 +205,11 @@ public class BokesServiceImpl extends ServiceImpl<BokesMapper, Bokes> implements
     public Map<String, Object> getSLLNumById(Integer bokeId) {
         return bokesMapper.getSLLNumById(bokeId);
     }
+
+    @Override
+    public Bokes selectByUidAndBid(Long userId, Long bokeId) {
+        QueryWrapper<Bokes> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userId).eq("boke_id",bokeId);
+        return bokesMapper.selectOne(wrapper);
+    }
 }

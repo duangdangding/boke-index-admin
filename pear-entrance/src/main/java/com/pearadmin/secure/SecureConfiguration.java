@@ -3,6 +3,7 @@ package com.pearadmin.secure;
 import javax.annotation.Resource;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,8 +14,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import com.pearadmin.common.config.proprety.SecurityProperty;
 import com.pearadmin.secure.process.SecureAccessDeniedHandler;
@@ -26,6 +29,7 @@ import com.pearadmin.secure.process.SecureLogoutSuccessHandler;
 import com.pearadmin.secure.process.SecureRememberMeHandler;
 import com.pearadmin.secure.process.SecureSessionExpiredHandler;
 import com.pearadmin.secure.support.SecureCaptchaSupport;
+import com.pearadmin.secure.support.SecurePermissionSupport;
 
 /**
  * Describe: Security 安全配置
@@ -91,6 +95,8 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Resource
     private SecureCaptchaSupport securityCaptchaSupport;
+    @Resource
+    private SecurePermissionSupport securePermissionSupport;
 
     @Resource
     private SecureSessionExpiredHandler securityExpiredSessionHandler;
@@ -177,10 +183,23 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter {
                 .expiredSessionStrategy(securityExpiredSessionHandler)
                 // 用于统计在线
                 .sessionRegistry(sessionRegistry);
-
+        // 配置permission
+        http.authorizeRequests().expressionHandler(defaultWebSecurityExpressionHandler());
         // 取消跨站请求伪造防护
         http.csrf().disable();
         // 防止iframe 造成跨域
         http.headers().frameOptions().disable();
+    }
+    
+    @Bean
+    public DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+        defaultWebSecurityExpressionHandler.setPermissionEvaluator(securePermissionSupport);
+        return defaultWebSecurityExpressionHandler;
+    }
+
+    @Bean
+    public SpringSecurityDialect springSecurityDialect(){
+        return new SpringSecurityDialect();
     }
 }
