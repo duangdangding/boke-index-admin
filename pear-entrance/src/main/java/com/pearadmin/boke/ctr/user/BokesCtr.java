@@ -76,22 +76,6 @@ public class BokesCtr extends BaseCtr {
         map.put("b_host", requestURL.substring(0, requestURL.lastIndexOf("/")));
         return getView("boke/index", map);
     }
-    // sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')"
-    // <ul class=\"ed_type\"><li><a sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')" onclick=\"return toeditor();\" href=\"/t/wd\">富文本编辑器</a></li><li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" onclick=\"return toeditor();\" href=\"/t/md\">markdown编辑器</a></li></ul>
-    //<ul class="ed_type"><li><a sec:authorize="hasPt/to/toermission('/admin/boke/wd','sys:boke:wd')" onclick="return toeditor();" href="/t/wd">富文本编辑器</a></li><li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" onclick="return toeditor();" href="/t/md">markdown编辑器</a></li></ul>
-    @RequestMapping({"/boke/md"})
-    // <ul class="ed_type"><li><a sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')" href="/t/wd">富文本编辑器</a></li>
-    // <li><a sec:authorize="hasPermission('/admin/boke/md','sys:boke:md')" href="/t/md">markdown编辑器</a></li></ul>
-    @PreAuthorize("hasPermission('/admin/boke/md','sys:boke:md')")
-    public ModelAndView toMDPage() {
-        return getView("boke/md");
-    }
-    @RequestMapping({"/boke/wd"})
-    // sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')"
-    @PreAuthorize("hasPermission('/admin/boke/wd','sys:boke:wd')")
-    public ModelAndView toWDPage() {
-        return getView("boke/wd");
-    }
     
     /**
      * 局部刷新
@@ -147,7 +131,7 @@ public class BokesCtr extends BaseCtr {
         return param;
     }
 
-    @RequestMapping("/boke/{bokeId}")
+    @RequestMapping("/bokexq/{bokeId}")
     public ModelAndView getBoke(@PathVariable("bokeId") String bokeId, HttpServletRequest request) {
         Integer id;
         try {
@@ -180,6 +164,10 @@ public class BokesCtr extends BaseCtr {
     }
 
     @RequestMapping("/t/editor/{bokeId}")
+    // if ([[${#authorization.expression('hasRole(''ROLE_ADMIN'')')}]]) {
+    // if ([[${#authorization.expression('hasPermission(''/t/boke/editor/{id}'',''sys:boke:editor'')')}]]) {
+    //     $('#supplyTable').bootstrapTable('hideColumn', 'supplierName');
+    // }
     @PreAuthorize("hasPermission('/t/boke/editor','sys:boke:editor')")
     public ModelAndView gotoEditor(@PathVariable("bokeId") Integer bokeId) {
         SysUser sysUser = SecurityUtil.currentUser();

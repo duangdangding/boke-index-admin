@@ -34,7 +34,7 @@ public class BokeListEntry implements java.io.Serializable {
     
     private String updateTime;
 
-    private Integer userId;
+    private Long userId;
     
     private String userName;
 

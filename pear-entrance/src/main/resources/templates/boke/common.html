@@ -330,20 +330,21 @@
             // 记录新随笔出现的索引 导航栏
             var suibi_index;
             $.ajax({
-                url:"/navicon/all/" + userId,
+                url:"/indexNav",
+                // url:"/navicon/all/" + userId,
                 // async:false,
                 success:function (data) {
                     // navs = data;
-                    let cus = data.custom;
+                    let cus = data.result.custom;
                     // console.log(JSON.stringify(data))
                     for (let i=0;i < cus.length;i++) {
                         if (cus[i].name === "新随笔") {
                             suibi_index = i;
                         }
                     }
-                    miluframe(data)
+                    miluframe(data.result)
                     /* 右边栏头像 */
-                    let token = get_item(lo_token);
+                    /*let token = get_item(lo_token);
                     if (isNull_O(token)) {
                         // $("#navList li").eq(suibi_index).hide();
                         // $("#user_info").hide();
@@ -352,7 +353,7 @@
                     } else {
                         getInfo(suibi_index);
                     }
-                    $("#navList li").eq(suibi_index).show();
+                    $("#navList li").eq(suibi_index).show();*/
                     /* 导航栏 随笔 */
                     // 判断是否是手机
                     if (jQuery.browser.mobile) {
@@ -389,14 +390,16 @@
                     // 注销
                     if(!$('#user_logout').is(':hidden')) {
                         $("#user_logout").click(function () {
-                            let out_id = get_item(lo_userId);
-                            if (!out_id) {out_id = 0}
-                            clear_item(lo_userId);
-                            clear_item(lo_token);
-                            clear_item(lo_username);
-                            clear_item(lo_face);
-                            clear_item(songList + out_id);
-                            window.location.href = "/logout";
+                            $.ajax({
+                                url: '/logout',
+                                dataType: 'json',
+                                type: 'post',
+                                success: function (result) {
+                                    if (result.success) {
+                                        location.href = "/";
+                                    }
+                                }
+                            })
                         });
                     }
                 }

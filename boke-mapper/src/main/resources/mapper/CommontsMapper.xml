@@ -11,8 +11,8 @@
         <result property="bokeId" column="boke_id" />
         <result property="commVerify" column="comm_verify" />
 <!--        <result property="" column="user_ip" />-->
-        <result property="userName" column="user_name" />
-        <result property="userFace" column="user_face" />
+        <result property="username" column="username" />
+        <result property="avatar" column="avatar" />
         <collection property="replys" column="comm_id" ofType="com.pearadmin.boke.entry.Replys" 
             select="com.lsh.mapper.boke.ReplysMapper.getRelyByPid"/>
     </resultMap>

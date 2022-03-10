@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class FileRecode {
     @TableId
-    private Integer fileId;
+    private Long fileId;
     private String fileUrl;
     private String fileName;
     private String fileType;

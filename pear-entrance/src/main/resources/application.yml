@@ -73,10 +73,13 @@ pear:
       - /title/sub # 副标题
       - /mail/qus # 首页发送邮件
       - /comment/to # 评论
+      - /SLLNum/** # 浏览量 点赞量 分享量
       - /label/labelPage # 标签列表页
       - /archive/get # 日期
-      - /boke/* # 详情页
+      - /bokexq/* # 详情页
+      - /label/get/**
       - /navicon/all/** # 首页导航栏
+      - /indexNav # 首页导航栏
       - /getCateCount # 获取分类数
       - /getLookups # 获取浏览量
       - /userinfo/** # 获取用户信息
@@ -109,29 +112,29 @@ pear:
       - /favicon.ico # 开放FAVICON
 
   # 上传配置
-  upload:
-    # windows 上传路径
-    windows-path: D:\home\uploads\
-    # linux 上传路径
-    linux-path: /home/uploads/
-    # 是否使用ftp服务器
-    ftp-use: false
-    #  ftp服务器地址
-    hostname:
-    # ftp服务器端口
-    port: 0000
-    # ftp服务器用户名
-    username:
-    # ftp服务器密码
-    password:
+#  upload:
+#    # windows 上传路径
+#    windows-path: D:\home\uploads\
+#    # linux 上传路径
+#    linux-path: /home/uploads/
+#    # 是否使用ftp服务器
+#    ftp-use: false
+#    #  ftp服务器地址
+#    hostname:
+#    # ftp服务器端口
+#    port: 0000
+#    # ftp服务器用户名
+#    username:
+#    # ftp服务器密码
+#    password:
 
 # Page Helper 分页配置
-pagehelper:
-  # 方 言
-  helper-dialect: mysql
-  params: count=countSql
-  reasonable: true
-  support-methods-arguments: true
+#pagehelper:
+#  # 方 言
+#  helper-dialect: mysql
+#  params: count=countSql
+#  reasonable: true
+#  support-methods-arguments: true
 
 # 日志配置
 logging:
@@ -147,3 +150,8 @@ mybatis-plus:
   configuration:
     ## 日志实现
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      # id生成策略
+      id-type: auto  

@@ -27,7 +27,7 @@ public interface SysRoleMapper {
      * Param: SysRole
      * Return: List<SysRole>
      */
-    List<SysRole> selectList(@Param("vo")SysRole param);
+    List<SysRole> selectList(@Param("vo") SysRole param);
     IPage<SysRole> selectList(Page<SysRole> page, @Param("vo") SysRole param);
 
     /**
@@ -64,5 +64,7 @@ public interface SysRoleMapper {
      * Return: Integer
      */
     Integer deleteByIds(String[] ids);
+
+    List<SysRole> getRolesByUserId(Long userId);
 
 }

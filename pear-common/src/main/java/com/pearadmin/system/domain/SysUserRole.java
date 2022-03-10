@@ -1,7 +1,8 @@
 package com.pearadmin.system.domain;
 
-import lombok.Data;
 import org.apache.ibatis.type.Alias;
+
+import lombok.Data;
 
 /**
  * Describe: 用户角色映射关系
@@ -21,7 +22,7 @@ public class SysUserRole {
     /**
      * 用户编号
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 角色编号

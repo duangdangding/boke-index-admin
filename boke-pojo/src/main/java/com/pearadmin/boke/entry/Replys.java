@@ -31,7 +31,7 @@ public class Replys implements Serializable {
     private String userName;
     
     @TableField(exist = false)
-    private String userFace;
+    private String avatar;
 
     //    0未审核1审核不通过
     private Integer replyVerify;

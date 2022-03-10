@@ -80,5 +80,7 @@ public interface ISysRoleService {
      * Return: 操作结果
      */
     boolean batchRemove(String[] ids);
+    
+    List<SysRole> getRolesByUserId(Long userId);
 
 }

@@ -3,6 +3,7 @@ package com.pearadmin.api.modules;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,9 +51,12 @@ public class EntranceController extends BaseController {
      * Param: ModelAndView
      * Return: 登录视图
      */
-    @GetMapping("/admin/index")
+    // @GetMapping("/admin/index")
+    @GetMapping("/menu/lushao/page")
+    @PreAuthorize("hasPermission('/menu/lushao/page','sys:manager:index')")
     @Logging(title = "主页", describe = "返回 Index 主页视图", type = BusinessType.ADD)
-    public ModelAndView index() {
+    public ModelAndView index(HttpServletRequest request) {
+        // boolean userInRole = request.isUserInRole("admin");
         return jumpPage("index");
     }
 

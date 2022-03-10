@@ -1,9 +1,8 @@
 package com.pearadmin.system.mapper;
 
-import com.pearadmin.system.domain.SysUserRole;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+
+import com.pearadmin.system.domain.SysUserRole;
 
 /**
  * Describe: 用户角色接口
@@ -15,7 +14,7 @@ public interface SysUserRoleMapper {
 
     int batchInsert(List<SysUserRole> sysUserRoles);
 
-    int deleteByUserId(String userId);
+    int deleteByUserId(Long userId);
 
     int deleteByUserIds(String[] userIds);
 
@@ -24,4 +23,5 @@ public interface SysUserRoleMapper {
     int deleteByRoleIds(String[] roleIds);
 
     List<SysUserRole> selectByUserId(String userId);
+    
 }

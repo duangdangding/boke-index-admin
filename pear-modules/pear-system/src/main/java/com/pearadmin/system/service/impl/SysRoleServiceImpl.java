@@ -182,4 +182,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
         return true;
     }
 
+    @Override
+    public List<SysRole> getRolesByUserId(Long userId) {
+        return sysRoleMapper.getRolesByUserId(userId);
+    }
+
 }

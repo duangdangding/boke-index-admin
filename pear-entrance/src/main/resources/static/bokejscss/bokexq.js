@@ -64,7 +64,7 @@ $(function () {
     let sps = $(".b_c_s");
     if (sps.length) {
         sps.each(function () {
-            let href = get_item("b_host") + "/boke/" + id;
+            let href = get_item("b_host") + "/bokexq/" + id;
             let text = $("#cb_post_title_url span").text().trim();
             text = href + "\n" + text + cpoy_boke_name;
             setCopyText(text,$(this),id);

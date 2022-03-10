@@ -29,15 +29,15 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * Param: id
      * Return: SysUser
      */
-    SysUser selectById(@Param("id") Long id);
+    SysUser selectByIdInfo(Long userId);
 
     /**
      * Describe: 根据 SysUser 条件查询用户
      * Param: username
      * Return: SysUser
      */
-    List<SysUser> selectList(@Param("vo")SysUser param);
-    IPage<SysUser> selectList(Page<SysUser> page, @Param("vo") SysUser param);
+    List<SysUser> selectListPage(@Param("vo")SysUser param);
+    IPage<SysUser> selectListPage(Page<SysUser> page, @Param("vo") SysUser param);
 
     /**
      * Describe: 根据 SysUser 条件查询用户数量
@@ -45,28 +45,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * Return: Integer
      */
     Integer count(SysUser sysUser);
-
-    /**
-     * Describe: 添加用户数据
-     * Param: username
-     * Return: Integer
-     */
-    // Integer insert(SysUser sysUser);
-
-    /**
-     * Describe: 根据 Id 修改用户
-     * Param: username
-     * Return: Integer
-     */
-    // Integer updateById(SysUser sysUser);
-
-    /**
-     * Describe: 根据 Id 删除用户
-     * Param: username
-     * Return: Integer
-     */
-    Integer deleteById(String id);
-
 
     /**
      * Describe: 根据 Id 批量删除
@@ -90,6 +68,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     Integer resetDeptByDeptIds(String[] deptIds);
 
     SysUser getUserByNEP(SysUser users);
+    SysUser getUserByEmail(String email);
 
     int setFace(SysUser users);
 
@@ -100,6 +79,5 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     int unOrbdMail(int bd,Long userId);
 
     int ghMail(String email,Long userId);
-
 
 }

@@ -42,7 +42,7 @@ public interface ISysUserService {
      * Param: id
      * Return: 操作结果
      */
-    boolean remove(String id);
+    boolean remove(Long id);
 
     /**
      * Describe: 根据 id 修改用户数据
@@ -70,7 +70,7 @@ public interface ISysUserService {
      * Param: SysUser
      * Return: 操作结果
      */
-    boolean saveUserRole(String userId, List<String> roleIds);
+    boolean saveUserRole(Long userId, List<String> roleIds);
 
     /**
      * Describe: 获取用户角色数据

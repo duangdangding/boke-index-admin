@@ -29,6 +29,7 @@ import com.pearadmin.common.web.base.BaseController;
 import com.pearadmin.common.web.domain.request.PageDomain;
 import com.pearadmin.common.web.domain.response.Result;
 import com.pearadmin.common.web.domain.response.module.ResultTable;
+import com.pearadmin.system.domain.SysRole;
 import com.pearadmin.system.domain.SysUser;
 import com.pearadmin.system.domain.vo.EditPassword;
 import com.pearadmin.system.service.ISysLogService;
@@ -116,7 +117,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "获取用户新增视图")
     @PreAuthorize("hasPermission('/system/user/add','sys:user:add')")
     public ModelAndView add(Model model) {
-        model.addAttribute("sysRoles", sysRoleService.list(null));
+        model.addAttribute("sysRoles", sysRoleService.list(new SysRole()));
         return jumpPage(MODULE_PATH + "add");
     }
 
@@ -136,7 +137,7 @@ public class SysUserController extends BaseController {
         sysUser.setStatus("1");
         // sysUser.setUserId(SequenceUtil.makeStringId());
         sysUser.setPassword(new BCryptPasswordEncoder().encode(sysUser.getPassword()));
-        sysUserService.saveUserRole(sysUser.getUserId() + "", Arrays.asList(sysUser.getRoleIds().split(",")));
+        sysUserService.saveUserRole(sysUser.getUserId(), Arrays.asList(sysUser.getRoleIds().split(",")));
         Boolean result = sysUserService.save(sysUser);
         return decide(result);
     }
@@ -151,7 +152,8 @@ public class SysUserController extends BaseController {
     @PreAuthorize("hasPermission('/system/user/edit','sys:user:edit')")
     public ModelAndView edit(Model model, Long userId) {
         model.addAttribute("sysRoles", sysUserService.getUserRole(userId + ""));
-        model.addAttribute("sysUser", sysUserService.getById(userId));
+        SysUser byId = sysUserService.getById(userId);
+        model.addAttribute("sysUser",byId );
         return jumpPage(MODULE_PATH + "edit");
     }
 
@@ -231,7 +233,7 @@ public class SysUserController extends BaseController {
     @PreAuthorize("hasPermission('/system/user/edit','sys:user:edit')")
     @Logging(title = "修改用户", describe = "修改用户", type = BusinessType.EDIT)
     public Result update(@RequestBody SysUser sysUser) {
-        sysUserService.saveUserRole(sysUser.getUserId() + "", Arrays.asList(sysUser.getRoleIds().split(",")));
+        sysUserService.saveUserRole(sysUser.getUserId(), Arrays.asList(sysUser.getRoleIds().split(",")));
         boolean result = sysUserService.update(sysUser);
         return decide(result);
     }
@@ -275,7 +277,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "删除用户数据")
     @PreAuthorize("hasPermission('/system/user/remove','sys:user:remove')")
     @Logging(title = "删除用户", describe = "删除用户", type = BusinessType.REMOVE)
-    public Result remove(@PathVariable String id) {
+    public Result remove(@PathVariable Long id) {
         boolean result = sysUserService.remove(id);
         return decide(result);
     }

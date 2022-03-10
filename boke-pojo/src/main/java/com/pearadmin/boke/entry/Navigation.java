@@ -52,4 +52,7 @@ public class Navigation {
     @ApiModelProperty(value = "0显示1不显示")
     private Boolean navShow;
         
+    @ApiModelProperty(value = "登陆验证 0不登陆显示1登陆显示3都显示4管理员才显示")
+    private Integer authorization;
+        
 }

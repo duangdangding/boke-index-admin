@@ -1,8 +1,8 @@
 package com.pearadmin.boke.entry;
 
-import lombok.Data;
-
 import java.util.Date;
+
+import lombok.Data;
 
 /**
  * @Author lushao
@@ -17,7 +17,7 @@ public class LoginInfo {
 
     private String userName;
 
-    private String userFace;
+    private String avatar;
 
     private Date loginTime;
 

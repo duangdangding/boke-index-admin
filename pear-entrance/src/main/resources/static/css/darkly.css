@@ -15,7 +15,8 @@
 .cnblogs-markdown code, .cnblogs-post-body code {
     background: #E0E0E0 !important;
 }
-
+.u_btn {color: #d1e5ef }
+.u_btn:hover {color: #49afe2 }
 .day .postTitle a:link {
     /*color: #d1e5ef;*/
 }

@@ -1,12 +1,13 @@
 package com.pearadmin.common.web.base;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+
+import lombok.Data;
 
 /**
  * Describe: 基 础 实 体 类
@@ -31,7 +32,7 @@ public class BaseDomain implements Serializable {
     /**
      * 创建人名称
      */
-    private String createName;
+    // private String createName;
 
     /**
      * 修改时间
@@ -48,7 +49,7 @@ public class BaseDomain implements Serializable {
     /**
      * 修改人名称
      */
-    private String updateName;
+    // private String updateName;
 
     /**
      * 备注
@@ -58,5 +59,6 @@ public class BaseDomain implements Serializable {
     /**
      * 请求参数
      */
+    @TableField(exist = false)
     private Map<String, Object> params;
 }

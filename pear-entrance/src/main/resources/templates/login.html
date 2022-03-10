@@ -15,13 +15,13 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <input class="layui-input" hover name="username" placeholder="账 户 : admin " type="text" value="admin"/>
+        <input class="layui-input" hover name="username" type="text" />
     </div>
     <div class="layui-form-item">
-        <input class="layui-input" hover name="password" placeholder="密 码 : admin " type="password" value="admin"/>
+        <input class="layui-input" hover name="password" type="password" />
     </div>
     <div class="layui-form-item">
-        <input class="code layui-input layui-input-inline" hover name="captcha" placeholder="验证码 : "/>
+        <input id="myyzm" class="code layui-input layui-input-inline" hover name="captcha" placeholder="验证码 : "/>
         <img class="codeImage" id="captchaImage" src="/system/captcha/generate"/>
     </div>
     <div class="layui-form-item">
@@ -63,7 +63,7 @@
                             })
                         } else {
                             popup.failure(result.msg, function () {
-                                document.getElementById("captchaImage").src = captchaPath + "?" + Math.random();
+                                document.getElementById("myyzm").value="";
                             });
                         }
                     })
@@ -74,9 +74,11 @@
 
         $("#captchaImage").click(function () {
             document.getElementById("captchaImage").src = captchaPath + "?" + Math.random();
+            document.getElementById("myyzm").value="";
         })
         setInterval(function () {
             document.getElementById("captchaImage").src = captchaPath + "?" + Math.random();
+            document.getElementById("myyzm").value="";
         }, 30 * 1000);
         validateKickout();
     })

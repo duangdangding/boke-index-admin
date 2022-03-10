@@ -1,16 +1,22 @@
 package com.pearadmin.secure.domain;
 
-import com.pearadmin.system.domain.SysPower;
-import com.pearadmin.system.domain.SysUser;
-import com.pearadmin.system.mapper.SysPowerMapper;
-import com.pearadmin.system.mapper.SysUserMapper;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.pearadmin.system.domain.SysPower;
+import com.pearadmin.system.domain.SysRole;
+import com.pearadmin.system.domain.SysUser;
+import com.pearadmin.system.mapper.SysPowerMapper;
+import com.pearadmin.system.mapper.SysRoleMapper;
+import com.pearadmin.system.mapper.SysUserMapper;
 
 /**
  * Describe: Security 用户服务
@@ -25,6 +31,9 @@ public class SecureUserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
     private SysPowerMapper sysPowerMapper;
+    
+    @Resource
+    private SysRoleMapper sysRoleMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,6 +41,9 @@ public class SecureUserDetailsServiceImpl implements UserDetailsService {
         if (sysUser == null) {
             throw new UsernameNotFoundException("Account Not Found");
         }
+        List<SysRole> rolesByUserId = sysRoleMapper.getRolesByUserId(sysUser.getUserId());
+        List<String> collect = rolesByUserId.stream().map(SysRole::getRoleName).collect(Collectors.toList());
+        sysUser.setRoles(new HashSet<>(collect));
         List<SysPower> powerList = sysPowerMapper.selectByUsername(username);
         sysUser.setPowerList(powerList);
         return sysUser;

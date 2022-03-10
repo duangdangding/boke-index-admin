@@ -71,7 +71,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
      */
     @Override
     public List<SysUser> list(SysUser param) {
-        return sysUserMapper.selectList(param);
+        return sysUserMapper.selectListPage(param);
     }
 
     /**
@@ -82,7 +82,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
     @Override
     public IPage<SysUser> page(SysUser param, PageDomain pageDomain) {
         Page<SysUser> page = new Page<>(pageDomain.getPage(), pageDomain.getLimit());
-        return sysUserMapper.selectList(page,param);
+        return sysUserMapper.selectListPage(page,param);
     }
 /*
     @Override
@@ -101,7 +101,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
      */
     @Override
     public SysUser getById(Long id) {
-        return sysUserMapper.selectById(id);
+        return sysUserMapper.selectByIdInfo(id);
     }
 
     /**
@@ -111,7 +111,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean remove(String id) {
+    public boolean remove(Long id) {
         sysUserRoleMapper.deleteByUserId(id);
         sysUserMapper.deleteById(id);
         return true;
@@ -163,7 +163,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
      * Return: 操作结果
      */
     @Override
-    public boolean saveUserRole(String userId, List<String> roleIds) {
+    public boolean saveUserRole(Long userId, List<String> roleIds) {
         sysUserRoleMapper.deleteByUserId(userId);
         List<SysUserRole> sysUserRoles = new ArrayList<>();
         roleIds.forEach(roleId -> {
@@ -184,7 +184,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
      */
     @Override
     public List<SysRole> getUserRole(String userId) {
-        List<SysRole> allRole = sysRoleMapper.selectList(null);
+        List<SysRole> allRole = sysRoleMapper.selectList(new SysRole());
         List<SysUserRole> myRole = sysUserRoleMapper.selectByUserId(userId);
         allRole.forEach(sysRole -> {
             myRole.forEach(sysUserRole -> {
@@ -203,9 +203,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
 
     @Override
     public SysUser getUserByEmail(String email) {
-        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
-        wrapper.eq("email",email);
-        return sysUserMapper.selectOne(wrapper);
+        return sysUserMapper.getUserByEmail(email);
     }
 
     @Override

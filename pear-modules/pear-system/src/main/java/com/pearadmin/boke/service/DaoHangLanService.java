@@ -1,11 +1,12 @@
 package com.pearadmin.boke.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pearadmin.boke.entry.Navigation;
 import com.pearadmin.boke.vo.NavAndIcon;
 import com.pearadmin.boke.vo.NavDto;
-
-import java.util.List;
+import com.pearadmin.system.domain.SysUser;
 
 public interface DaoHangLanService extends IService<Navigation> {
 
@@ -14,4 +15,6 @@ public interface DaoHangLanService extends IService<Navigation> {
     NavAndIcon getInfo(Integer userId);
     
     boolean updateNavTitle(String navigation);
+
+    NavAndIcon indexNav(SysUser sysUser);
 }

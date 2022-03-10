@@ -85,11 +85,13 @@ public class UsersCtr extends BaseCtr {
         users.setEnable("1");
         users.setStatus("1");
         users.setPassword(new BCryptPasswordEncoder().encode(users.getPassword()));
-        sysUserService.saveUserRole(users.getUserId() + "", Arrays.asList(users.getRoleIds().split(",")));
+        
 //        注册IP
         String ip = IPHelper.getIp(request);
         users.setRegisterIp(ip);
-        Boolean save = sysUserService.save(userByEmail);
+        Boolean save = sysUserService.save(users);
+        // 给普通用户权限
+        sysUserService.saveUserRole(users.getUserId(), Arrays.asList("1501789529231589376".split(",")));
         return returnDto(save);
     }
 

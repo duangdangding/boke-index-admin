@@ -2,9 +2,10 @@ package com.pearadmin.system.domain;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.type.Alias;
 import org.springframework.security.core.CredentialsContainer;
@@ -29,9 +30,8 @@ import lombok.Setter;
 public class SysUser extends BaseDomain implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = 1L;
-
-    public SysUser() {
-    }
+    
+    public SysUser() {}
 
     public SysUser(Long userId, String userName) {
         this.userId = userId;
@@ -77,8 +77,6 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
     private String email;
 
     private String loginIp;
-
-    // private String userFace;
 
     private Timestamp registerTime;
 
@@ -140,8 +138,10 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
     /**
      * 计算列
      */
+    @TableField(exist = false)
     private String roleIds;
-
+    @TableField(exist = false)
+    private Set<String> roles = new HashSet<>();
 
     /**
      * 最后一次登录时间
@@ -151,12 +151,15 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
     /**
      * 权限 这里暂时不用 security 的 Authorities
      */
+    @TableField(exist = false)
     private List<SysPower> powerList;
+    @TableField(exist = false)
+    private final Set<GrantedAuthority> authorities = new HashSet<>();
 
-    @Override
+   /* @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
-    }
+    }*/
 
     @Override
     public boolean isAccountNonExpired() {

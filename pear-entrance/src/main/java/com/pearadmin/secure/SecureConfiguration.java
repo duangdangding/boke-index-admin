@@ -83,6 +83,7 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Resource
     private UserDetailsService securityUserDetailsService;
+    // private ISysUserService securityUserDetailsService;
 
     /**
      * remember me redis持久化

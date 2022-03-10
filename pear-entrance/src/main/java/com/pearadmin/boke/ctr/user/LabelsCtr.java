@@ -42,6 +42,7 @@ public class LabelsCtr extends BaseCtr {
      * @return
      */
     @RequestMapping("/get/{userId}")
+    // @PreAuthorize("hasPermission('isAuthenticated')")
     public ResultDto getLabelByUserId(@PathVariable("userId") Integer userId) {
         // return returnDto(labelsService.getByUserId(userId));
         return returnDto(labelsService.getUseLabels());

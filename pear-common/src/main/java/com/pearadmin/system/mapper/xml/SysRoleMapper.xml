@@ -130,4 +130,11 @@
         </foreach>
     </delete>
 
+    <select id="getRolesByUserId" parameterType="long" resultMap="SysRoleMap">
+        select sr.* from (
+            select * from sys_user_role where user_id = #{userId}
+        ) sur
+        left join sys_role sr on sr.role_id = sur.role_id
+    </select>
+
 </mapper>

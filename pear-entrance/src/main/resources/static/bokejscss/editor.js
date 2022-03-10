@@ -24,7 +24,6 @@ var is_confirm = false;
 var boke_id;
 let cg_item = boke_type === 1 ? wd_cg : md_cg;
 $(function () {
-    checkLogin();
     initCategory();
     let cur_boke;
     if (boke) {
@@ -71,7 +70,6 @@ function saveCGBtn() {
 let isSaveCG = true;
 function savecg(html) {
     if (isSaveCG) {
-        checkLogin();
         let val=$('input[name="cheakRadios"]:checked').val();
         // let html = boke_type === 1 ? editor.txt.html().trim() : testEditor.getMarkdown().trim();
         let title = $("#title").val().trim();
@@ -108,7 +106,7 @@ $(document).keyup(function (e) {
 function submitBoke() {
     isSaveCG = false;
     showLoad()
-    let token = checkLogin(savecg());
+    savecg();
     let val=$('input[name="cheakRadios"]:checked').val();
     let introduction;
     let bokeCont;
@@ -148,7 +146,7 @@ function submitBoke() {
             data:param,
             //再次添加头部信息
             beforeSend: function(request) {
-                requestToken(request,token);
+                // requestToken(request,token);
             },
             success : function (data) {
                 if (data.status === -1) {
@@ -273,7 +271,7 @@ let allLabels;
 // 选中已选择的标签
 function getByAjax() {
     $("#label_list").html('');
-    jcAjax_notf_noParam("/label/get/" + get_item(lo_userId),function (data) {
+    jcAjax_notf_noParam("/label/get/0",function (data) {
         let labels = data.result;
         // 赋值全部的labels
         if (labels.length > 0) {
@@ -378,7 +376,6 @@ function setcategoryV(k,v) {
  * 清空草稿箱
  */
 function clearcg() {
-    checkLogin();
     clear_item(boke_type === 1 ? wd_cg : md_cg);
     show_suc_msg(clear_cgx);
 //    刷新页面

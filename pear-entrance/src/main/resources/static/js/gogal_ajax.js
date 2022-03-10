@@ -12,17 +12,6 @@ function getEmoji() {
     return e_datae;
 }
 
-function checkLogin(fun) {
-    let token = localStorage.getItem(lo_token);
-    if (!token) {
-        if (fun) fun()
-        layer.msg("请先登录！")
-        window.location.href = "/login";
-        return false;
-    }
-    return token;
-}
-
 /**
  * 清除localStorage某一项
  * 如果没传item则清空所有
@@ -149,7 +138,7 @@ function getInfo(suibi_index) {
         async:false,
         success:function (data) {
             let user = data.result;
-            $("#portrait img").attr("src",user.userFace)
+            $("#portrait img").attr("src",user.avatar)
             $(".github_c a").attr("href",user.githubUrl);
             $(".weixin_c a").attr("title",user.wxUrl);
             // $(".QQ_c a").attr("title",user.qqUrl);
@@ -360,7 +349,6 @@ function show_suc_msg(m) {
  * 1,弹出消息2，运行函数3，既弹消息又运行函数
  */
 function token_ajax(url,data,fun,o,p) {
-    let token = checkLogin();
     if (!o) {o = 3;}
     if (!p) {p = 1;}
     if (!data) {data = {};}
@@ -372,7 +360,7 @@ function token_ajax(url,data,fun,o,p) {
         dataType:"json",
         //再次添加头部信息
         beforeSend: function(request) {
-            requestToken(request,token);
+            // requestToken(request,token);
         },
         success:function (data) {
             if (data.status === -1) {
@@ -393,7 +381,6 @@ function serverErr() {
 }
 /* 文件上传公共方法 */
 function token_file(url,data,fun,o,p) {
-    let token = checkLogin();
     showLoad()
     if (!o) {o = 2;}
     if (!p) {p = 1;}
@@ -407,7 +394,7 @@ function token_file(url,data,fun,o,p) {
         contentType: false,
         //再次添加头部信息
         beforeSend: function(request) {
-            requestToken(request,token);
+            // requestToken(request,token);
         },
         success:function (data) {
             if (data.status === -1) {

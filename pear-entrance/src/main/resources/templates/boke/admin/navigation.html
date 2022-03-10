@@ -13,7 +13,9 @@
     <script src="/js/jquery-3.8.min.js"></script>
     <!-- Layui -->
     <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
-    <script th:src="@{/common/layui/layui.js}"></script>
+<!--    <script th:src="@{/common/layui/layui.js}"></script>-->
+    <script th:src="@{/component/layui/layui.js}"></script>
+    <script th:src="@{/component/pear/pear.js}"></script>
     <script th:inline="javascript">
         //项目根路径
         // ctx = /*[[@{/}]]*/'';
@@ -96,11 +98,22 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">显示</label>
+            <label class="layui-form-label">是否显示</label>
             <div class="layui-input-block">
                 <select class="layui-select" name="navShow" id="navShow">
-                    <option value="1">显示</option>
-                    <option value="0">隐藏</option>
+                    <option value="3">登陆前后都显示</option>
+                    <option value="1">登陆前显示</option>
+                    <option value="1">管理员显示</option>
+                    <option value="0">登陆后显示</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否禁用</label>
+            <div class="layui-input-block">
+                <select class="layui-select" name="authorization">
+                    <option value="1">启用</option>
+                    <option value="0">禁用</option>
                 </select>
             </div>
         </div>
@@ -119,6 +132,14 @@
         <button class="layui-btn" onclick="closelayer()">取消</button>
     </div>
 </div>
+<!--<script id="auth-enable" type="text/html">
+    <input type="checkbox" name="authorization" value="{{d.navId}}" lay-skin="switch" lay-text="是|否"
+           lay-filter="auth-enable" {{ d.authorization== 1 ? 'checked' : '' }}>
+</script>
+<script id="show-enable" type="text/html">
+    <input type="checkbox" name="navShow" value="{{d.navId}}" lay-skin="switch" lay-text="启用|禁用"
+           lay-filter="show-enable" {{ d.navShow== true ? 'checked' : '' }}>
+</script>-->
 </body>
 <script>
     
@@ -128,15 +149,17 @@
     let navTable;
     let navlist_url = '/admin/navigation/page';
     let navAddOrUpdate = '/admin/navigation/upOrAdd';
-    layui.use('table', function () {
+    layui.use(['table', 'form', 'jquery', 'popup'], function () {
         let table = layui.table;
+        let form = layui.form;
+        let popup = layui.popup;
         navTable = table.render({
             elem: '#navListTable'
             ,url: navlist_url
             ,toolbar: '#headerTool'
             ,cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'}
+                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'navId', width:60, title: 'ID', sort: true}
                     ,{field:'navTitle', width:120, title: '标题'}
                     ,{field:'navUrl', width:200, title: '地址'}
@@ -145,7 +168,8 @@
                     ,{field:'target', width:150, title: '弹出'}
                     ,{field:'idStr', width:100, title: 'iD值'}
                     ,{field:'htmlStr', width:120, title: 'HTML'}
-                    ,{field:'navShow', width:120, title: '显示'}
+                    ,{field:'authorization', width:120, title: '验证', templet: '#auth-enable'}
+                    ,{field:'navShow', width:120, title: '显示', templet: '#show-enable'}
                     ,{field:'caozuo',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
                 ]
             ]
@@ -167,6 +191,54 @@
                     reload();
                     break;
             }
+        });
+        form.on('switch(auth-enable)', function (obj) {
+            let operate;
+            if (obj.elem.checked) {
+                operate = "enable";
+            } else {
+                operate = "disable";
+            }
+            let loading = layer.load();
+            $.ajax({
+                url: '/system/power/' + operate,
+                data: JSON.stringify({powerId: this.value}),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'put',
+                success: function (result) {
+                    layer.close(loading);
+                    if (result.success) {
+                        popup.success(result.msg);
+                    } else {
+                        popup.failure(result.msg);
+                    }
+                }
+            })
+        });
+        form.on('switch(show-enable)', function (obj) {
+            let operate;
+            if (obj.elem.checked) {
+                operate = "enable";
+            } else {
+                operate = "disable";
+            }
+            let loading = layer.load();
+            $.ajax({
+                url: '/system/power/' + operate,
+                data: JSON.stringify({powerId: this.value}),
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'put',
+                success: function (result) {
+                    layer.close(loading);
+                    if (result.success) {
+                        popup.success(result.msg);
+                    } else {
+                        popup.failure(result.msg);
+                    }
+                }
+            })
         });
 
         //监听行工具事件

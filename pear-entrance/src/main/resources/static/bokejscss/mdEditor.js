@@ -83,7 +83,6 @@ function initPasteDragImg(Editor){
 var maxLen = 5 * 1024 * 1024;// M
 var minLen = 0;
 function uploadImg(file,Editor){
-    let token = checkLogin();
     let formData = new FormData();
     let fileName=new Date().getTime()+"."+file.name.split(".").pop();
     // console.log("文件大小"+file.size)
@@ -102,8 +101,8 @@ function uploadImg(file,Editor){
         dataType: 'json',
         //再次添加头部信息
         beforeSend: function(request) {
-            showLoad()
-            requestToken(request,token);
+            // showLoad()
+            // requestToken(request,token);
         },
         success: function (msg) {
             var success=msg['success'];
