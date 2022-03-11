@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class QueryUserVo extends PageVo{
     
-    private String userName;
+    private String username;
     
     private Integer deleteState;
     

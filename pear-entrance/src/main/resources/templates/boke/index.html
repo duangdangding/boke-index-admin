@@ -60,7 +60,7 @@
                         <div class="postTitle">
                             <span class="titleTop" style="white-space: nowrap;" th:text="${bok.topOrder == 1 ? '[置顶]' : ''}"></span>
                             <a class="postTitle2 vertical-middle" th:text="'['+${bok.cateName}+']'" th:href="@{'/?navTitle=分类：' + ${bok.cateName} + '&cateId=' + ${bok.cateId}}" ></a>
-                            <a class="postTitle3 vertical-middle" th:id="'bok_url' + ${bokStat.index}" th:href="@{'/boke/'+${bok.bokeId}}" target="_blank">
+                            <a class="postTitle3 vertical-middle" th:id="'bok_url' + ${bokStat.index}" th:href="@{'/bokexq/'+${bok.bokeId}}" target="_blank">
                                 <span th:text="${bok.title}">标题</span>
                             </a>
                         </div>

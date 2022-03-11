@@ -28,7 +28,7 @@ public class Replys implements Serializable {
     private String replyIp;
     
     @TableField(exist = false)
-    private String userName;
+    private String username;
     
     @TableField(exist = false)
     private String avatar;

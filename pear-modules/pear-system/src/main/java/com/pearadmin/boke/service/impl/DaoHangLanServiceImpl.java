@@ -100,7 +100,7 @@ public class DaoHangLanServiceImpl extends ServiceImpl<DaoHangLanMapper, Navigat
             navDtos = JSONUtil.toList(redisUtil.get(nav).toString(),NavDto.class);
         } else {
             QueryWrapper<Navigation> wrapper = new QueryWrapper<>();
-            wrapper.eq("nav_show",0);
+            wrapper.eq("nav_show",1);
             if (sysUser == null) {
                 wrapper.eq("authorization",0);
             } else {
@@ -137,7 +137,7 @@ public class DaoHangLanServiceImpl extends ServiceImpl<DaoHangLanMapper, Navigat
             NavDto dto = new NavDto();
             dto.setName(nav.getNavTitle());
             dto.setLink(nav.getNavUrl());
-            dto.setIstarget(nav.getTarget());
+            dto.setIstarget(nav.getTarget() == 1);
             dto.setId_str(nav.getIdStr());
             dto.setHtml_str(nav.getHtmlStr());
             dtos.add(dto);

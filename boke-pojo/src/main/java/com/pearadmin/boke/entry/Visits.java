@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -15,7 +16,8 @@ public class Visits implements Serializable {
     private Integer visitId;
     
     private String visitIp;
-    
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp visitTime;
     
     private long visitCount;
@@ -23,7 +25,7 @@ public class Visits implements Serializable {
     private Long userId;
     
     @TableField(exist = false)
-    private String userName;
+    private String username;
     
     private String visitClient;
     

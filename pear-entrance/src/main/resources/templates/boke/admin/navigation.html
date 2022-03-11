@@ -36,7 +36,7 @@
             <div class="menuBox">
             </div>
             <div class="layui-card">
-                <div class="layui-card-header">排序：asc，弹出：0在本页面1新窗口，显示：0显示1不显示</div>
+<!--                <div class="layui-card-header">排序：asc，弹出：0在本页面1新窗口，显示：0显示1不显示</div>-->
                 <div class="layui-card-body">
                     <!-- 表格主体 -->
                     <table class="layui-hide" id="navListTable" lay-filter="navListTable"></table>
@@ -48,14 +48,14 @@
                         </div>
                     </script>
                     <script type="text/html" id="rowTool">
-                        <a sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-danger layui-btn-xs" id="navBtn{{d.friendId}}"
+                        <!--<a sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-danger layui-btn-xs" id="navBtn{{d.friendId}}"
                            lay-event="deleteState">
                             {{#  if(d.navShow == 1){ }}
                             启用
                             {{#  } else { }}
                             禁用
                             {{#  } }}
-                        </a>
+                        </a>-->
                         <a sec:authorize="hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="update">修改</a>
                     </script>
                 </div>
@@ -98,12 +98,12 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">是否显示</label>
+            <label class="layui-form-label">显示方式</label>
             <div class="layui-input-block">
-                <select class="layui-select" name="navShow" id="navShow">
+                <select class="layui-select" name="authorization" id="navShow">
                     <option value="3">登陆前后都显示</option>
                     <option value="1">登陆前显示</option>
-                    <option value="1">管理员显示</option>
+                    <option value="4">管理员显示</option>
                     <option value="0">登陆后显示</option>
                 </select>
             </div>
@@ -111,7 +111,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">是否禁用</label>
             <div class="layui-input-block">
-                <select class="layui-select" name="authorization">
+                <select class="layui-select" name="navShow">
                     <option value="1">启用</option>
                     <option value="0">禁用</option>
                 </select>
@@ -135,13 +135,37 @@
 <!--<script id="auth-enable" type="text/html">
     <input type="checkbox" name="authorization" value="{{d.navId}}" lay-skin="switch" lay-text="是|否"
            lay-filter="auth-enable" {{ d.authorization== 1 ? 'checked' : '' }}>
-</script>
+</script>-->
 <script id="show-enable" type="text/html">
     <input type="checkbox" name="navShow" value="{{d.navId}}" lay-skin="switch" lay-text="启用|禁用"
-           lay-filter="show-enable" {{ d.navShow== true ? 'checked' : '' }}>
-</script>-->
+           lay-filter="show-enable" {{ d.navShow == 1 ? 'checked' : '' }}>
+</script>
 </body>
 <script>
+    
+    function showType(t) {
+        let s = "";
+        switch (t) {
+            case 0:
+                s = "登陆后显示";
+                break;
+            case 1:
+                s = "登陆前显示";
+                break;
+            case 3:
+                s = "登陆前后都显示";
+                break;
+            case 4:
+                s = "管理员显示";
+                break;
+            default:
+                break;
+        }
+        return s;
+    }
+    function tanNewPage(t) {
+        return t === 1 ? "新窗口" : "本页面";
+    }
     
     $(function () {
     })
@@ -152,7 +176,7 @@
     layui.use(['table', 'form', 'jquery', 'popup'], function () {
         let table = layui.table;
         let form = layui.form;
-        let popup = layui.popup;
+        // let popup = layui.popup;
         navTable = table.render({
             elem: '#navListTable'
             ,url: navlist_url
@@ -164,12 +188,12 @@
                     ,{field:'navTitle', width:120, title: '标题'}
                     ,{field:'navUrl', width:200, title: '地址'}
                     ,{field:'orderNum', width:60, title: '排序'}
-                    ,{field:'createTime', width:160, title: '创建时间'}
-                    ,{field:'target', width:150, title: '弹出'}
+                    ,{field:'target', width:150, title: '弹出',templet: function (d) { return tanNewPage(d.target) }}
                     ,{field:'idStr', width:100, title: 'iD值'}
                     ,{field:'htmlStr', width:120, title: 'HTML'}
-                    ,{field:'authorization', width:120, title: '验证', templet: '#auth-enable'}
+                    ,{field:'authorization', width:120, title: '显示方式', templet: function (d) { return showType(d.authorization) }}
                     ,{field:'navShow', width:120, title: '显示', templet: '#show-enable'}
+                    ,{field:'createTime', width:160, title: '创建时间'}
                     ,{field:'caozuo',width:215, align:'center', fixed: 'right', toolbar: '#rowTool'}
                 ]
             ]
@@ -192,60 +216,25 @@
                     break;
             }
         });
-        form.on('switch(auth-enable)', function (obj) {
-            let operate;
-            if (obj.elem.checked) {
-                operate = "enable";
-            } else {
-                operate = "disable";
-            }
-            let loading = layer.load();
-            $.ajax({
-                url: '/system/power/' + operate,
-                data: JSON.stringify({powerId: this.value}),
-                dataType: 'json',
-                contentType: 'application/json',
-                type: 'put',
-                success: function (result) {
-                    layer.close(loading);
-                    if (result.success) {
-                        popup.success(result.msg);
-                    } else {
-                        popup.failure(result.msg);
-                    }
-                }
-            })
-        });
         form.on('switch(show-enable)', function (obj) {
             let operate;
             if (obj.elem.checked) {
-                operate = "enable";
+                operate = 1;
             } else {
-                operate = "disable";
+                operate = 0;
             }
-            let loading = layer.load();
-            $.ajax({
-                url: '/system/power/' + operate,
-                data: JSON.stringify({powerId: this.value}),
-                dataType: 'json',
-                contentType: 'application/json',
-                type: 'put',
-                success: function (result) {
-                    layer.close(loading);
-                    if (result.success) {
-                        popup.success(result.msg);
-                    } else {
-                        popup.failure(result.msg);
-                    }
-                }
+            param_sucfun_get('/admin/navigation/setShowStatus',{navId:this.value,navShow:operate},function () {
+                /*obj.update({
+                    navShow: operate,
+                });*/
             })
         });
 
         //监听行工具事件
         table.on('tool(navListTable)', function(obj){
             let b = obj.data;
-            let navId = b.navId;
-            if(obj.event === 'deleteState'){
+            // let navId = b.navId;
+            /*if(obj.event === 'deleteState'){
                 layer.confirm('确定要禁用此导航吗？', function(index){
                     let state = b.navShow;
                     let pstate;
@@ -265,7 +254,7 @@
                         layer.close(index);
                     })
                 });
-            } else if (obj.event === 'update') {
+            } else*/ if (obj.event === 'update') {
                 // edit = 2;
                 $("#navId").val(b.navId);
                 $("#navTitle").val(b.navTitle);

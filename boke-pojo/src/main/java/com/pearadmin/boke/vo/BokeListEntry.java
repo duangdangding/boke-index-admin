@@ -36,7 +36,7 @@ public class BokeListEntry implements java.io.Serializable {
 
     private Long userId;
     
-    private String userName;
+    private String username;
 
     private Integer likeNum;
 

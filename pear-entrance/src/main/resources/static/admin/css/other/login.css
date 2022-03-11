@@ -50,13 +50,14 @@
 .title {
     font-size: 30px !important;
     font-weight: 550 !important;
-    margin-left: 20px !important;
+    /*margin-left: 20px !important;*/
     color: #5FB878 !important;
-    display: inline-block !important;
+    text-align: center;
+    /*display: inline-block !important;*/
     height: 60px !important;
     line-height: 60px !important;
-    margin-top: 10px !important;
-    position: absolute !important;
+    /*margin-top: 10px !important;*/
+    /*position: absolute !important;*/
 }
 
 .desc {

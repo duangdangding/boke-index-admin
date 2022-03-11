@@ -3,6 +3,7 @@ package com.pearadmin.boke.entry;
 import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -26,6 +27,7 @@ public class FileRecode {
     private Integer fileOwnId;
     private String localPath;
     private long fileSize;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
     private String oosKey;
 }

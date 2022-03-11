@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -164,11 +163,7 @@ public class BokesCtr extends BaseCtr {
     }
 
     @RequestMapping("/t/editor/{bokeId}")
-    // if ([[${#authorization.expression('hasRole(''ROLE_ADMIN'')')}]]) {
-    // if ([[${#authorization.expression('hasPermission(''/t/boke/editor/{id}'',''sys:boke:editor'')')}]]) {
-    //     $('#supplyTable').bootstrapTable('hideColumn', 'supplierName');
-    // }
-    @PreAuthorize("hasPermission('/t/boke/editor','sys:boke:editor')")
+    // @PreAuthorize("hasPermission('/t/boke/editor','sys:boke:editor')")
     public ModelAndView gotoEditor(@PathVariable("bokeId") Integer bokeId) {
         SysUser sysUser = SecurityUtil.currentUser();
         if (sysUser == null) {
@@ -178,26 +173,30 @@ public class BokesCtr extends BaseCtr {
         if (boke == null) {
             return to400View();
         }
-        String model = "login";
-        Integer type = boke.getEditorType();
-        if (null != type) {
-            model = BookType.typeMap.get(type);
-        }
-
-        if (boke.getDeleteState() == 0) {
-            return to400View("该帖子已被删除~");
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        if (boke.getBokeZip() == 1) {
-            boke.setBokeCont(MyStringUtil.uncompress(boke.getBokeCont()));
-            if (type == 2) {
-                boke.setMdContent(MyStringUtil.uncompress(boke.getMdContent()));
+        if (sysUser.getUserId().equals(boke.getUserId()) || sysUser.getRoles().contains("admin")) {
+            String model = "login";
+            Integer type = boke.getEditorType();
+            if (null != type) {
+                model = BookType.typeMap.get(type);
             }
+
+            if (boke.getDeleteState() == 0) {
+                return to400View("该帖子已被删除~");
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            if (boke.getBokeZip() == 1) {
+                boke.setBokeCont(MyStringUtil.uncompress(boke.getBokeCont()));
+                if (type == 2) {
+                    boke.setMdContent(MyStringUtil.uncompress(boke.getMdContent()));
+                }
+            }
+            map.put("boke", boke);
+            map.put("bokeId", boke.getBokeId());
+            return getView(model, map);
+        } else {
+            return to403View();
         }
-        map.put("boke", boke);
-        map.put("bokeId", boke.getBokeId());
-        return getView(model, map);
     }
 
     @PostMapping("/t/addBoke")

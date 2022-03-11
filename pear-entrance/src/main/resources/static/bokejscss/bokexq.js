@@ -448,7 +448,7 @@ function openReplyBox(id,r_b_i) {
         fixed:false,//即鼠标滚动时，层是否固定在可视区域。如果不想，设置fixed: false即可
         area:[width + 'px','320px'],
         // offset: y + 'px',
-        offset: ['20%',left],
+        offset: ['0',left],
         // offset: '20%',
         // area: [img.width + 'px', img.height+'px'],
         anim:0,//动画  -1不显示

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.mapper.boke.PhotosMapper;
 import com.pearadmin.boke.entry.Photos;
 import com.pearadmin.boke.service.PhotosService;
+import com.pearadmin.boke.utils.contains.Constants;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +27,7 @@ public class PhotosServiceImpl extends ServiceImpl<PhotosMapper, Photos> impleme
         wrapper.eq("photo_type",photoType);
         wrapper.orderByDesc("create_time");
         wrapper.eq("delete_state",1);
-        Page<Photos> page = new Page<>(pageNumber,60);
+        Page<Photos> page = new Page<>(pageNumber, Constants.PageSize.SIZE30);
         return photosMapper.selectPage(page,wrapper);
     }
 

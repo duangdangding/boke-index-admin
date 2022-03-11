@@ -2,7 +2,6 @@ package com.pearadmin.boke.ctr.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,16 +35,6 @@ public class DaoHangLanCtr extends BaseCtr {
         SysUser sysUser = SecurityUtil.currentUser();
         NavAndIcon navAndIcon = daoHangLanService.indexNav(sysUser);
         return success(navAndIcon);
-    }
-
-    /**
-     * 获取用户的标题栏
-     * @param userId
-     * @return
-     */
-    @GetMapping("/navicon/all/{userId}")
-    public NavAndIcon getInfo(@PathVariable("userId") Integer userId) {
-        return daoHangLanService.getInfo(userId);
     }
 
     /**

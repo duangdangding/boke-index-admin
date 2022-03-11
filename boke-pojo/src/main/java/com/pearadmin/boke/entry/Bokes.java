@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -28,10 +29,12 @@ public class Bokes implements java.io.Serializable {
 
     private String bokeCont;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 
     private Integer cateId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
     private Long userId;

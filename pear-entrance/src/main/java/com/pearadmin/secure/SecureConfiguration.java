@@ -171,6 +171,7 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationSuccessHandler(rememberMeAuthenticationSuccessHandler)
                 .tokenRepository(securityUserTokenService)
                 .key(securityProperty.getRememberKey())
+                .userDetailsService(securityUserDetailsService)
                 .and()
                 .sessionManagement()
                 .sessionFixation()

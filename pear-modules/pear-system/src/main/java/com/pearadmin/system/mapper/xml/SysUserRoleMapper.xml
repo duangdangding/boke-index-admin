@@ -18,7 +18,7 @@
     </insert>
 
     <!-- 根据 Id 删除用户数据 -->
-    <delete id="deleteByUserId" parameterType="string">
+    <delete id="deleteByUserId" parameterType="long">
         delete
         from sys_user_role
         where user_id = #{userId}

@@ -37,8 +37,8 @@ public class Navigation {
     @ApiModelProperty(value = "排序")
     private Integer orderNum;
         
-    @ApiModelProperty(value = "0在本页面1新窗口")
-    private Boolean target;
+    @ApiModelProperty(value = "0不弹出1弹出新窗口")
+    private Integer target;
         
     @ApiModelProperty(value = "parent_id")
     private Integer parentId;
@@ -49,8 +49,8 @@ public class Navigation {
     @ApiModelProperty(value = "html_str")
     private String htmlStr;
         
-    @ApiModelProperty(value = "0显示1不显示")
-    private Boolean navShow;
+    @ApiModelProperty(value = "0不显示1显示")
+    private Integer navShow;
         
     @ApiModelProperty(value = "登陆验证 0不登陆显示1登陆显示3都显示4管理员才显示")
     private Integer authorization;

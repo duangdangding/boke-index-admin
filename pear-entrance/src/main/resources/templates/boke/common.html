@@ -327,12 +327,12 @@
             if (isNull_O(userId)) {
                 userId = 0;
             }
+            getInfo();
             // 记录新随笔出现的索引 导航栏
             var suibi_index;
             $.ajax({
                 url:"/indexNav",
-                // url:"/navicon/all/" + userId,
-                // async:false,
+                async:false,
                 success:function (data) {
                     // navs = data;
                     let cus = data.result.custom;
@@ -344,6 +344,7 @@
                     }
                     miluframe(data.result)
                     /* 右边栏头像 */
+                    
                     /*let token = get_item(lo_token);
                     if (isNull_O(token)) {
                         // $("#navList li").eq(suibi_index).hide();
@@ -373,17 +374,14 @@
                         })
                         $(document).mouseover(function (e) {
                             let target = $(e.target);
-                            if (target.closest("#boke_type").length != 0) return;
+                            if (target.closest("#boke_type").length !== 0) return;
                             $(".ed_type").hide();
                         })
                     }
                     // 点击登录打开登录窗口
                     if(!$('#user_login_a').is(':hidden')) {
                         $("#user_login_a").click(function () {
-                            set_item("t_login",1);
-                            let w;
-                            if (jQuery.browser.mobile) {w = '100%'}
-                            openHtmlWin_fun3("登录","/login",w);
+                            window.location.href = "/login";
                         })
                     }
                     
@@ -404,10 +402,6 @@
                     }
                 }
             })
-            /* 未登录不显示新随笔 */
-            if(!userId) {
-                $("#boke_type").hide();
-            }
         </script>
         <!-- 以下内容是否添加你随意 -->
         <!-- 发送邮件 -->

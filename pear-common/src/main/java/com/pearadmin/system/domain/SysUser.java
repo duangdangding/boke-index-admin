@@ -12,8 +12,10 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pearadmin.common.web.base.BaseDomain;
 
 import lombok.Getter;
@@ -41,7 +43,7 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
     /**
      * 编号
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long userId;
 
     /**
@@ -78,8 +80,10 @@ public class SysUser extends BaseDomain implements UserDetails, CredentialsConta
 
     private String loginIp;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp registerTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp loginTime;
     private String loginType;
 

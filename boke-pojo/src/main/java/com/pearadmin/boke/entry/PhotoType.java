@@ -1,9 +1,11 @@
 package com.pearadmin.boke.entry;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-
 import java.sql.Timestamp;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Data;
 
 /**
  * @Author lushao
@@ -20,7 +22,8 @@ public class PhotoType {
     private String typeName;
     
     private String descript;
-    
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
     
     private String folder;

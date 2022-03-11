@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,10 +44,13 @@ public class UsersCtr extends BaseCtr {
     @Autowired
     private RedisUtil redisUtil;
     
-    @GetMapping("/userinfo/{userId}")
-    public ResultDto<SysUser> getUserByid(@PathVariable("userId") Long userId) {
-        SysUser byId = sysUserService.getById(userId);
-        return success(byId);
+    @GetMapping("/userinfo")
+    public ResultDto<SysUser> getUserByid() {
+        SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
+            sysUser = sysUserService.getById(0L);
+        }
+        return success(sysUser);
     }
     
     @PostMapping("/userRegis")

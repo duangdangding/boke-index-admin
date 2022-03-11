@@ -40,6 +40,7 @@
         .w-e-text,.w-e-text-container {
             border-radius: 0 0 10px 10px;
         }
+        .u_btn {color: #d1e5ef !important;}
     </style>
     <!-- Layui -->
     <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
@@ -62,7 +63,7 @@
                         <span class="b_c_s" th:vlt="${bokeId}"></span>
                         <span id="setTOP" style="font-size: 12px;font-weight: normal"><a style="display:none;" class="to_top_e"></a></span>
                         <div id="BlogPostCategory">
-                            <span th:text="${boke.userName}">苏喂苏喂喔</span>
+                            <span th:text="${boke.username}">苏喂苏喂喔</span>
                             <span th:text="${boke.createTime}"></span> | <span><img th:src="@{/imgs/ll_blue.gif}">(<span id="b_ll" ></span>) </span>
                             <span class="like_img"><img style="cursor: pointer" onclick="setLikeNum()" th:src="@{/imgs/fax.gif}">(<span id="b_ln" ></span>) </span>
                             <span><img th:src="@{/imgs/fx.gif}">(<span id="b_sn"></span>)</span>
@@ -111,8 +112,8 @@
                             <tbody>
                             <tr>
                                 <td class="cm_td_img">
-                                    <img width="150" style="border-radius: 5px;border: 5px solid white" th:alt="${comment.userName == null ? '无名氏':comment.userName}" th:src="${comment.avatar == null ? '/imgs/face_2.jpg' : comment.avatar}" />
-                                    <p style="padding: 10px 0;text-align: center" th:text="${comment.userName == null ? '无名氏':comment.userName}"></p>
+                                    <img width="150" style="border-radius: 5px;border: 5px solid white" th:alt="${comment.username == null ? '无名氏':comment.username}" th:src="${comment.avatar == null ? '/imgs/face_2.jpg' : comment.avatar}" />
+                                    <p style="padding: 10px 0;text-align: center" th:text="${comment.username == null ? '无名氏':comment.username}"></p>
                                 </td>
                                 <td class="cm_td_cont">
                                     <div class="comm_title">发表于：<span th:text="${comment.commTime}">2021.01.11: 11:11:11</span></div>
@@ -120,7 +121,7 @@
                                     <ul th:id="replyUl+(${status.index} + 1)">
                                         <li th:if="${comment.replys}" th:each="reply,replyStatus : ${comment.replys}">
                                             <div class="rep_count">
-                                                <img width="40" height="40" th:alt="${reply.userName == null ? '无名氏':reply.userName}" alt="" th:src="${reply.avatar == null ? '/imgs/face_2.jpg' : reply.avatar}" />
+                                                <img width="40" height="40" th:alt="${reply.username == null ? '无名氏':reply.username}" alt="" th:src="${reply.avatar == null ? '/imgs/face_2.jpg' : reply.avatar}" />
                                                 <div class="cm_td_rp_sp">
                                                     <span>回复：</span><span th:text="${reply.replyTime}">2021.01.11: 11:11:11</span>
                                                 </div>

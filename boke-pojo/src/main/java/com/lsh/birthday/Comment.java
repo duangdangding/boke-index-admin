@@ -5,11 +5,13 @@ import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Comment implements Serializable {
     @TableId
     private Long commentId;
     private String context;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createtime;
     private int userId;
     @TableField(exist = false)

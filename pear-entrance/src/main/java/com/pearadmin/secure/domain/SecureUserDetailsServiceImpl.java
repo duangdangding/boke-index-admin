@@ -42,7 +42,7 @@ public class SecureUserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Account Not Found");
         }
         List<SysRole> rolesByUserId = sysRoleMapper.getRolesByUserId(sysUser.getUserId());
-        List<String> collect = rolesByUserId.stream().map(SysRole::getRoleName).collect(Collectors.toList());
+        List<String> collect = rolesByUserId.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
         sysUser.setRoles(new HashSet<>(collect));
         List<SysPower> powerList = sysPowerMapper.selectByUsername(username);
         sysUser.setPowerList(powerList);

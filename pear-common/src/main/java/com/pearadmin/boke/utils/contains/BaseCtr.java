@@ -78,6 +78,9 @@ public abstract class BaseCtr {
     protected ModelAndView to400View() {
         return getView("error/404", null);
     }
+    protected ModelAndView to403View() {
+        return getView("error/403", null);
+    }
 
     protected ModelAndView to500View() {
         return getView("error/500", null);

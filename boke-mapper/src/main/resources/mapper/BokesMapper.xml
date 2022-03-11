@@ -6,7 +6,7 @@
     <select id="getBokes" resultType="com.pearadmin.boke.vo.BokeListEntry">
         select b.boke_id,b.title,date_format(b.create_time, '%Y-%m-%d %H:%i:%s') createTime,b.cate_id,b.update_time,b.user_id,
         b.introduction,b.create_date,bt.top_order topOrder,bt.top_time,b.share_num,b.label_names,b.boke_examine,
-        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name userName from bokes b
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name username from bokes b
         
         left join categorys c on c.cate_id = b.cate_id
         left join users u on u.user_id = b.user_id
@@ -40,7 +40,7 @@
         select b.boke_id,b.title,date_format(b.create_time, '%Y-%m-%d %H:%i:%s') createTime,b.cate_id,b.update_time,b.user_id,
         b.introduction,b.create_date,bt.top_order topOrder,bt.top_time,b.share_num,b.label_names,b.boke_zip bokeZip,b.delete_state deleteState,
         b.boke_examine bokeExamine,
-        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name userName from bokes b
+        b.like_num,b.reply_num,b.look_num,b.label_id,b.editor_type,b.pri_pub,c.cate_name cateName,u.user_name username from bokes b
         left join categorys c on c.cate_id = b.cate_id
         left join users u on u.user_id = b.user_id
         left join boke_top bt on bt.boke_id = b.boke_id
@@ -72,8 +72,8 @@
             <if test="vo.title != null and vo.title != ''">
                 and b.title like concat('%',#{vo.title},'%')
             </if>
-            <if test="vo.userName != null and vo.userName != ''">
-                and u.user_name like concat('%',#{vo.userName},'%')
+            <if test="vo.username != null and vo.username != ''">
+                and u.user_name like concat('%',#{vo.username},'%')
             </if>
         </where>
         order by b.update_time desc

@@ -122,6 +122,7 @@ public interface Constants {
         // 10条
         Integer SIZE10 = 10;
         Integer SIZE50 = 50;
+        Integer SIZE30 = 30;
     }
 
 //    博客表

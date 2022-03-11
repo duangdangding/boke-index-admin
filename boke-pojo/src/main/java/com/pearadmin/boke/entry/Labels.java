@@ -1,8 +1,9 @@
 package com.pearadmin.boke.entry;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-
 import java.sql.Timestamp;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -26,6 +27,7 @@ public class Labels implements java.io.Serializable {
 
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
     
     private Integer deleteState;

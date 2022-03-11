@@ -124,9 +124,13 @@ code{ font-family: "idea mono", serif !important;}
     height: 10px;
 }
 
-.postDesc img,#BlogPostCategory img {
+.postDesc img {
     width: 20px;
     margin-bottom: -5px;
+}
+#BlogPostCategory img {
+    width: 20px;
+    margin-bottom: 3px;
 }
 span.like_img:hover {
     color: #bbdcef;

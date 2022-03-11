@@ -64,7 +64,7 @@
                 [
                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'userId', width:60, title: 'ID', sort: true}
-                    ,{field:'userName', width:140, title: '昵称'}
+                    ,{field:'username', width:140, title: '昵称'}
                     ,{field:'userIp', width:140, title: '登陆IP'}
                     ,{field:'loginTime', width:160, title: '登陆时间'}
                     ,{field:'loginSum', width:100, title: '登陆次数'}
@@ -127,7 +127,7 @@
         let userEmail = $("#userEmail").val();
         
         let where = {
-            userName:userName,
+            username:userName,
             deleteState:deleteState,
             emailBind:emailBind,
             userEmail:userEmail

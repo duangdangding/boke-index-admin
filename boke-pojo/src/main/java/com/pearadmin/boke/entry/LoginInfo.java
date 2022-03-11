@@ -15,7 +15,7 @@ public class LoginInfo {
 
     private Integer userId;
 
-    private String userName;
+    private String username;
 
     private String avatar;
 

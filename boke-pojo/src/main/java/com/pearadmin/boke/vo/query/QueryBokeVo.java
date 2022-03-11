@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class QueryBokeVo extends PageVo{
     
-    private String userName;
+    private String username;
     private String title;
     
     // 博客类型

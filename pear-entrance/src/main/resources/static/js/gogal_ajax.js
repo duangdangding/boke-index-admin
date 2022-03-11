@@ -128,13 +128,9 @@ function logout() {
 /**
  * 获取用户信息
  */
-function getInfo(suibi_index) {
-    let userId = get_item(lo_userId);
-    if (isNull_O(userId)) {
-        userId = 0;
-    }
+function getInfo() {
     $.ajax({
-        url:"/userinfo/" + userId,
+        url:"/userinfo",
         async:false,
         success:function (data) {
             let user = data.result;
@@ -144,7 +140,7 @@ function getInfo(suibi_index) {
             // $(".QQ_c a").attr("title",user.qqUrl);
             $(".csdn_c a").attr("href",user.csdnUrl);
             $(".bili_c a").attr("href",user.biliUrl);
-            $("#uuuuu").text(user.userName)
+            $("#uuuuu").text(user.username)
             
             $("#user_login_a").hide();
         }
