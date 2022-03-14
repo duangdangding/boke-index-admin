@@ -241,7 +241,7 @@
             $("#ranNameBox").html(html);
         })
         // 回显歌曲列表
-        noParam_sucfun_get('/song/0',function (data) {
+        noParam_sucfun_get('/song/listen',function (data) {
             layui.use(['element', 'form', 'layer', 'table'], function () {
                 var elemet = layui.element, form = layui.form, table1 = layui.table, table2 = layui.table;
                 form.val("form_hx",data)

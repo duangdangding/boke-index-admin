@@ -3,6 +3,7 @@ function createPbtn() {
     loadshuiguo();
     cur_page = parseInt($("#ref_cur").val().trim());
     all_page = parseInt($("#ref_all").val().trim());
+    // 如果没有结果显示
     if (all_page === 0) {
         let html = '<div class="day"><div class="postTitle" style="border: 0">没有搜索到数据~';
         let seachTitle = $("#seachTitle").text();
@@ -16,16 +17,19 @@ function createPbtn() {
     // console.log(all_page)
     let ul = $(".page_li");
     ul.empty();
+    // 显示按钮数 +1
     let all_show = 6;
-
+    // 最后一个按钮页数
     let end = cur_page + 2;
     if (end > all_page) {
         end = all_page;
     }
+    // 第一个按钮页数
     let star = cur_page - 2;
     if (end - star <= 3) {
         star = all_page - 4;
     }
+    // 
     if (cur_page > 5 && end <= all_page) {
         for (let i = star; i < end + 1; i++) {
             if (cur_page === i) {
@@ -81,6 +85,7 @@ function loadPage(url) {
     $('#bolg_contents').load(url,function (response,status) {
         if (status === "success") {
             createPbtn();
+            // 滚动至上面 
             $("body,html").animate({scrollTop: $("#header").height() - 50}, 600);
         } else {
             show_l_m("服务器错误~",0);

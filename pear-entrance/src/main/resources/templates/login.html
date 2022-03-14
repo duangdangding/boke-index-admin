@@ -3,6 +3,14 @@
 <head>
     <th:block th:include="include :: header('登录')"/>
     <link rel="stylesheet" th:href="@{/admin/css/other/login.css}"/>
+    <style>
+        @media screen and (max-device-width:375px) {
+            .layui-form {margin-top: 0 !important;}
+            .codeImage {clear: both}
+        }
+        .layui-form button {margin: 5px 0}
+        #myyzm {width: 170px !important;}
+    </style>
 </head>
 <!-- 代 码 结 构 -->
 <body background="admin/images/login.svg">

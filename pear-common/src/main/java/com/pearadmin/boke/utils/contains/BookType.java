@@ -11,8 +11,8 @@ import java.util.Map;
 
 public enum BookType {
 
-    WD(1, "wd"),
-    MD(2, "md"),
+    WD(1, "boke/wd"),
+    MD(2, "boke/md"),
 
     ;
     private Integer type;

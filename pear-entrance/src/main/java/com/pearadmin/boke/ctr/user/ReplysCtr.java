@@ -52,6 +52,8 @@ public class ReplysCtr extends BaseCtr {
 
     @PostMapping("/reply/to")
     public ResultDto<Object> toReplys(Replys reply, HttpServletRequest request) {
+        // SysUser sysUser = SecurityUtil.currentUser();
+        // reply.setUserId(sysUser != null ? sysUser.getUserId() : null);
         String html = reply.getReplyContent();
         String rep = html.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br/>","").replaceAll("&nbsp;","").trim();
         if (rep.length() <= 0) {
@@ -74,6 +76,8 @@ public class ReplysCtr extends BaseCtr {
         String ip = IPHelper.getIp(request);
         SysUser sysUser = SecurityUtil.currentUser();
         if (sysUser != null) {
+            reply.setUsername(sysUser.getUsername());
+            reply.setAvatar(sysUser.getAvatar());
             reply.setUserId(sysUser.getUserId());
         } else {
             String key = Constants.RedisKey.PL + ip;

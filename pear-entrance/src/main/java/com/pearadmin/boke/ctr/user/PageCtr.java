@@ -42,6 +42,7 @@ public class PageCtr {
     @RequestMapping({"/boke/wd"})
     // sec:authorize="hasPermission('/admin/boke/wd','sys:boke:wd')"
     @PreAuthorize("hasPermission('/admin/boke/wd','sys:boke:wd')")
+    // <ul class="ed_type"><li><a href="/boke/wd">富文本编辑器</a></li><li><a href="/boke/md">markdown编辑器</a></li></ul>
     public String toWDPage() {
         return "boke/wd";
     }

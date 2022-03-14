@@ -52,12 +52,12 @@ function createLabels() {
 }
 
 // 总访问量
-function getWebCount() {
+/*function getWebCount() {
     noParam_sucfun_get("/web/count",function (count) {
         $("#web_day").text(count.dayCount);
         $("#web_count").text(count.webCount);
     });
-}
+}*/
 
 var navTitle;
 

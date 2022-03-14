@@ -90,7 +90,7 @@ body,
 }
 
 .pear-admin .layui-logo {
-    width: 230px;
+    width: 220px;
     height: 59px;
     line-height: 59px;
     position: relative;
@@ -118,7 +118,7 @@ body,
 
 .pear-admin .layui-side {
     top: 0px;
-    width: 230px;
+    width: 220px;
     box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
     z-index: 9999;
 }
@@ -131,7 +131,7 @@ body,
 .pear-admin .layui-side-scroll {
     height: calc(100% - 60px) !important;
     background-color: #28333E;
-    width: 247px;
+    width: 220px;
 
 }
 

@@ -593,7 +593,7 @@ editor.create()
 
     function setSongData(s,i) {
         if (!i) {
-            createSongBox(s,get_item(lo_userId));
+            createSongBox(s);
         }
         $("#songNo").val(s.songNo);
         // $("#songTheme").val(s.songTheme);
@@ -604,7 +604,6 @@ editor.create()
     
     $(function () {
         showLoad();
-
         // let pathTypeArr = document.getElementsByName("tabs");
         let u_tabs = $(".tabBox_info");
         // 给每个radio 加点击事件

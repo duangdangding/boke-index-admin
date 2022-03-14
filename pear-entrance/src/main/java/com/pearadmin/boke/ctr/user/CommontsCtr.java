@@ -92,6 +92,8 @@ public class CommontsCtr extends BaseCtr {
                 redisUtil.set(key,1, DateUtil.getSeconds());
             }
         } else {
+            comments.setUsername(sysUser.getUsername());
+            comments.setAvatar(sysUser.getAvatar());
             comments.setUserId(sysUser.getUserId());
         }
         comments.setUserIp(ip);

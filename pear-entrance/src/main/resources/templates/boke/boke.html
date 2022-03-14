@@ -40,7 +40,7 @@
         .w-e-text,.w-e-text-container {
             border-radius: 0 0 10px 10px;
         }
-        .u_btn {color: #d1e5ef !important;}
+        .u_btn,.to_top_e {color: #d1e5ef !important;}
     </style>
     <!-- Layui -->
     <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
@@ -61,7 +61,12 @@
                             <span th:text="${boke.title}"></span>
                         </a>
                         <span class="b_c_s" th:vlt="${bokeId}"></span>
-                        <span id="setTOP" style="font-size: 12px;font-weight: normal"><a style="display:none;" class="to_top_e"></a></span>
+                        <span th:if="${#authentication.authenticated && #authentication.principal != null && #authentication.principal != 'anonymousUser'}" id="setTOP" style="font-size: 12px;font-weight: normal">
+                            <a style="display:none;" class="to_top_e"></a>
+                            <a class="to_top_e" th:if="${#authentication.principal.userId == boke.userId || #authentication.principal.username == 'admin'}"
+                               th:text="${boke.topOrder == 0 ? '[设置置顶]' : '[取消置顶]'}"
+                               th:onclick="setTop([[${boke.topOrder}]])">置顶</a>
+                        </span>
                         <div id="BlogPostCategory">
                             <span th:text="${boke.username}">苏喂苏喂喔</span>
                             <span th:text="${boke.createTime}"></span> | <span><img th:src="@{/imgs/ll_blue.gif}">(<span id="b_ll" ></span>) </span>
@@ -190,6 +195,13 @@ var testEditor;
 function pinglune(e) {
     if (e.ctrlKey && e.keyCode === 13){
         pinglun();
+    }
+}
+function setTop(d) {
+    if (d === 0) {
+        topAdd();
+    } else {
+        topCancel();
     }
 }
     

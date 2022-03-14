@@ -67,7 +67,7 @@ pear:
       - /index  # 开放首页接口
       - /page # 开放首页分页接口
       - /frant/list # 开放导航页列表
-      - /song/** # 用户歌曲
+      - /song/listen # 用户歌曲
       - /login/**  # 开放登录接口
       - /register # 注册页面
       - /userRegis # 用户点击注册
@@ -79,6 +79,8 @@ pear:
       - /label/labelPage # 标签列表页
       - /archive/get # 日期
       - /bokexq/* # 详情页
+      - /setLookup/* # 设置浏览量
+      - /setLikeNum/* # 设置点赞量
       - /label/get/**
       - /indexNav # 首页导航栏
       - /getCateCount # 获取分类数

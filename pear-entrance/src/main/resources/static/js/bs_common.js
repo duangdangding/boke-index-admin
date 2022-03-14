@@ -173,8 +173,8 @@ function clearSongBox() {
  * 动态创建songBox
  * @param res
  */
-function createSongBox(res,userId) {
-    set_item(songList + userId,JSON.stringify(res))
+function createSongBox(res) {
+    // set_item(songList + userId,JSON.stringify(res))
     // let type = res.songType;
     let autoplay = res.aotoPaly;
     let id = res.songNo;

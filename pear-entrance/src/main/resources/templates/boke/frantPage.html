@@ -106,6 +106,9 @@
         .headerTip {
             color: white;clear: both;text-align: center
         }
+        @media screen and (max-device-width:375px) {
+            .headerBtn a {padding: 0}
+        }
     </style>
     <link href="/Sortable-master/st/app.css" rel="stylesheet" type="text/css"/>
     <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />
@@ -136,6 +139,7 @@
             <div class="seachBox">
                 <select id="seachPlate" class="layui-select shadow_hover" style="text-align: center;border-radius: 10px 0 0 10px;cursor: pointer;color: black">
                     <option value="baidu">百度搜索</option>
+                    <option value="by_rutracker">搜索破解</option>
                     <option value="sougou">搜狗搜索</option>
                     <option value="kaifa">开发者搜索</option>
                     <option value="google">谷歌搜索</option>
@@ -449,7 +453,7 @@
             set_item(seachPlate,plate,true);
             if (plate === 'baidu') {
                 window.open("https://www.baidu.com/s?ie=UTF-8&wd=" + word);
-            }else if (plate === 'kaifa') {
+            } else if (plate === 'kaifa') {
                 window.open("https://kaifa.baidu.com/searchPage?wd=" + word);
             } else if (plate === 'google') {
                 window.open("https://www.google.com/search?q=" + word);
@@ -461,6 +465,8 @@
                 window.open("https://cn.bing.com/search?q=" + word);
             } else if (plate === '360') {
                 window.open("https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=" + word);
+            } else if (plate === 'by_rutracker') {
+                window.open("https://cn.bing.com/search?q=" + word + "+site%3Arutracker.org")
             }
         }
     }

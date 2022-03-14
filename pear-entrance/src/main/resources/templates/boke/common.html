@@ -322,11 +322,6 @@
         <!--    <script src="https://blog-static.cnblogs.com/files/miluluyo/monitoring2.js"></script>-->
         <script type="text/javascript">
             /* 导航动态生成 */
-            // let navs ;
-            let userId = get_item(lo_userId);
-            if (isNull_O(userId)) {
-                userId = 0;
-            }
             getInfo();
             // 记录新随笔出现的索引 导航栏
             var suibi_index;
@@ -334,32 +329,19 @@
                 url:"/indexNav",
                 async:false,
                 success:function (data) {
-                    // navs = data;
                     let cus = data.result.custom;
-                    // console.log(JSON.stringify(data))
                     for (let i=0;i < cus.length;i++) {
                         if (cus[i].name === "新随笔") {
                             suibi_index = i;
+                            break;
                         }
                     }
                     miluframe(data.result)
-                    /* 右边栏头像 */
-                    
-                    /*let token = get_item(lo_token);
-                    if (isNull_O(token)) {
-                        // $("#navList li").eq(suibi_index).hide();
-                        // $("#user_info").hide();
-                        $("#user_logout").hide();
-                        $("#user_login_a").show();
-                    } else {
-                        getInfo(suibi_index);
-                    }
-                    $("#navList li").eq(suibi_index).show();*/
                     /* 导航栏 随笔 */
                     // 判断是否是手机
                     if (jQuery.browser.mobile) {
                         // 手机端不开放此编辑器
-                        // 使用jquery修改！important样式
+                        // 使用jquery修改!important样式
                         // $('.ed_type li').eq(1).css("cssText","display:none !important;");
                         $('#boke_type a:first-child').click(function(){//点击a标签
                             if($('.ed_type').is(':hidden')){//如果当前隐藏
@@ -456,15 +438,6 @@
                     layer.msg("字数在5~200之间~")
                 }
             }
-            /*$(window).scroll(function(){
-                var s_top = Number($(this).scrollTop());  // 获取滚动条，滚动刻度
-                var csh_top = 0;
-                if (s_top > 346) {
-                    $("#sideBar").css("top",(s_top + csh_top) + "px")
-                }else {
-                    $("#sideBar").css("top",csh_top + "px")
-                }
-            })*/
         </script>
         <!--鼠标点击特效-->
         <script src="/js/mouseclick.js"></script>
@@ -484,19 +457,10 @@
     <script type="text/javascript">
         $(function () {
             /* 获取用户自己的歌单设置 */
-            let userId = get_item(lo_userId);
-            if (isNull_O(userId)) {userId = 0}
-            let lo_songlist = get_item(songList + userId);
             //由JSON字符串转换为JSON对象
-            if (!isNull_O(lo_songlist)) {
-                let res = JSON.parse(lo_songlist);
-                // console.log(res);
-                createSongBox(res,userId);
-            } else {
-                noParam_sucfun_get("/song/" + userId, function (res){
-                    createSongBox(res,userId);
-                },2);
-            }
+            noParam_sucfun_get("/song/listen", function (res){
+                createSongBox(res);
+            },2);
         })
     </script>
 </footer>
@@ -520,8 +484,10 @@
         <br /> <b>仅供学习使用</b>
 <!--        <br /><span id="poweredby" style="padding: 0.6rem 0;display: block">今日访问量：<span id="web_day">0</span>&nbsp;&nbsp;总访问量：<span id="web_count">0</span></span>-->
 <!--        <p><a target="_blank" href="https://beian.miit.gov.cn">豫ICP备2021020899号</a></p>-->
-        <!--<br /><span id="poweredby">Powered by .NET 5.0 on Kubernetes</span>--></div><!--end: footer -->
+        <!--<br /><span id="poweredby">Powered by .NET 5.0 on Kubernetes</span>-->
+    </div><!--end: footer -->
 </footer>
+<!-- 编辑页面头部 -->
 <footer th:fragment="page_editor_html">
     <div id="zzc" onclick="hideLabelist()"></div>
     <div class="wd_header" id="md_header">

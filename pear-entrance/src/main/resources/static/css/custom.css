@@ -343,10 +343,6 @@ div#catalogue {
     font-size: .8rem
 }
 
-div#catalogue .catalogueMain {
-    margin-top: 3.5rem;
-    padding: 10px
-}
 .w-e-toolbar {
     background: #FFF !important;
 }
@@ -1453,9 +1449,6 @@ canvas#thumsCanvas {
         box-shadow: -1px 0 3px rgba(26, 26, 26, .1)
     }
 
-    div#catalogue .catalogueMain {
-        margin-top: 10px
-    }
 }
 
 @media (max-width: 100px) {
@@ -1504,10 +1497,6 @@ canvas#thumsCanvas {
 
     #catalogue {
         width: 100% !important
-    }
-
-    #catalogue .catalogueMain {
-        width: calc(100% - 20px) !important
     }
 
     #live2d-widget, #player {

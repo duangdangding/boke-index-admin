@@ -72,7 +72,7 @@ $(function () {
     }
 
     // 博客分两种情况，一种是富文本一种是markdown语法
-    if (b_boke_2.editorType == 2) {
+    if (b_boke_2.editorType === 2) {
         $("#md_msg").text(b_boke_2.mdContent)
         // editormd.markdownToHTML("cnblogs_post_body");
         testEditor = editormd.markdownToHTML("cnblogs_post_body", {//注意：这里是上面DIV的id
@@ -110,13 +110,6 @@ $(function () {
 
     // 给代码添加复制功能
     addCodeCopy(b_boke_2.editorType === 2 ? 'md' : 'wd');
-
-    if (get_item(lo_userId) == b_userId) {
-        // $(".to_edit_e").show();
-        $(".to_top_e").show();
-        $(".to_top_e").text(b_boke_2.topOrder === 0 ? '[设置置顶]' : '[取消置顶]');
-        $(".to_top_e").attr("onclick",b_boke_2.topOrder === 0 ? 'topAdd()' : 'topCancel()');
-    }
 
     let imgs = $('#cnblogs_post_body img:not(.clippy)');
     // layer弹窗方式预览图片
@@ -156,11 +149,11 @@ $(function () {
     // 给复制按钮增加横向滚动跟随的效果
     let pres = $("#cnblogs_post_body pre");
     pres.each(function (index,e) {
-        let t = $(this).width();
+        // let t = $(this).width();
         let l = $(".clippy").css("left")
         let ln = Number(l.replace('px',''));
         // $(".clippy").css("left",t + "px")
-        console.log("原本的" + ln)
+        // console.log("原本的" + ln)
         $(this).scroll(function(){
             let sLeft = Number($(this).scrollLeft());  // 获取滚动条，滚动刻度
             console.log('向右滚动距离：' + sLeft)
@@ -284,7 +277,7 @@ function create_ml() {
         $(".blogs_ml").hide();
     }
 }
-
+/* 创建评论编辑器 */
 const E = window.wangEditor
 const editor = new E("#wangEdit")
 editor.config.height = 200
@@ -333,8 +326,8 @@ editor.create()
 
 // 创建评论元素
 function createplTab(pl) {
-    let face = get_item(lo_face);
-    let userName = get_item(lo_username);
+    let face = pl.avatar;
+    let userName = pl.username;
     if (!face) {
         face = face_def;
     }
@@ -352,8 +345,8 @@ function createplTab(pl) {
 }
 // 创建回复元素
 function createReplyBox(reply) {
-    let face = get_item(lo_face);
-    let userName = get_item(lo_username);
+    let face = reply.avatar;
+    let userName = reply.username;
     if (!face) {
         face = face_def;
     }
@@ -369,44 +362,29 @@ function createReplyBox(reply) {
 }
 // 评论
 function pinglun() {
-    let p_count = 0;
-    if(!get_item(lo_token)) {
-        p_count = ls.get("pinglun");
-        if (p_count) {
-            p_count = parseInt(p_count);
-            if (p_count >= 10) {
-                layer.msg("每天只能评论10次呐，如有需要请联系管理员~")
-                return false;
-            }
-        } else {
-            p_count = 0;
-        }
-    }
     let bId = b_boke_2.bokeId;
-    let text = editor.txt.text().trim();
+    // let text = editor.txt.text().trim();
     let html = editor.txt.html().trim();
 
     let h_re = html.replace("<p>","").replace("</p>","").replace("<br/>","").replace("&nbsp;","").trim();
     if (h_re.length > 0 && bId > 0) {
         showLoad()
         is_confirm = true;
-        let c_p_userId = get_item(lo_userId);
+        // let c_p_userId = get_item(lo_userId);
         if (ccc_tore) {
-            param_post("/reply/to",{replyContent:html,bokeId:bId,commentId:ccc_tore,userId:c_p_userId},function (data) {
+            param_post("/reply/to",{replyContent:html,bokeId:bId,commentId:ccc_tore},function (data) {
                 show_l_m("回复成功~",6);
                 // 清空内容
                 editor.txt.clear()
                 keydd = true;
                 closeRelAf();
-                ls.set("pinglun",p_count + 1,todayScond() * 1000);
                 createReplyBox(data);
             },1,2)
         } else {
-            param_post("/comment/to",{commTont:html,bokeId:bId,userId:c_p_userId},function (data) {
+            param_post("/comment/to",{commTont:html,bokeId:bId},function (data) {
                 show_l_m("评论成功~",6);
                 // 清空内容
                 editor.txt.clear()
-                ls.set("pinglun",p_count + 1,todayScond() * 1000)
                 createplTab(data)
             },1,2)
         }

@@ -43,8 +43,10 @@ public class QNYCtr extends BaseCtr {
     @PostMapping(value = "/t/kodo/wd",produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResultDto<List<Map<String,String>>> wdUpload(@RequestParam(value = "files") List<MultipartFile> files) {
         SysUser sysUser = SecurityUtil.currentUser();
+        if (sysUser == null) {
+            return fail("登陆之后才能上传哦~~~");
+        }
         if (!files.isEmpty()) {
-            
             List<Map<String,String>> imgs = new ArrayList<>();
             // int index = 0;
             for (MultipartFile file : files) {
