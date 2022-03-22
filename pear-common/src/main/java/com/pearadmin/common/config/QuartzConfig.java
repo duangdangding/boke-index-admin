@@ -1,22 +1,20 @@
 package com.pearadmin.common.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-
-import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 /**
  * Describe: 定 时 任 务 配 置 文 件
  * Author: 就 眠 仪 式
  * CreateTime: 2019/10/23
  */
-@Configuration
+// @Configuration
 public class QuartzConfig {
 
-    @Resource
+    // @Resource
     private DataSource dataSource;
 
     /**
@@ -24,7 +22,7 @@ public class QuartzConfig {
      * Param: DataSource
      * Return: ScheduleFactoryBean
      */
-    @Bean
+    // @Bean
     public SchedulerFactoryBean schedulerFactoryBean() {
         Properties prop = new Properties();
         prop.put("org.quartz.scheduler.instanceName", "PearScheduler");

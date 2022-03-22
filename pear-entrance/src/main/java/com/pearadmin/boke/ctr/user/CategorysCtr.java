@@ -12,7 +12,6 @@ import com.pearadmin.boke.service.CategorysService;
 import com.pearadmin.boke.utils.RedisUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.vo.BootStrapResult;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
 import com.pearadmin.common.tools.SecurityUtil;
@@ -31,16 +30,16 @@ public class CategorysCtr extends BaseCtr {
     private RedisUtil redisUtil;
     
     @RequestMapping("/getAllCates")
-    public BootStrapResult<Categorys> getAllCategorys() {
+    public ResultDto<Categorys> getAllCategorys() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("delete_state",1);
         String key = Constants.RedisKey.CATELIST;
         if (redisUtil.hasKey(key)) {
-            return new BootStrapResult<>(JSONUtil.toList(redisUtil.get(key).toString(),Categorys.class),0L);
+            return success(JSONUtil.toList(redisUtil.get(key).toString(),Categorys.class));
         }
         List<Categorys> list = categorysService.list(wrapper);
         redisUtil.set(key,JSONUtil.toJsonStr(list));
-        return new BootStrapResult<>(list,0L);
+        return success(list);
     }
     
     @RequestMapping("/addCate")

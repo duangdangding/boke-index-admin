@@ -194,17 +194,17 @@
                 <version>${revision}</version>
             </dependency>
             <!-- 工 作 流 程 -->
-            <dependency>
+            <!--<dependency>
                 <groupId>com.lsh.boke</groupId>
                 <artifactId>pear-process</artifactId>
                 <version>${revision}</version>
-            </dependency>
+            </dependency>-->
             <!-- 定 时 模 块 -->
-            <dependency>
+            <!--<dependency>
                 <groupId>com.lsh.boke</groupId>
                 <artifactId>pear-schedule</artifactId>
                 <version>${revision}</version>
-            </dependency>
+            </dependency>-->
             <!-- 分 页 组 件 -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>

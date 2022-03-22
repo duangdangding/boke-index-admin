@@ -1,21 +1,24 @@
 package com.pearadmin.secure.session;
 
-import com.pearadmin.common.web.session.HttpSessionContextHolder;
-import com.pearadmin.system.domain.SysUser;
-import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.impl.util.CollectionUtil;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import com.pearadmin.common.web.session.HttpSessionContextHolder;
+import com.pearadmin.system.domain.SysUser;
+
+import cn.hutool.core.collection.CollectionUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Describe: Security 在线用户监测任务

@@ -17,7 +17,6 @@ import com.pearadmin.boke.service.LabelsService;
 import com.pearadmin.boke.utils.RedisUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.Constants;
-import com.pearadmin.boke.vo.BootStrapResult;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
 import com.pearadmin.boke.vo.query.QueryLabelVo;
@@ -98,9 +97,9 @@ public class LabelCtr extends BaseCtr {
 
     @RequestMapping("/getAllLabels")
     @PreAuthorize("hasPermission('/admin/label/getAllLabels','sys:label:getAllLabels')")
-    public BootStrapResult<Labels> getAllCategorys() {
+    public ResultDto<Labels> getAllCategorys() {
         List<Labels> list = labelsService.list();
-        return new BootStrapResult<Labels>(list,0L);
+        return success(list);
     }
 
 }

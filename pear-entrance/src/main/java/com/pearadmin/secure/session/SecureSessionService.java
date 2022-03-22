@@ -1,14 +1,17 @@
 package com.pearadmin.secure.session;
 
-import com.pearadmin.common.web.session.HttpSessionContextHolder;
-import com.pearadmin.system.domain.SysUser;
-import org.activiti.engine.impl.util.CollectionUtil;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+
+import com.pearadmin.common.web.session.HttpSessionContextHolder;
+import com.pearadmin.system.domain.SysUser;
+
+import cn.hutool.core.collection.CollectionUtil;
 
 /**
  * Describe: Security Session 操作服务
