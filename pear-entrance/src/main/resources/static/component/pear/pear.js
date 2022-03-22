@@ -14,8 +14,8 @@ layui.config({
     card: "card",
     convert: "convert",
     tinymce: "tinymce/tinymce",
-    echarts: "echarts",
-    echartsTheme: "echartsTheme",
+    // echarts: "echarts",
+    // echartsTheme: "echartsTheme",
     hash: "hash",
     document: "document",
     select: "select",
@@ -41,6 +41,7 @@ layui.config({
     theme: "theme",
     message: "message",
     toast: "toast"
-}).use(['layer', 'theme'], function () {
+}).use(['layer'], function () {
+// }).use(['layer', 'theme'], function () {
     layui.theme.changeTheme(window, false);
 });
