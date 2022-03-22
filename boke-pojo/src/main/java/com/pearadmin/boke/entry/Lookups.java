@@ -1,5 +1,8 @@
 package com.pearadmin.boke.entry;
 
+import lombok.Data;
+
+@Data
 public class Lookups {
     
     private Integer bokeId;
@@ -8,27 +11,4 @@ public class Lookups {
     
     private Integer lookNum;
 
-    public Integer getBokeId() {
-        return bokeId;
-    }
-
-    public void setBokeId(Integer bokeId) {
-        this.bokeId = bokeId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getLookNum() {
-        return lookNum;
-    }
-
-    public void setLookNum(Integer lookNum) {
-        this.lookNum = lookNum;
-    }
 }

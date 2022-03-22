@@ -108,7 +108,7 @@ public class ReplysCtr extends BaseCtr {
                     String fromEmail = mailUtils.getFromEmail();
                     if (!fromEmail.equals(userEmail)) {
                         log.info(fromEmail + "开始给" + userEmail + "发送邮件~");
-                        String context = "有人在<a href='http://suweibk.xyz:11521/boke/"+ boke.getBokeId() +"' target='_blank'>" + boke.getTitle() + "</a>回复了您的留言~<br>请不要回复此邮件！！！";
+                        String context = "有人在<a href='"+Constants.PREHOST+"boke/"+ boke.getBokeId() +"' target='_blank'>" + boke.getTitle() + "</a>回复了您的留言~<br>请不要回复此邮件！！！";
                         mailUtils.sendHtmlMail(userEmail,"提示邮件",context);
                     }
                 }

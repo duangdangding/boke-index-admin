@@ -115,7 +115,7 @@ public class CommontsCtr extends BaseCtr {
                     String fromEmail = mailUtils.getFromEmail();
                     if (!fromEmail.equals(userEmail)) {
                         log.info(fromEmail + "开始给" + userEmail + "发送邮件~");
-                        String context = "有人对您的<a href='http://suweibk.xyz:11521/boke/"+ boke.getBokeId() +"' target='_blank'>" + boke.getTitle() + "</a>进行了评论~<br>请不要回复此邮件！！！";
+                        String context = "有人对您的<a href='"+Constants.PREHOST+"boke/"+ boke.getBokeId() +"' target='_blank'>" + boke.getTitle() + "</a>进行了评论~<br>请不要回复此邮件！！！";
                         mailUtils.sendHtmlMail(userEmail,"提示邮件",context);
                         /*SimpleMailMessage message = new SimpleMailMessage();
                         message.setFrom(mailUtil.getUsername());

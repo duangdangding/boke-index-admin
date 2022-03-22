@@ -1,5 +1,8 @@
 package com.pearadmin.boke.vo;
 
+import lombok.Data;
+
+@Data
 public class EditorUploadEntry {
 //    0 失败1成功
     private int success;

@@ -7,6 +7,7 @@ public interface Constants {
     String ANDROID = "ANDROID";
     String IPHONE = "IPHONE";
     String MAC = "MAC";
+    String PREHOST = "http://blog.suweibk.xyz/";
 
     // 日期格式化字符格式
     interface DateFormatStr {

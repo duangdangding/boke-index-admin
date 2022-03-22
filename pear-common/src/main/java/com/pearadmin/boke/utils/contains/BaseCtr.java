@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.pearadmin.boke.vo.BootStrapResult;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
 
@@ -94,11 +93,6 @@ public abstract class BaseCtr {
 
     protected ModelAndView toLoginView() {
         return getView("login", null);
-    }
-
-    protected BootStrapResult getBootStraps(IPage pages) {
-        BootStrapResult result = new BootStrapResult<>(pages.getRecords(), pages.getTotal());
-        return result;
     }
 
     protected ResultDto returnDto(boolean b) {
