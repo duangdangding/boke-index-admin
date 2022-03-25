@@ -36,7 +36,7 @@ function initSelectOptions3(selectId, url,key,value) {
         async : false,
         type : "GET",
         success : function(result) {
-            let configs = result.data;
+            let configs = result.result;
             selectObj.find("option:not(:first)").remove();
             for (let i in configs) {
                 let addressConfig = configs[i];
@@ -57,7 +57,7 @@ function initSelectOptions2(selectId, url,key,value) {
         async : false,
         type : "GET",
         success : function(result) {
-            let options = result.data;
+            let options = result.result;
             selectObj.empty();
             for (var i in options) {
                 // console.log(result)

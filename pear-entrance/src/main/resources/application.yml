@@ -70,6 +70,8 @@ pear:
       - /song/listen # 用户歌曲
       - /login/**  # 开放登录接口
       - /register # 注册页面
+      - /messageWall # 留言墙
+      - /u/wall/**
       - /userRegis # 用户点击注册
       - /system/captcha/** # 开放验证码接口
       - /title/sub # 副标题

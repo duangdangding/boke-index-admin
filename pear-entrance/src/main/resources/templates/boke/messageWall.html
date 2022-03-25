@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!-- 百度SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="Access-Control-Allow-Origin" content="*" />
+    <meta name="site" content="http://blog.suweibk.xyz" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>苏喂苏喂喔 - 留言墙</title>
+    <link rel="alternate" href="http://blog.suweibk.xyz">
+
+    <link rel="stylesheet" th:href="@{/css/blog-common.min.css}" />
+
+    <link type="text/css" rel="stylesheet" href="/css/custom.css" />
+<style>
+    body::after {
+        content: "";
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: .06;
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+        filter: gray;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /*div#home::after {*/
+        background-image: url(https://img.xjh.me/random_img.php?type=bg&ctype=acg&return=302)
+    }
+    #yincangyh {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 10em;
+        line-height: 13pt;
+        height: 2em;
+        background: url(http://birthday.suweibk.xyz/xingzuo/bg7.jpg) no-repeat left top;
+        /* font-family: "Arial","Tahoma","微软雅黑","雅黑"; */
+        border: 0px;
+        vertical-align: middle;
+        background-position: left -2em;
+        background-size: 9.5em 6em;
+        font-size: 0.7em;
+        letter-spacing: 0.3pt;
+        color: black;
+        /*font: 10px/1.14 Noto Sans SC, \5b8b\4f53;*/
+        outline: 0;
+    }
+    #yincangyh img {
+        width: 2.5em;
+        height: 2.5em;
+        margin: -5px -3px -4px -11px;
+    }
+    .wallItem {
+        background: rgb(150, 194, 241);
+        cursor: move;
+        position: absolute;
+        top: 397px;
+        left: 391px;
+        z-index: 1;
+        width: 200px;
+        height: 200px;
+        line-height: 30px;
+        -webkit-border-bottom-left-radius: 20px 500px;
+        -webkit-border-bottom-right-radius: 500px 30px;
+        -webkit-border-top-right-radius: 5px 100px;
+        -moz-border-bottom-left-radius: 20px 500px;
+        -moz-border-bottom-right-radius: 500px 30px;
+        -moz-border-top-right-radius: 5px 100px;
+        box-shadow: 0 2px 10px 1px rgb(0 0 0 / 20%);
+        -webkit-box-shadow: 0 2px 10px 1px rgb(0 0 0 / 20%);
+        -moz-box-shadow: 0 2px 10px 1px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<!--    <link rel="stylesheet" th:href="@{/layui/layer.css}" type="text/css"/>-->
+<!--    <link type="text/css" rel="stylesheet" href="/css/madia_index.css" />-->
+    <link type="text/css" rel="stylesheet" href="/css/darkly.css" />
+<!--    <script src="/js/constains.js"></script>-->
+    <script src="/js/jquery-3.8.min.js"></script>
+    <!-- Layui -->
+    <link th:href="@{/common/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/common/layui/layui.js}"></script>
+    <script th:src="@{/layui/layer.js}" ></script>
+    <!--    <script th:src="@{/common/layui/lay/modules/layer.js}"></script>-->
+    <script src="/js/gogal_ajax.js"></script>
+    <script th:src="@{/js/bs_common.js}" ></script>
+<!--    <script src="/js/checkpc_moile.js"></script>-->
+</head>
+<body>
+<!-- 导航添加窗口 -->
+<div id="addWallWin" class="layui-panel-window" style="display: none">
+    <form class="layui-form" id="winForm" lay-filter="form_hx" style="padding: 0;margin: 0">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">名字：</label>
+            <div class="layui-input-inline" style="width: 200px">
+                <input type="text" name="nickName" id="randomName" lay-verify="required" autocomplete="on" class="layui-input">
+                <input class="layui-btn layui-btn-sm" onclick="selectRandomName()" type="button" value="随机">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">导航排序：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <input type="number" name="frantSort" lay-verify="number" autocomplete="off" class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 105px">留言内容：</label>
+            <div class="layui-input-inline" style="width: 300px">
+                <textarea type="text" name="content" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" style="text-align: center">
+            <input class="layui-btn layui-btn-sm" type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认">
+            <input class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="closelayer()" value="取消">
+        </div>
+    </form>
+</div>
+<button type="button" id="yincangyh" title="如果卡的话可以隐藏樱花背景" onclick="openAddWallWin()">
+    <img src="http://birthday.suweibk.xyz/xingzuo/b_xin.gif"><span id="ycyhBtn">留言</span>
+</button>
+<div  id="contentBox">
+    
+</div>
+<block th:include="boke/common :: page_music_html" />
+</body>
+<script th:inline="javascript">
+    function openAddWallWin() {
+        openWind('留言','addWallWin','620px','550px',function (){
+        });
+    }
+    function selectRandomName() {
+        noParam_sucfun_get('/u/wall/randomName',function (d) {
+            $("#randomName").val(d);
+        })
+    }
+    layui.use(['element', 'form', 'table'], function () {
+        let elemet = layui.element, form = layui.form;
+
+        form.on('submit(kFormSubmit)', function (data) {
+            let d = data.field;
+            param_get("/u/wall/add",d,function (result) {
+                createWallItem(result);
+                closelayer();
+            },1,2);
+        });
+    });
+    function createWallItem(d) {
+        let div = '<div onmousedown="asdasd(this)" id="item'+d.wallId+'" class="wallItem">' +
+            '<p class="contenss">'+d.content+'</p>' +
+            'time: ' + d.createTime + ' By: ' + d.nickName +
+            '</div>';
+        $("#contentBox").append(div);
+    }
+
+    $(function () {
+        init();
+        
+    })
+    
+    function init() {
+        noParam_sucfun_get('/u/wall/list',function (result) {
+            for (let i = 0; i < result.length; i++) {
+                let b = result[i];
+                createWallItem(b)
+                
+            }
+        })
+    }
+    
+    function asdasd(e) {
+        $(document).mousemove(function(e){
+            $(e).offset({
+                left:e.pageX,
+                top:e.pageY
+            })
+        })
+        $(document).mouseup(function(){
+            $(document).off('mousemove')
+        })
+    }
+
+    $(function() {
+    })
+
+
+</script>
+</html>

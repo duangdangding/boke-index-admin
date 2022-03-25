@@ -13,7 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.pearadmin.boke.entry.Navigation;
 import com.pearadmin.boke.service.DaoHangLanService;
+import com.pearadmin.boke.utils.RedisUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
+import com.pearadmin.boke.utils.contains.Constants;
 import com.pearadmin.boke.vo.ResultDto;
 
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +26,9 @@ public class NavigationCtr extends BaseCtr {
     
     @Autowired
     private DaoHangLanService daoHangLanService;
+    
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * Describe: 获取首页导航列表视图
@@ -49,6 +54,9 @@ public class NavigationCtr extends BaseCtr {
     @PreAuthorize("hasPermission('/admin/navigation/upOrAdd','sys:navigation:upOrAdd')")
     public ResultDto upOrAddNav(Navigation navigation) {
         boolean b = daoHangLanService.saveOrUpdate(navigation);
+        if (b) {
+            redisUtil.preDel(Constants.RedisKey.ALLNAVIGATION_);
+        }
         return returnDto(b);
     }
 

@@ -14,6 +14,10 @@ public class PageCtr {
     public String frantPage() {
         return "boke/frantPage";
     }
+    @RequestMapping("/messageWall")
+    public String messageWall() {
+        return "boke/messageWall";
+    }
     @RequestMapping("/register")
     public String register() {
         return "boke/register";

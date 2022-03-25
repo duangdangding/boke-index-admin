@@ -94,6 +94,7 @@ public interface Constants {
         String ALLNAVIGATIONY = "ALLNAVIGATIONY"; // 个人导航(已登录(普通用户))
         String ALLNAVIGATIONG = "ALLNAVIGATIONG"; // 个人导航(已登录(管理员))
         String ALLNAVIGATIONN = "ALLNAVIGATIONN"; // 个人导航(未登录)
+        String ALLNAVIGATION_ = "ALLNAVIGATION*"; // 个人导航(未登录)
         String OTHERNAVIGATION = "OTHERNAVIGATION"; // 自定义
         String USERINFO = "UserInfo_"; // 个人信息
         String GUIDANG = "guidang_"; // 归档日期
