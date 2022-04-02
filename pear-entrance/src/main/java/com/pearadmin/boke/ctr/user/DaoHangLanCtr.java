@@ -48,9 +48,6 @@ public class DaoHangLanCtr extends BaseCtr {
             if (redisUtil.hasKey(Constants.RedisKey.SUBTITLE)) {
                 title = redisUtil.get(Constants.RedisKey.SUBTITLE).toString();
             }
-            if (redisUtil.hasKey(Constants.RedisKey.SUBTITLE)) {
-                title = redisUtil.get(Constants.RedisKey.SUBTITLE).toString();
-            }
         } catch (Exception e) {
             title = "";
         }

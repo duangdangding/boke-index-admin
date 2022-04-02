@@ -1,11 +1,12 @@
 spring:
   redis:
     # 主 机 地 址
-    host: 1.117.138.180
+#    host: 1.117.138.180
+    host: 127.0.0.1
     # 端 口
     port: 6379
     # 认 证
-    password: Lsh0611.
+    password:
     # 选 择 数 据 库
     database: 0
     # 连 接 池 配 置
@@ -30,9 +31,10 @@ spring:
         # 主 库 配 置
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://1.117.138.180:3306/boke?serverTimezone=Asia/Shanghai&useUnicode=true&nullCatalogMeansCurrent=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+#          url: jdbc:mysql://1.117.138.180:3306/boke?serverTimezone=Asia/Shanghai&useUnicode=true&nullCatalogMeansCurrent=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://localhost:3306/boke?serverTimezone=Asia/Shanghai&useUnicode=true&nullCatalogMeansCurrent=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
           username: root
-          password: Lsh0611.
+          password: 123456
           druid:
             # 初始连接数
             initialSize: 5

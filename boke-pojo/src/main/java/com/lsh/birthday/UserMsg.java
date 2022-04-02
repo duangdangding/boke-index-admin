@@ -3,6 +3,7 @@ package com.lsh.birthday;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -15,6 +16,7 @@ public class UserMsg implements Serializable {
 
     @TableId
     private Integer userId;
+    @TableField("user_name")
     private String username;
     private String userIp;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -32,6 +32,7 @@ import com.pearadmin.boke.utils.VisitsUtil;
 import com.pearadmin.boke.utils.contains.BaseCtr;
 import com.pearadmin.boke.utils.contains.BookType;
 import com.pearadmin.boke.utils.contains.Constants;
+import com.pearadmin.boke.utils.ip.IPHelper;
 import com.pearadmin.boke.vo.BokeListEntry;
 import com.pearadmin.boke.vo.ResultDto;
 import com.pearadmin.boke.vo.ResultDtoManager;
@@ -71,8 +72,14 @@ public class BokesCtr extends BaseCtr {
         }*/
         VisitsUtil.setVisitCount(request, visitsService, redisUtil);
         Map<String, Object> map = indexParam(pageNumber, bokes, navTitle);
-        StringBuffer requestURL = request.getRequestURL();
-        map.put("b_host", requestURL.substring(0, requestURL.lastIndexOf("/")));
+        String requestURL = request.getRequestURL().toString();
+        String ip = IPHelper.getIp(request);
+        String url = requestURL.substring(0, requestURL.lastIndexOf("/"));
+        if (url.contains("localhost")) {
+            url = url.replace("localhost",ip);
+        }
+        // map.put("b_host", requestURL.substring(0, requestURL.lastIndexOf("/")));
+        map.put("b_host", url);
         return getView("boke/index", map);
     }
     

@@ -23,22 +23,23 @@
     
     <script type="text/javascript">
         // 设置副标题
-        function loadSubtitle(t) {
-            if (isNull_O(t) || t === '未知账户') {
-                noParam_sucfun_get("/title/sub",setSub);
+        function loadSubtitle() {
+            // noParam_sucfun_get("/title/sub",setSub);
+            noParam_sucfun_get("/title/sub");
+            /*if (isNull_O(t) || t === '未知账户') {
             } else {
                 setSub(t);
-            }
+            }*/
         }
-        function setSub(t) {
+        /*function setSub(t) {
             if (!isNull_O(t)) {
                 sessionStorage.subTitle = t;
                 $("#header_subtitle").html(t);
             }
-        }
+        }*/
         $(function () {
-            let subtitle = sessionStorage.subTitle;
-            loadSubtitle(subtitle);
+            // let subtitle = sessionStorage.subTitle;
+            loadSubtitle();
             /* 如果是手机则隐藏此按钮  */
             if (jQuery.browser.mobile) {
                 $(".yc_4fn").show();

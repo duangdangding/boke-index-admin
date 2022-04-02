@@ -21,8 +21,8 @@
     <modules>
 <!--        <module>pear-generate</module>-->
         <module>pear-system</module>
-<!--        <module>pear-schedule</module>-->
-<!--        <module>pear-process</module>-->
+        <module>pear-schedule</module>
+        <module>pear-process</module>
     </modules>
 
     <dependencies>

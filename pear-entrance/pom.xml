@@ -29,18 +29,18 @@
             <artifactId>pear-system</artifactId>
         </dependency>
         <!-- 定 时 任 务 -->
-        <!--<dependency>
+        <dependency>
             <groupId>com.lsh.boke</groupId>
             <artifactId>pear-schedule</artifactId>
-            &lt;!&ndash;<exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <artifactId>mybatis</artifactId>
                     <groupId>org.mybatis</groupId>
                 </exclusion>
-            </exclusions>&ndash;&gt;
-        </dependency>-->
+            </exclusions>-->
+        </dependency>
         <!-- 工 作 流 程 -->
-        <!--<dependency>
+        <dependency>
             <groupId>com.lsh.boke</groupId>
             <artifactId>pear-process</artifactId>
             <exclusions>
@@ -49,7 +49,7 @@
                     <groupId>org.mybatis</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <!-- 三方依赖 -->
        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
