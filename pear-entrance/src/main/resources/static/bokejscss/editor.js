@@ -303,6 +303,7 @@ function getByAjax() {
             $("#label_list").append(labestrs);
             setLabelVs();
         }
+        $("#addb_v").focus();
     })
 }
 

@@ -193,9 +193,10 @@ public class BokesCtr extends BaseCtr {
 
             Map<String, Object> map = new HashMap<>();
             if (boke.getBokeZip() == 1) {
-                boke.setBokeCont(MyStringUtil.uncompress(boke.getBokeCont()));
                 if (type == 2) {
                     boke.setMdContent(MyStringUtil.uncompress(boke.getMdContent()));
+                } else {
+                    boke.setBokeCont(MyStringUtil.uncompress(boke.getBokeCont()));
                 }
             }
             map.put("boke", boke);
@@ -243,7 +244,7 @@ public class BokesCtr extends BaseCtr {
         bokes.setUserId(userId);
 //        对文章进行压缩，有js和后台压缩这里采用后台压缩
         // 因为可能存在汉字，如果存在汉字则不能使用length判断长度
-        int length = MyStringUtil.getLength(html);
+        /*int length = MyStringUtil.getLength(html);
         if (length > Constants.BokeXZ.CONTLEN) {
             String compress = MyStringUtil.compress(html);
             bokes.setBokeCont(compress);
@@ -253,7 +254,8 @@ public class BokesCtr extends BaseCtr {
             bokes.setBokeZip(1);
         } else {
             bokes.setBokeZip(0);
-        }
+        }*/
+        bokes.setBokeZip(0);
         boolean b = bokesService.addOrUpdateAndSetCache(bokes);
         return returnDto(b);
     }

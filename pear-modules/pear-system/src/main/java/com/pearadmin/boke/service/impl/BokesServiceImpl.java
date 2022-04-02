@@ -55,12 +55,12 @@ public class BokesServiceImpl extends ServiceImpl<BokesMapper, Bokes> implements
         }
 
         boolean b = saveOrUpdate(bokes);
-        if (b) {
+        /*if (b) {
             Integer bokeId = bokes.getBokeId();
             BokeListEntry bokesById = bokesMapper.getBokesById(bokeId, bokes.getUserId());
             // 设置缓存1个月
             redisUtil.setToDay(Constants.RedisKey.BOKEXQ + bokeId, JSONUtil.toJsonStr(bokesById), 30);
-        }
+        }*/
         return b;
     }
 
@@ -81,15 +81,16 @@ public class BokesServiceImpl extends ServiceImpl<BokesMapper, Bokes> implements
 
     @Override
     public BokeListEntry getBokesById(Integer bokeId, Long userId) {
-        String key = Constants.RedisKey.BOKEXQ + bokeId;
+        // String key = Constants.RedisKey.BOKEXQ + bokeId;
         BokeListEntry boke;
-        if (redisUtil.hasKey(key)) {
+        /*if (redisUtil.hasKey(key)) {
             boke = JSONUtil.toBean(redisUtil.get(key).toString(), BokeListEntry.class);
         } else {
             boke = bokesMapper.getBokesById(bokeId, userId);
             // 设置缓存1个月
             redisUtil.setToDay(key, JSONUtil.toJsonStr(boke), 30);
-        }
+        }*/
+        boke = bokesMapper.getBokesById(bokeId, userId);
         if (boke != null && boke.getBokeZip() == 1) {
             boke.setBokeCont(MyStringUtil.uncompress(boke.getBokeCont()));
             boke.setMdContent(MyStringUtil.uncompress(boke.getMdContent()));

@@ -119,7 +119,9 @@ public class MyStringUtil {
             while ((offset = ginzip.read(buffer)) != -1) {
                 out.write(buffer, 0, offset);
             }
+            // decompressed = out.toString("utf-8");
             decompressed = out.toString();
+            // decompressed = out.toString("gb2312");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
